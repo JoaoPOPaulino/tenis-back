@@ -27,8 +27,11 @@ public class Usuario {
     @Column(name = "cpf", unique = true)
     private String cpf;
 
-    @Column(name = "dataNascimento")
+    @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
+
+    @Column(name = "data_cadastro")
+    private LocalDate dataCadastro;
 
     public Long getId() {
         return id;
@@ -78,4 +81,13 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
+    public LocalDate getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDate dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    
 }

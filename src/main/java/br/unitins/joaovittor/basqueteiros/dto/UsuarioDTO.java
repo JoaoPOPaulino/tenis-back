@@ -5,8 +5,8 @@ public record UsuarioDTO(
     String email,
     String telefone,
     String cpf,
-    Integer dia,
-    Integer mes,
-    Integer ano
+    Integer diaAniv,
+    Integer mesAniv,
+    Integer anoAniv
 ) { }  
 

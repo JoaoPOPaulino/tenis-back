@@ -10,7 +10,8 @@ public record UsuarioResponseDTO (
     String email,
     String telefone,
     String cpf,
-    LocalDate dataNascimento
+    LocalDate dataNascimento,
+    LocalDate dataCadastro
 ){
     
     public static UsuarioResponseDTO parse(Usuario usuario){
@@ -19,7 +20,8 @@ public record UsuarioResponseDTO (
             usuario.getEmail(),
             usuario.getTelefone(),
             usuario.getCpf(),
-            usuario.getDataNascimento());
+            usuario.getDataNascimento(),
+            usuario.getDataCadastro());
     }
 
 }
