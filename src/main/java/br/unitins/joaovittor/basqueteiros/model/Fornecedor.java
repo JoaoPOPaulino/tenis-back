@@ -15,8 +15,8 @@ public class Fornecedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "nome_empresa")
+    private String nomeEmpresa;
 
     @Column(name = "email")
     private String email;
@@ -35,12 +35,12 @@ public class Fornecedor {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getNomeEmpresa() {
+        return nomeEmpresa;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setNomeEmpresa(String nome) {
+        this.nomeEmpresa = nome;
     }
 
     public String getEmail() {

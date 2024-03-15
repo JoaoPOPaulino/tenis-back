@@ -10,6 +10,7 @@ import br.unitins.joaovittor.basqueteiros.repository.UsuarioRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @ApplicationScoped
 public class UsuarioServiceImpl implements UsuarioService {
@@ -19,7 +20,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public UsuarioResponseDTO create(UsuarioDTO dto) {
+    public UsuarioResponseDTO create(@Valid UsuarioDTO dto) {
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());

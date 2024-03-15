@@ -4,7 +4,7 @@ values
     ('maria feia', 'mariafeia@email', '63111', '999.999.999-99', '2000-03-21'),
     ('natalino', 'natalino@email', '63333', '999.999.999-12', '1980-12-25');
 
-insert into fornecedor(nome, email, telefone, data_cadastro) 
+insert into fornecedor(nome_empresa, email, telefone, data_cadastro) 
 values
     ('nike', 'niketop@gmail.com', '999', 'NOW()'),
     ('adidas', 'adidaslegal@gmail.com', '888', 'NOW()');
