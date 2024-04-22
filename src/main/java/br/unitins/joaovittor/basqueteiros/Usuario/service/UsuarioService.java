@@ -10,7 +10,7 @@ public interface UsuarioService {
     
     public UsuarioResponseDTO create(@Valid UsuarioDTO dto);
     public void update(Long id, UsuarioDTO dto);
-    public void delete(Long id);
+    public boolean delete(Long id);
     public List<UsuarioResponseDTO> findAll();
     public UsuarioResponseDTO findById(Long id);
     public List<UsuarioResponseDTO> findByNome(String nome);

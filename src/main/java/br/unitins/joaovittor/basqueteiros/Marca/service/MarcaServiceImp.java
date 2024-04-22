@@ -24,13 +24,13 @@ public class MarcaServiceImp implements MarcaService{
         marca.setNome(dto.nome());
 
         repository.persist(marca);
-        return MarcaResponseDTO.parse(marca);
+        return MarcaResponseDTO.valueof(marca);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
@@ -45,19 +45,19 @@ public class MarcaServiceImp implements MarcaService{
     public List<MarcaResponseDTO> findAll() {
         return repository.findAll()
                                 .stream()
-                                .map(e -> MarcaResponseDTO.parse(e)).toList();
+                                .map(e -> MarcaResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public MarcaResponseDTO findById(Long id) {
-        return MarcaResponseDTO.parse(repository.findById(id));
+        return MarcaResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<MarcaResponseDTO> findByNome(String nome) {
         return repository.findByNome(nome)
                                         .stream()
-                                        .map(e -> MarcaResponseDTO.parse(e)).toList();
+                                        .map(e -> MarcaResponseDTO.valueof(e)).toList();
     }
     
 }

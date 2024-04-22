@@ -17,8 +17,7 @@ public record FornecedorDTO(
     @Size(min = 12, max = 20, message = "O tamanho do cnpj deve ser 14")
     String cnpj,
 
-    String telefone,
-    String dataCadastro
+    String telefone
 ) {
     
 }

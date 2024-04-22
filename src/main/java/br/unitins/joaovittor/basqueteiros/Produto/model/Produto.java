@@ -1,22 +1,16 @@
 package br.unitins.joaovittor.basqueteiros.Produto.model;
 
+import br.unitins.joaovittor.basqueteiros.DefaultEntity.model.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.model.Fornecedor;
 import br.unitins.joaovittor.basqueteiros.Marca.model.Marca;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Produto {
+public class Produto extends DefaultEntity{
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "nome")
     private String nome;
 
@@ -39,14 +33,6 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "id_marca")  
     private Marca marca;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;

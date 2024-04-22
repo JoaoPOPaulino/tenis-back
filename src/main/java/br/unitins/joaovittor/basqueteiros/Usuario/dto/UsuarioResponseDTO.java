@@ -13,7 +13,7 @@ public record UsuarioResponseDTO (
     LocalDate dataNascimento
 ){
     
-    public static UsuarioResponseDTO parse(Usuario usuario){
+    public static UsuarioResponseDTO valueof(Usuario usuario){
         return new UsuarioResponseDTO(usuario.getId(),
             usuario.getNome(),
             usuario.getEmail(),

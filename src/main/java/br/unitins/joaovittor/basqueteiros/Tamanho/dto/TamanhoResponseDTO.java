@@ -11,7 +11,7 @@ public record TamanhoResponseDTO(
     LocalDateTime dataCadastro,
     LocalDateTime dataAlteracao
 ) {
-    public static TamanhoResponseDTO parse(Tamanho tamanho){
+    public static TamanhoResponseDTO valueof(Tamanho tamanho){
         return new TamanhoResponseDTO(tamanho.getId(),
                                     tamanho.getNumeracao(), 
                                     tamanho.getTamanhoEmCm(), 

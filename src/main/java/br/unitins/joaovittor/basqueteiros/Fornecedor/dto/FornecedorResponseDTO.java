@@ -1,6 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.Fornecedor.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import br.unitins.joaovittor.basqueteiros.Fornecedor.model.Fornecedor;
 
@@ -10,17 +10,19 @@ public record FornecedorResponseDTO (
     String cnpj,
     String email,
     String telefone,
-    LocalDate dataCadastro
+    LocalDateTime dataCadastro,
+    LocalDateTime dataAlteracao
 ){
     
-    public static FornecedorResponseDTO parse(Fornecedor fornecedor){
+    public static FornecedorResponseDTO valueof(Fornecedor fornecedor){
         return new FornecedorResponseDTO(
             fornecedor.getId(),
             fornecedor.getNomeEmpresa(),
             fornecedor.getCnpj(),
             fornecedor.getEmail(),
             fornecedor.getTelefone(),
-            fornecedor.getDataCadastro()
+            fornecedor.getDataCadastro(),
+            fornecedor.getDataAlteracao()
         );
     }
 

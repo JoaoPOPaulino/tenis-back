@@ -10,7 +10,7 @@ public interface MeiaService {
 
     public MeiaResponseDTO create(@Valid MeiaDTO dto);
     public void update(Long id, MeiaDTO dto);
-    public void delete(Long id);
+    public boolean delete(Long id);
     public List<MeiaResponseDTO> findAll();
     public MeiaResponseDTO findById(Long id);
     public List<MeiaResponseDTO> findByNome(String nome);

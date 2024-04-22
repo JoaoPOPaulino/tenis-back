@@ -1,19 +1,11 @@
 package br.unitins.joaovittor.basqueteiros.Fornecedor.model;
 
-import java.time.LocalDate;
-
+import br.unitins.joaovittor.basqueteiros.DefaultEntity.model.DefaultEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
-public class Fornecedor {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Fornecedor extends DefaultEntity{
 
     @Column(name = "nome_empresa")
     private String nomeEmpresa;
@@ -26,17 +18,6 @@ public class Fornecedor {
 
     @Column(name = "telefone")
     private String telefone;
-
-    @Column(name = "data_cadastro")
-    private LocalDate dataCadastro;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNomeEmpresa() {
         return nomeEmpresa;
@@ -69,13 +50,4 @@ public class Fornecedor {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-
-    public LocalDate getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
 }

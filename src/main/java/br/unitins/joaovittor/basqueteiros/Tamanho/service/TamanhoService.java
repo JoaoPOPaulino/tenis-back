@@ -10,7 +10,7 @@ public interface TamanhoService {
     
     public TamanhoResponseDTO create(@Valid TamanhoDTO dto);
     public void update(Long id, TamanhoDTO dto);
-    public void delete(Long id);
+    public boolean delete(Long id);
     public List<TamanhoResponseDTO> findAll();
     public TamanhoResponseDTO findById(Long id);
     public List<TamanhoResponseDTO> findByNumeracao(Integer numeracao);

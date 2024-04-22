@@ -1,6 +1,5 @@
 package br.unitins.joaovittor.basqueteiros.Fornecedor.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorDTO;
@@ -25,11 +24,10 @@ public class FornecedorServiceImpl implements FornecedorService{
         fornecedor.setNomeEmpresa(dto.nome());
         fornecedor.setEmail(dto.email());
         fornecedor.setTelefone(dto.telefone());
-        fornecedor.setDataCadastro(LocalDate.now());
 
         repository.persist(fornecedor);
 
-        return FornecedorResponseDTO.parse(fornecedor);
+        return FornecedorResponseDTO.valueof(fornecedor);
     }
 
     @Override
@@ -40,32 +38,31 @@ public class FornecedorServiceImpl implements FornecedorService{
         fornecedor.setNomeEmpresa(dto.nome());
         fornecedor.setEmail(dto.email());
         fornecedor.setTelefone(dto.telefone());
-        // nao alterar data de cadastro
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
     public List<FornecedorResponseDTO> findAll() {
         return repository.findAll()
                 .stream()
-                .map(e -> FornecedorResponseDTO.parse(e)).toList();
+                .map(e -> FornecedorResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public FornecedorResponseDTO findById(Long id) {
-        return FornecedorResponseDTO.parse(repository.findById(id));
+        return FornecedorResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<FornecedorResponseDTO> findByNome(String nome) {
         return repository.findByNome(nome)
         .stream()
-        .map(e -> FornecedorResponseDTO.parse(e)).toList();
+        .map(e -> FornecedorResponseDTO.valueof(e)).toList();
     }
     
 }

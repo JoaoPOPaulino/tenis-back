@@ -10,7 +10,7 @@ public interface CorService {
     
     public CorResponseDTO create(@Valid CorDTO dto);
     public void update(Long id, CorDTO dto);
-    public void delete(Long id);
+    public boolean delete(Long id);
     public List<CorResponseDTO> findAll();
     public CorResponseDTO findById(Long id);
     public List<CorResponseDTO> findByNome(String nome);

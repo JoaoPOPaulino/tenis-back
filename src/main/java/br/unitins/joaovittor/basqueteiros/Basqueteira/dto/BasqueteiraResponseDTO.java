@@ -17,7 +17,7 @@ public record BasqueteiraResponseDTO(
     MarcaResponseDTO marca,
     TamanhoResponseDTO tamanho
 ) {
-    public static BasqueteiraResponseDTO parse(Basqueteira basqueteira){
+    public static BasqueteiraResponseDTO valueof(Basqueteira basqueteira){
         return new BasqueteiraResponseDTO(basqueteira.getId(), 
         basqueteira.getNome(), 
         basqueteira.getPeso(), 
@@ -25,8 +25,8 @@ public record BasqueteiraResponseDTO(
         basqueteira.getQuantidade(), 
         basqueteira.getPrecoCompra(), 
         basqueteira.getPrecoVenda(), 
-        FornecedorResponseDTO.parse(basqueteira.getFornecedor()), 
-        MarcaResponseDTO.parse(basqueteira.getMarca()), 
-        TamanhoResponseDTO.parse(basqueteira.getTamanho()));
+        FornecedorResponseDTO.valueof(basqueteira.getFornecedor()), 
+        MarcaResponseDTO.valueof(basqueteira.getMarca()), 
+        TamanhoResponseDTO.valueof(basqueteira.getTamanho()));
     }
 }

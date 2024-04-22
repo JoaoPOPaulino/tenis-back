@@ -44,13 +44,13 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
         basqueteira.setTamanho(tamanhoRepository.findById(dto.idTamanho()));
 
         repository.persist(basqueteira);
-        return BasqueteiraResponseDTO.parse(basqueteira);
+        return BasqueteiraResponseDTO.valueof(basqueteira);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
@@ -72,18 +72,18 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
     public List<BasqueteiraResponseDTO> findAll() {
         return repository.findAll()
         .stream()
-        .map(e -> BasqueteiraResponseDTO.parse(e)).toList();
+        .map(e -> BasqueteiraResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public BasqueteiraResponseDTO findById(Long id) {
-        return BasqueteiraResponseDTO.parse(repository.findById(id));
+        return BasqueteiraResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<BasqueteiraResponseDTO> findByNome(String nome) {
         return repository.findByNome(nome)
         .stream()
-        .map(e -> BasqueteiraResponseDTO.parse(e)).toList();
+        .map(e -> BasqueteiraResponseDTO.valueof(e)).toList();
     }  
 }

@@ -24,13 +24,13 @@ public class CorServiceImp implements CorService {
         Cor.setNome(dto.nome());
 
         repository.persist(Cor);
-        return CorResponseDTO.parse(Cor);
+        return CorResponseDTO.valueof(Cor);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
@@ -45,18 +45,18 @@ public class CorServiceImp implements CorService {
     public List<CorResponseDTO> findAll() {
         return repository.findAll()
                                 .stream()
-                                .map(e -> CorResponseDTO.parse(e)).toList();
+                                .map(e -> CorResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public CorResponseDTO findById(Long id) {
-        return CorResponseDTO.parse(repository.findById(id));
+        return CorResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<CorResponseDTO> findByNome(String nome) {
         return repository.findByNome(nome)
                                         .stream()
-                                        .map(e -> CorResponseDTO.parse(e)).toList();
+                                        .map(e -> CorResponseDTO.valueof(e)).toList();
     }
 }

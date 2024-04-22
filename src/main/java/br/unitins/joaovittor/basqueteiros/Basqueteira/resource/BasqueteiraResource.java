@@ -26,6 +26,10 @@ public class BasqueteiraResource {
     @POST
     public Response create(BasqueteiraDTO dto){
         return Response.ok(service.create(dto)).build();
+        // tem como criar uma basqueteira sem ter criado, por exemplo cor
+        // ou tem como criar uma cor a partir de uma tentativa de criar basqueteira ("view" do modelo mvc)
+
+        // tabela "basqueteira" nao existe, nem "meia" por ser uma herança de produto
     }
 
     @PUT
@@ -38,8 +42,9 @@ public class BasqueteiraResource {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        service.delete(id);
-        return Response.status(Status.NO_CONTENT).build();
+        if(service.delete(id))
+            return Response.status(Status.NO_CONTENT).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @GET

@@ -6,6 +6,7 @@ import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoDTO;
 import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Tamanho.model.Tamanho;
 import br.unitins.joaovittor.basqueteiros.Tamanho.repository.TamanhoRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -21,17 +22,26 @@ public class TamanhoServiceImp implements TamanhoService{
     @Transactional
     public TamanhoResponseDTO create(@Valid TamanhoDTO dto) {
         Tamanho tamanho = new Tamanho();
+
+        verificarNumeracao(dto.numeracao());
+
         tamanho.setNumeracao(dto.numeracao());
         tamanho.setTamanhoEmCm(dto.tamanhoEmCm());
 
         repository.persist(tamanho);
-        return TamanhoResponseDTO.parse(tamanho);
+        return TamanhoResponseDTO.valueof(tamanho);
+    }
+
+    public void verificarNumeracao(Integer numeracao){
+        Tamanho tamanho = repository.findByNumeracaoFirstResult(numeracao);
+        if(tamanho != null)
+            throw new ValidationException("numeracao", "A numeracao '"+numeracao+"' ja existe");
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
@@ -46,19 +56,19 @@ public class TamanhoServiceImp implements TamanhoService{
     public List<TamanhoResponseDTO> findAll() {
         return repository.findAll()
         .stream()
-        .map(e -> TamanhoResponseDTO.parse(e)).toList();
+        .map(e -> TamanhoResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public TamanhoResponseDTO findById(Long id) {
-        return TamanhoResponseDTO.parse(repository.findById(id));
+        return TamanhoResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<TamanhoResponseDTO> findByNumeracao(Integer numeracao) {
             return repository.findByNumeracao(numeracao)
             .stream()
-            .map(e -> TamanhoResponseDTO.parse(e)).toList();
+            .map(e -> TamanhoResponseDTO.valueof(e)).toList();
     }
     
 }

@@ -13,4 +13,8 @@ public class UsuarioRepository implements PanacheRepository<Usuario>{
         return find("UPPER(nome) LIKE ?1", "%"+ nome.toUpperCase() + "%").list();  
     }
 
+    public Usuario findByCpf(String cpf){
+        return find("UPPER(cpf) LIKE ?1", "%"+ cpf + "%").singleResult(); 
+    }
+
 }

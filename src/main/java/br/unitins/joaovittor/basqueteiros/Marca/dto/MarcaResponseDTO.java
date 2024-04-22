@@ -10,7 +10,7 @@ public record MarcaResponseDTO (
     LocalDateTime dataCadastro,
     LocalDateTime dataAlteracao    
 ){
-    public static MarcaResponseDTO parse(Marca marca) {
+    public static MarcaResponseDTO valueof(Marca marca) {
         return new MarcaResponseDTO(
                                     marca.getId(), 
                                     marca.getNome(),

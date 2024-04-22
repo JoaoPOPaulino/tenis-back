@@ -7,6 +7,7 @@ import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Usuario.model.Usuario;
 import br.unitins.joaovittor.basqueteiros.Usuario.repository.UsuarioRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -16,7 +17,7 @@ import jakarta.validation.Valid;
 public class UsuarioServiceImpl implements UsuarioService {
 
     @Inject
-    UsuarioRepository usuarioRepository;
+    UsuarioRepository repository;
 
     @Override
     @Transactional
@@ -28,20 +29,28 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setTelefone(dto.telefone());
         usuario.setDataNascimento(LocalDate.of(dto.anoAniv(), dto.mesAniv(), dto.diaAniv()));
 
-        usuarioRepository.persist(usuario);
-        return UsuarioResponseDTO.parse(usuario);
+        repository.persist(usuario);
+        return UsuarioResponseDTO.valueof(usuario);
+    }
+
+    // metodo nao da certo pois da erro do servidor
+    // por estar definido como "unique" no model
+    public void verificarCpf(String cpf){
+        Usuario usuario = repository.findByCpf(cpf);
+        if(usuario != null)
+            throw new ValidationException("cpf", "O CPF '"+cpf+"' ja existe");
     }
 
     @Override
     @Transactional
-    public void delete(Long id) { 
-        usuarioRepository.deleteById(id); 
+    public boolean delete(Long id) { 
+        return repository.deleteById(id); 
     }
 
     @Override
     @Transactional
     public void update(Long id, UsuarioDTO dto) {
-        Usuario usuario = usuarioRepository.findById(id);
+        Usuario usuario = repository.findById(id);
 
         usuario.setNome(dto.nome());
         usuario.setEmail(dto.email());
@@ -52,21 +61,21 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public List<UsuarioResponseDTO> findAll() {
-        return usuarioRepository.findAll()
+        return repository.findAll()
                          .stream()
-                         .map(e -> UsuarioResponseDTO.parse(e)).toList();
+                         .map(e -> UsuarioResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public UsuarioResponseDTO findById(Long id) { 
-        return UsuarioResponseDTO.parse(usuarioRepository.findById(id));
+        return UsuarioResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<UsuarioResponseDTO> findByNome(String nome) {
-        return usuarioRepository.findByNome(nome)
+        return repository.findByNome(nome)
                                 .stream()
-                                .map(e -> UsuarioResponseDTO.parse(e)).toList();
+                                .map(e -> UsuarioResponseDTO.valueof(e)).toList();
     }
     
 

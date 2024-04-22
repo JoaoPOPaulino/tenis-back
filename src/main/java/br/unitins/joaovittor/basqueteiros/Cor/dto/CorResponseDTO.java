@@ -10,7 +10,7 @@ public record CorResponseDTO(
     LocalDateTime dataCadastro,
     LocalDateTime dataAlteracao
 ) {
-    public static CorResponseDTO parse(Cor cor){
+    public static CorResponseDTO valueof(Cor cor){
         return new CorResponseDTO(cor.getId(), 
                                 cor.getNome(), 
                                 cor.getDataCadastro(), 

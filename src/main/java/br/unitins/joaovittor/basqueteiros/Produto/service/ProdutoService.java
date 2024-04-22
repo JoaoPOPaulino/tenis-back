@@ -10,7 +10,7 @@ public interface ProdutoService {
     
     public ProdutoResponseDTO create(@Valid ProdutoDTO dto);
     public void update(Long id, ProdutoDTO dto);
-    public void delete(Long id);
+    public boolean delete(Long id);
     public List<ProdutoResponseDTO> findAll();
     public ProdutoResponseDTO findById(Long id);
     public List<ProdutoResponseDTO> findByNome(String nome);

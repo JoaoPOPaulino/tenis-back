@@ -10,7 +10,7 @@ public interface BasqueteiraService {
     
     public BasqueteiraResponseDTO create(@Valid BasqueteiraDTO dto);
     public void update(Long id, BasqueteiraDTO dto);
-    public void delete(Long id);
+    public boolean delete(Long id);
     public List<BasqueteiraResponseDTO> findAll();
     public BasqueteiraResponseDTO findById(Long id);
     public List<BasqueteiraResponseDTO> findByNome(String nome);

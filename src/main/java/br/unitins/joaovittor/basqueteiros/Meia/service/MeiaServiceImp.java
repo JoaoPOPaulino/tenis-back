@@ -44,13 +44,13 @@ public class MeiaServiceImp implements MeiaService {
         meia.setCor(corRepository.findById(dto.idCor()));
 
         repository.persist(meia);
-        return MeiaResponseDTO.parse(meia);
+        return MeiaResponseDTO.valueof(meia);
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
@@ -72,18 +72,18 @@ public class MeiaServiceImp implements MeiaService {
     public List<MeiaResponseDTO> findAll() {
         return repository.findAll()
         .stream()
-        .map(e -> MeiaResponseDTO.parse(e)).toList();
+        .map(e -> MeiaResponseDTO.valueof(e)).toList();
     }
 
     @Override
     public MeiaResponseDTO findById(Long id) {
-        return MeiaResponseDTO.parse(repository.findById(id));
+        return MeiaResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<MeiaResponseDTO> findByNome(String nome) {
         return repository.findByNome(nome)
         .stream()
-        .map(e -> MeiaResponseDTO.parse(e)).toList();
+        .map(e -> MeiaResponseDTO.valueof(e)).toList();
     }
 }

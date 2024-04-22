@@ -14,7 +14,7 @@ public record ProdutoResponseDTO(
     FornecedorResponseDTO fornecedor,
     MarcaResponseDTO marca
 ) {
-    public static ProdutoResponseDTO parse(Produto produto){
+    public static ProdutoResponseDTO valueof(Produto produto){
         return new ProdutoResponseDTO(
             produto.getId(),
             produto.getNome(), 
@@ -22,8 +22,8 @@ public record ProdutoResponseDTO(
             produto.getQuantidade(), 
             produto.getPrecoCompra(), 
             produto.getPrecoVenda(), 
-            FornecedorResponseDTO.parse(produto.getFornecedor()),
-            MarcaResponseDTO.parse(produto.getMarca())
+            FornecedorResponseDTO.valueof(produto.getFornecedor()),
+            MarcaResponseDTO.valueof(produto.getMarca())
         );
     }
 }

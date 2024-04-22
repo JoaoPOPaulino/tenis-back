@@ -2,18 +2,12 @@ package br.unitins.joaovittor.basqueteiros.Usuario.model;
 
 import java.time.LocalDate;
 
+import br.unitins.joaovittor.basqueteiros.DefaultEntity.model.DefaultEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
-public class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Usuario extends DefaultEntity{
 
     @Column(name = "nome")
     private String nome;
@@ -29,14 +23,6 @@ public class Usuario {
 
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;

@@ -38,7 +38,7 @@ public class ProdutoServiceImpl implements ProdutoService{
         produto.setMarca(marcaRepository.findById(dto.idMarca()));
 
         repository.persist(produto);
-        return ProdutoResponseDTO.parse(produto);
+        return ProdutoResponseDTO.valueof(produto);
     }
 
     @Override
@@ -57,27 +57,27 @@ public class ProdutoServiceImpl implements ProdutoService{
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public boolean delete(Long id) {
+        return repository.deleteById(id);
     }
 
     @Override
     public List<ProdutoResponseDTO> findAll() {
         return repository.findAll().list()
             .stream()
-            .map(p -> ProdutoResponseDTO.parse(p)).toList();
+            .map(p -> ProdutoResponseDTO.valueof(p)).toList();
     }
 
     @Override
     public ProdutoResponseDTO findById(Long id) {
-        return ProdutoResponseDTO.parse(repository.findById(id));
+        return ProdutoResponseDTO.valueof(repository.findById(id));
     }
 
     @Override
     public List<ProdutoResponseDTO> findByNome(String nome) {
         return repository.findByNome(nome)
         .stream()
-        .map(e -> ProdutoResponseDTO.parse(e)).toList();
+        .map(e -> ProdutoResponseDTO.valueof(e)).toList();
     }
     
 }

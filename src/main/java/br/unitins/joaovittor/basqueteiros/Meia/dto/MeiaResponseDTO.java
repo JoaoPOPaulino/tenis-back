@@ -17,7 +17,7 @@ public record MeiaResponseDTO(
     MarcaResponseDTO marca,
     CorResponseDTO cor
 ) {
-    public static MeiaResponseDTO parse(Meia meia){
+    public static MeiaResponseDTO valueof(Meia meia){
         return new MeiaResponseDTO(meia.getId(), 
         meia.getNome(), 
         meia.getQtdPares(), 
@@ -25,8 +25,8 @@ public record MeiaResponseDTO(
         meia.getQuantidade(), 
         meia.getPrecoCompra(), 
         meia.getPrecoVenda(), 
-        FornecedorResponseDTO.parse(meia.getFornecedor()), 
-        MarcaResponseDTO.parse(meia.getMarca()), 
-        CorResponseDTO.parse(meia.getCor()));
+        FornecedorResponseDTO.valueof(meia.getFornecedor()), 
+        MarcaResponseDTO.valueof(meia.getMarca()), 
+        CorResponseDTO.valueof(meia.getCor()));
     }
 }
