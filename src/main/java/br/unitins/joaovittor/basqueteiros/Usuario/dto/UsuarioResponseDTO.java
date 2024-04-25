@@ -7,6 +7,7 @@ import br.unitins.joaovittor.basqueteiros.Usuario.model.Usuario;
 public record UsuarioResponseDTO (
     Long id,
     String nome,
+    String login,
     String email,
     String telefone,
     String cpf,
@@ -16,6 +17,7 @@ public record UsuarioResponseDTO (
     public static UsuarioResponseDTO valueof(Usuario usuario){
         return new UsuarioResponseDTO(usuario.getId(),
             usuario.getNome(),
+            usuario.getLogin(),
             usuario.getEmail(),
             usuario.getTelefone(),
             usuario.getCpf(),

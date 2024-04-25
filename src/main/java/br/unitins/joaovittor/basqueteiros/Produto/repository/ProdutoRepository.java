@@ -13,4 +13,8 @@ public class ProdutoRepository implements PanacheRepository<Produto> {
         return find("UPPER(nome) LIKE ?1", "%"+ nome.toUpperCase() + "%").list();  
     }
 
+    public Produto findByNomeCompleto(String nome){
+        return find("UPPER(nome) LIKE ?1", "%"+ nome.toUpperCase() + "%").firstResult();
+    }
+
 }

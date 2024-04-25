@@ -1,8 +1,8 @@
-insert into usuario (nome, email, telefone, cpf, data_nascimento, data_cadastro) 
+insert into usuario (nome, `login` , email, telefone, cpf, data_nascimento, data_cadastro) 
 values
-    ('joao', 'joaodev@email', '63999', '111.111.111-11', '2004-09-16', CURRENT_DATE),
-    ('maria feia', 'mariafeia@email', '63111', '999.999.999-99', '2000-03-21', CURRENT_DATE),
-    ('natalino', 'natalino@email', '63333', '999.999.999-12', '1980-12-25', CURRENT_DATE);
+    ('joao', 'joo', 'joaodev@email', '63999', '111.111.111-11', '2004-09-16', CURRENT_DATE),
+    ('maria feia', 'mari', 'mariafeia@email', '63111', '999.999.999-99', '2000-03-21', CURRENT_DATE),
+    ('natalino', 'natal', 'natalino@email', '63333', '999.999.999-12', '1980-12-25', CURRENT_DATE);
 
 insert into fornecedor(nome_empresa, email, telefone, data_cadastro) 
 values

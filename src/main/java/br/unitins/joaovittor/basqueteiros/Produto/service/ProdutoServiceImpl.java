@@ -8,6 +8,7 @@ import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.model.Produto;
 import br.unitins.joaovittor.basqueteiros.Produto.repository.ProdutoRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,9 @@ public class ProdutoServiceImpl implements ProdutoService{
     @Transactional
     public ProdutoResponseDTO create(@Valid ProdutoDTO dto) {
         Produto produto = new Produto();
+
+        verificarNome(dto.nome());
+
         produto.setNome(dto.nome());
         produto.setDescricao(dto.descricao());
         produto.setQuantidade(dto.quantidade());
@@ -39,6 +43,13 @@ public class ProdutoServiceImpl implements ProdutoService{
 
         repository.persist(produto);
         return ProdutoResponseDTO.valueof(produto);
+    }
+
+    public void verificarNome(String nome){
+        Produto p = repository.findByNomeCompleto(nome);
+        if(p != null)
+            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
+        
     }
 
     @Override

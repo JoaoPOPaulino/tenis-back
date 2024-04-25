@@ -6,6 +6,7 @@ import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorDTO;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.model.Fornecedor;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.repository.FornecedorRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -21,6 +22,11 @@ public class FornecedorServiceImpl implements FornecedorService{
     @Transactional
     public FornecedorResponseDTO create(@Valid FornecedorDTO dto) {
         Fornecedor fornecedor = new Fornecedor();
+
+        // ta dando erro ao cadastrar
+
+        verificarNome(dto.nome());
+
         fornecedor.setNomeEmpresa(dto.nome());
         fornecedor.setEmail(dto.email());
         fornecedor.setTelefone(dto.telefone());
@@ -28,6 +34,12 @@ public class FornecedorServiceImpl implements FornecedorService{
         repository.persist(fornecedor);
 
         return FornecedorResponseDTO.valueof(fornecedor);
+    }
+
+    public void verificarNome(String nome){
+        Fornecedor fornecedor = repository.findByNomeCompleto(nome);
+        if(fornecedor != null)
+            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
     }
 
     @Override

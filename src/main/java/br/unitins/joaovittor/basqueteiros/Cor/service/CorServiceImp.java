@@ -6,6 +6,7 @@ import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
 import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Cor.model.Cor;
 import br.unitins.joaovittor.basqueteiros.Cor.repository.CorRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -21,10 +22,19 @@ public class CorServiceImp implements CorService {
     @Transactional
     public CorResponseDTO create(@Valid CorDTO dto) {
         Cor Cor = new Cor();
+
+        verificarNome(dto.nome());
+
         Cor.setNome(dto.nome());
 
         repository.persist(Cor);
         return CorResponseDTO.valueof(Cor);
+    }
+
+    public void verificarNome(String nome){
+        Cor cor = repository.findByNomeCompleto(nome);
+        if(cor != null)
+            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
     }
 
     @Override

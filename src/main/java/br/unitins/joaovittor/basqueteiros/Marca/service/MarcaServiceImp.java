@@ -6,6 +6,7 @@ import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaDTO;
 import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Marca.model.Marca;
 import br.unitins.joaovittor.basqueteiros.Marca.repository.MarcaRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,12 @@ public class MarcaServiceImp implements MarcaService{
 
         repository.persist(marca);
         return MarcaResponseDTO.valueof(marca);
+    }
+
+    public void verificarNome(String nome){
+        Marca marca = repository.findByNomeCompleto(nome);
+        if(marca != null)
+            throw new ValidationException("nome", "O nome '"+nome+"' ja foi utilizado");
     }
 
     @Override

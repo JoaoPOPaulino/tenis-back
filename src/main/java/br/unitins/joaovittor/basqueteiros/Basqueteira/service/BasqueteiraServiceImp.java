@@ -6,9 +6,11 @@ import br.unitins.joaovittor.basqueteiros.Basqueteira.dto.BasqueteiraDTO;
 import br.unitins.joaovittor.basqueteiros.Basqueteira.dto.BasqueteiraResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Basqueteira.model.Basqueteira;
 import br.unitins.joaovittor.basqueteiros.Basqueteira.repository.BasqueteiraRepository;
+import br.unitins.joaovittor.basqueteiros.EnumTamanhoCano.model.TamanhoCano;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.repository.FornecedorRepository;
 import br.unitins.joaovittor.basqueteiros.Marca.repository.MarcaRepository;
 import br.unitins.joaovittor.basqueteiros.Tamanho.repository.TamanhoRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -33,7 +35,11 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
     @Transactional
     public BasqueteiraResponseDTO create(@Valid BasqueteiraDTO dto) {
         Basqueteira basqueteira = new Basqueteira();
+
+        verificarNome(dto.nome());
+
         basqueteira.setNome(dto.nome());
+        basqueteira.setTamanhoCano(TamanhoCano.valueOf(dto.idTamanhoCano()));
         basqueteira.setDescricao(dto.descricao());
         basqueteira.setPeso(dto.peso());
         basqueteira.setQuantidade(dto.quantidade());
@@ -47,6 +53,12 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
         return BasqueteiraResponseDTO.valueof(basqueteira);
     }
 
+    public void verificarNome(String nome){
+        Basqueteira basqueteira = repository.findByNomeCompleto(nome);
+        if(basqueteira != null)
+            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
+    }
+
     @Override
     @Transactional
     public boolean delete(Long id) {
@@ -58,6 +70,7 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
     public void update(Long id, BasqueteiraDTO dto) {
         Basqueteira basqueteira = repository.findById(id);
         basqueteira.setNome(dto.nome());
+        basqueteira.setTamanhoCano(TamanhoCano.valueOf(dto.idTamanhoCano()));
         basqueteira.setDescricao(dto.descricao());
         basqueteira.setPeso(dto.peso());
         basqueteira.setQuantidade(dto.quantidade());

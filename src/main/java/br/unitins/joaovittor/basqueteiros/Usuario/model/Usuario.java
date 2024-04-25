@@ -12,6 +12,9 @@ public class Usuario extends DefaultEntity{
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "login")
+    private String login;
+
     @Column(name = "email")
     private String email;
 
@@ -62,6 +65,14 @@ public class Usuario extends DefaultEntity{
 
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
     
 }

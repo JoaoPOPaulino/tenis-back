@@ -9,6 +9,7 @@ import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.model.Meia;
 import br.unitins.joaovittor.basqueteiros.Meia.repository.MeiaRepository;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -33,6 +34,9 @@ public class MeiaServiceImp implements MeiaService {
     @Transactional
     public MeiaResponseDTO create(@Valid MeiaDTO dto) {
         Meia meia = new Meia();
+
+        verificarQtdPares(dto.qtdPares());
+
         meia.setNome(dto.nome());
         meia.setDescricao(dto.descricao());
         meia.setQtdPares(dto.qtdPares());
@@ -45,6 +49,11 @@ public class MeiaServiceImp implements MeiaService {
 
         repository.persist(meia);
         return MeiaResponseDTO.valueof(meia);
+    }
+
+    public void verificarQtdPares(int qtdPares){
+        if(qtdPares <= 1)
+            throw new ValidationException("qtdPares", "A quantidade de pares não pode ser menor ou igual a 1");
     }
 
     @Override

@@ -32,6 +32,7 @@ public class TamanhoServiceImp implements TamanhoService{
         return TamanhoResponseDTO.valueof(tamanho);
     }
 
+    // Validação por consulta
     public void verificarNumeracao(Integer numeracao){
         Tamanho tamanho = repository.findByNumeracaoFirstResult(numeracao);
         if(tamanho != null)

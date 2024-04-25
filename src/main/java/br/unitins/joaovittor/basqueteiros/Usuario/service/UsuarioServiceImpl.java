@@ -22,8 +22,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public UsuarioResponseDTO create(@Valid UsuarioDTO dto) {
+        
         Usuario usuario = new Usuario();
+
+        verificarLogin(dto.login());
+
         usuario.setNome(dto.nome());
+        usuario.setLogin(dto.login());
         usuario.setEmail(dto.email());
         usuario.setCpf(dto.cpf());
         usuario.setTelefone(dto.telefone());
@@ -35,10 +40,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     // metodo nao da certo pois da erro do servidor
     // por estar definido como "unique" no model
+    // "como eu mudo o erro de 500 p 400?"
+
+    /*
     public void verificarCpf(String cpf){
         Usuario usuario = repository.findByCpf(cpf);
         if(usuario != null)
             throw new ValidationException("cpf", "O CPF '"+cpf+"' ja existe");
+    }
+    */
+
+    public void verificarLogin(String login){
+        Usuario u = repository.findByLoginCompleto(login);
+        if(u != null)
+        throw new ValidationException("login", "O login '"+login+"' ja existe");
     }
 
     @Override
@@ -53,6 +68,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = repository.findById(id);
 
         usuario.setNome(dto.nome());
+        usuario.setLogin(dto.login());
         usuario.setEmail(dto.email());
         usuario.setCpf(dto.cpf());
         usuario.setTelefone(dto.telefone());

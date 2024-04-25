@@ -12,4 +12,8 @@ public class BasqueteiraRepository implements PanacheRepository<Basqueteira> {
     public List<Basqueteira> findByNome(String nome){
         return find("UPPER(nome) LIKE ?1", "%"+ nome.toUpperCase() + "%").list();  
     }
+
+    public Basqueteira findByNomeCompleto(String nome){
+        return find("UPPER(nome) LIKE ?1", "%"+ nome.toUpperCase() + "%").firstResult();  
+    }
 }

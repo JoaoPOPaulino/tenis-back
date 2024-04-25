@@ -1,5 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.Basqueteira.model;
 
+import br.unitins.joaovittor.basqueteiros.EnumTamanhoCano.model.TamanhoCano;
 import br.unitins.joaovittor.basqueteiros.Produto.model.Produto;
 import br.unitins.joaovittor.basqueteiros.Tamanho.model.Tamanho;
 import jakarta.persistence.Column;
@@ -16,6 +17,9 @@ public class Basqueteira extends Produto{
     @ManyToOne
     @JoinColumn(name = "id_tamanho")
     private Tamanho tamanho;
+
+    @Column(name = "tamanho_cano")
+    private TamanhoCano tamanhoCano;
 
     @Column(name = "peso")
     private Double peso;
@@ -35,5 +39,12 @@ public class Basqueteira extends Produto{
     public void setPeso(Double peso) {
         this.peso = peso;
     }
-    
+
+    public TamanhoCano getTamanhoCano() {
+        return tamanhoCano;
+    }
+
+    public void setTamanhoCano(TamanhoCano tamanhoCano) {
+        this.tamanhoCano = tamanhoCano;
+    }    
 }

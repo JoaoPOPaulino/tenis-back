@@ -8,6 +8,7 @@ public record BasqueteiraDTO(
     String nome,
     String descricao,
     Double peso,
+    int idTamanhoCano,
     int quantidade,
 
     @NotNull

@@ -1,6 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.Basqueteira.dto;
 
 import br.unitins.joaovittor.basqueteiros.Basqueteira.model.Basqueteira;
+import br.unitins.joaovittor.basqueteiros.EnumTamanhoCano.model.TamanhoCano;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoResponseDTO;
@@ -8,6 +9,7 @@ import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoResponseDTO;
 public record BasqueteiraResponseDTO(
     Long id,
     String nome,
+    TamanhoCano tamanhoCano,
     Double peso,
     String descricao,
     int quantidade,
@@ -19,7 +21,8 @@ public record BasqueteiraResponseDTO(
 ) {
     public static BasqueteiraResponseDTO valueof(Basqueteira basqueteira){
         return new BasqueteiraResponseDTO(basqueteira.getId(), 
-        basqueteira.getNome(), 
+        basqueteira.getNome(),
+        basqueteira.getTamanhoCano(), 
         basqueteira.getPeso(), 
         basqueteira.getDescricao(), 
         basqueteira.getQuantidade(), 

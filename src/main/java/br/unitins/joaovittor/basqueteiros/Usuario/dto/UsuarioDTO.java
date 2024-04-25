@@ -11,6 +11,8 @@ public record UsuarioDTO(
     @Size(min = 4, max = 60, message = "O tamanho do nome deve ser entre 2 e 60 caracteres.")
     String nome,
 
+    String login,
+
     @Email(message = "O email deve ser válido!")
     String email,
 
