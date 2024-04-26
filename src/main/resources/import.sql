@@ -24,10 +24,20 @@ values
 (42, '27,5', CURRENT_DATE),
 (43, '28', CURRENT_DATE);
 
-insert into basqueteira(nome, descricao, peso, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca, id_tamanho)
+insert into cor(nome, data_cadastro)
 values
-('Nike Air Max', 'Tênis de corrida Nike Air Max', 100, 50, 150.00, 250.00, 1, 2, 4),
-('Adidas Ultraboost', 'Tênis de corrida Adidas Ultraboost', 120, 55, 160.00, 270.00, 2, 1, 6);
+('preto', CURRENT_DATE),
+('branco', CURRENT_DATE);
+
+insert into meia(descricao, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca, id_cor)
+values
+("meia nike", "pares de meias da nike", 10, 50.00, 109.99, 1, 2, 2),
+("meia adidas", "pares de meias da adidas", 10, 45.00, 99.99, 2, 1, 2);
+
+-- insert into basqueteira(nome, descricao, peso, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca, id_tamanho)
+-- values
+-- ('Nike Air Max', 'Tênis de corrida Nike Air Max', 100, 50, 150.00, 250.00, 1, 2, 4),
+-- ('Adidas Ultraboost', 'Tênis de corrida Adidas Ultraboost', 120, 55, 160.00, 270.00, 2, 1, 6);
 
 
 -- insert into produto (nome, descricao, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca)

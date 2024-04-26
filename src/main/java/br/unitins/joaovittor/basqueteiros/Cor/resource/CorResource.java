@@ -57,7 +57,7 @@ public class CorResource {
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome( @PathParam("nome") String nome){
-        service.findByNome(nome);
-        return Response.status(Status.OK).build();
+        // service.findByNome(nome);
+        return Response.ok(service.findByNome(nome)).build();
     }
 }
