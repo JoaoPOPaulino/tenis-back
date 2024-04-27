@@ -9,21 +9,29 @@ import jakarta.persistence.Entity;
 @Entity
 public class Usuario extends DefaultEntity{
 
+    //tirar (botar em Pessoa)
     @Column(name = "nome")
     private String nome;
 
+    //mudar p username
     @Column(name = "login")
     private String login;
 
+    // add senha
+
+    // ver o que fzr com esse email
     @Column(name = "email")
     private String email;
 
+    // vai p/ Classe (Pessoa)
     @Column(name = "telefone")
     private String telefone;
 
+    // vai p/ Classe (PessoaFisica)
     @Column(name = "cpf", unique = true)
     private String cpf;
 
+    // vai p/ Classe (Pessoa)
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 

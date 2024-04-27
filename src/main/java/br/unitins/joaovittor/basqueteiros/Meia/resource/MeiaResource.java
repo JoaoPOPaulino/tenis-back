@@ -2,7 +2,6 @@ package br.unitins.joaovittor.basqueteiros.Meia.resource;
 
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Meia.model.Meia;
 import br.unitins.joaovittor.basqueteiros.Meia.service.MeiaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

@@ -1,0 +1,127 @@
+@startuml Basqueteiros
+
+' MUDAR TUDO KKK
+
+enum StatusPedido {
+    + PAGAMENTO_PENDENTE: int
+    + EM_PROCESSO: int
+    + EM_TRANSITO: int
+    + ENTREGUE: int
+    + CANCELADO: int
+}
+
+enum TipoPagamento {
+    + DEBITO: int
+    + CREDITO: int
+    + PIX: int
+}
+
+class Tamanho {
+    - numeracao: Integer
+    - tamanhoEmCm: String
+}
+
+enum TamanhoCano {
+    + BAIXO: int
+    + MEDIO: int
+    + ALTO: int
+}
+
+class Usuario {
+    - username: String
+    - senha: String
+}
+
+class Pessoa {
+    - nome: String
+    - dataNascimento: LocalDate
+    - telefone: String
+}
+
+class Endereco {
+    - cep: String
+    - rua: String
+    - complemento: String
+}
+
+class PessoaFisica {
+    - cpf: String
+}
+
+class Cliente {
+    - saldo: Double
+}
+
+class Funcionario {
+    - numeroContrato: String
+    - dataAdmissao: LocalDate
+}
+
+class Pedido {
+    - data: LocalDate
+    - valorTotal: Double
+}
+
+class ItemPedido {
+    - valor: Double
+    - desconto: Double
+    - quantidade: int
+}
+
+class Marca {
+    - nome: String
+}
+
+class Cor {
+    - nome: String
+}
+
+class Basqueteira {
+    - peso: Double
+}
+
+class Meia {
+    - qtdPares: Integer
+}
+
+class Fornecedor {
+    - nomeEmpresa: String
+    - cnpj: String
+    - telefone: String
+    - endereco: String
+    
+}
+
+class Produto{
+    - nome: String
+    - valor: Double
+    - descricao: String
+    - material: String
+    - qtdEstoque: Integer
+}
+
+Pedido "*" -left-> "1" Cliente
+Pedido "1" *--> "*" ItemPedido
+
+ItemPedido "*" --> "*" Produto
+
+Basqueteira "*" *--> "1" TamanhoCano
+Basqueteira "*" *--> "1" Tamanho
+
+Meia "*" -left-> "1" Cor
+
+Produto "*" o--> "1" Marca
+Produto "*" *--> "1" Fornecedor
+Produto <|-right- Basqueteira
+Produto <|-left- Meia
+
+Cliente "1" -left-> "1" PessoaFisica
+
+PessoaFisica -left-|> Pessoa
+PessoaFisica "1" --> "1" Usuario
+
+Funcionario "1" -up-> "1" PessoaFisica
+
+Cliente "1" *-up-> "*" Endereco
+
+@enduml
