@@ -4,8 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public record TamanhoDTO(
 
-    @NotBlank(message = "a numeração não pode ser nula ou vazia")
+    
     Integer numeracao,
 
+    @NotBlank(message = "o 'tamanho em cm' não pode ser nula ou vazia")
     String tamanhoEmCm
 ) { }

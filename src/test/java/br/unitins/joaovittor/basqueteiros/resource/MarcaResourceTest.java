@@ -1,35 +1,35 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import org.junit.jupiter.api.Test;
-
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
+import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaDTO;
+import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaResponseDTO;
+import br.unitins.joaovittor.basqueteiros.Marca.service.MarcaService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
 import static io.restassured.RestAssured.given;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
 
 @QuarkusTest
-public class CorResourceTest {
+public class MarcaResourceTest {
     
     @Inject
-    CorService service;
+    MarcaService service;
 
     @Test
     public void testFindAll(){
 
         given()
         .when()
-            .get("/cores")
+            .get("/marcas")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("branco")));
+            .body("nome", hasItem(is("nike")));
 
     }
 
@@ -37,7 +37,7 @@ public class CorResourceTest {
     public void testFindById() {
         given()
         .when()
-            .get("/cores/search/id/1")
+            .get("/marcas/search/id/1")
         .then()
             .statusCode(200)
             .body("id", is(1));
@@ -47,21 +47,21 @@ public class CorResourceTest {
     public void testFindByNome(){
         given()
         .when()
-            .get("/cores/search/nome/p")
+            .get("marcas/search/nome/n")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("preto")));
+            .body("nome", hasItem(is("nike")));
     }
 
     @Test
     public void testCreate(){
-        CorDTO dto = new CorDTO("cinza");
+        MarcaDTO dto = new MarcaDTO("puma");
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .post("/cores")
+            .post("/marcas")
         .then()
             .statusCode(200)
             .body("id", is(3));
@@ -69,13 +69,13 @@ public class CorResourceTest {
 
     @Test
     public void testUpdate(){
-        CorDTO dto = new CorDTO("amarelo");
+        MarcaDTO dto = new MarcaDTO("under armor");
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .put("/cores/3")
+            .put("/marcas/3")
         .then()
             .statusCode(204);
     }
@@ -83,12 +83,12 @@ public class CorResourceTest {
     @Test
     public void testDelete(){
         
-        CorResponseDTO response = service.create(new CorDTO("vermelho"));
+        MarcaResponseDTO response = service.create(new MarcaDTO("mizuno"));
 
         given()
         .when()
             .pathParam("id", response.id())
-            .delete("/cores/{id}")
+            .delete("/marcas/{id}")
         .then()
             .statusCode(204);
 

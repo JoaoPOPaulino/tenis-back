@@ -81,14 +81,22 @@ public class ProdutoServiceImpl implements ProdutoService{
 
     @Override
     public ProdutoResponseDTO findById(Long id) {
-        return ProdutoResponseDTO.valueof(repository.findById(id));
+        Produto produto = repository.findById(id);
+        if(produto != null)
+            return ProdutoResponseDTO.valueof(produto);
+        return null;
     }
 
     @Override
     public List<ProdutoResponseDTO> findByNome(String nome) {
-        return repository.findByNome(nome)
+
+        List<ProdutoResponseDTO> lista = repository.findByNome(nome)
         .stream()
         .map(e -> ProdutoResponseDTO.valueof(e)).toList();
+
+        if(lista.size() != 0)
+            return lista;
+        return null;
     }
     
 }

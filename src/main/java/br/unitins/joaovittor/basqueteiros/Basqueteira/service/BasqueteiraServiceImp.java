@@ -90,13 +90,21 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
 
     @Override
     public BasqueteiraResponseDTO findById(Long id) {
-        return BasqueteiraResponseDTO.valueof(repository.findById(id));
+        Basqueteira basqueteira = repository.findById(id);
+        if(basqueteira != null)
+            return BasqueteiraResponseDTO.valueof(basqueteira);
+        return null;
     }
 
     @Override
     public List<BasqueteiraResponseDTO> findByNome(String nome) {
-        return repository.findByNome(nome)
+
+        List<BasqueteiraResponseDTO> lista = repository.findByNome(nome)
         .stream()
         .map(e -> BasqueteiraResponseDTO.valueof(e)).toList();
+
+        if(lista.size() != 0)
+            return lista;
+        return null;
     }  
 }

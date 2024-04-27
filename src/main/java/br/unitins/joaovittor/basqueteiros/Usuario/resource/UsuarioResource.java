@@ -57,8 +57,11 @@ public class UsuarioResource {
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome( @PathParam("nome") String nome) {
-        usuarioService.findByNome(nome);
-        return Response.status(Status.OK).build();
+        return Response.ok(usuarioService.findByNome(nome)).build();
     }
+
+    // Novos: (fazer testes unit)
+    // - find by login
+    // - find cpf
 
 }

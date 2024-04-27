@@ -62,7 +62,10 @@ public class TamanhoServiceImp implements TamanhoService{
 
     @Override
     public TamanhoResponseDTO findById(Long id) {
-        return TamanhoResponseDTO.valueof(repository.findById(id));
+        Tamanho tamanho = repository.findById(id);
+        if(tamanho != null)
+            return TamanhoResponseDTO.valueof(tamanho);
+        return null;
     }
 
     @Override

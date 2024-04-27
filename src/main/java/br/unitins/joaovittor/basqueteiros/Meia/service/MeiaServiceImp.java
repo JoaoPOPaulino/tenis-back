@@ -86,13 +86,20 @@ public class MeiaServiceImp implements MeiaService {
 
     @Override
     public MeiaResponseDTO findById(Long id) {
-        return MeiaResponseDTO.valueof(repository.findById(id));
+        Meia meia = repository.findById(id);
+        if(meia != null)
+            return MeiaResponseDTO.valueof(meia);
+        return null;
     }
 
     @Override
     public List<MeiaResponseDTO> findByNome(String nome) {
-        return repository.findByNome(nome)
+        List<MeiaResponseDTO> lista = repository.findByNome(nome)
         .stream()
         .map(e -> MeiaResponseDTO.valueof(e)).toList();
+
+        if(lista.size() != 0)
+            return lista;
+        return null;
     }
 }

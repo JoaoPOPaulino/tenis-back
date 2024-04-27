@@ -1,35 +1,34 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
+import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorDTO;
+import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorResponseDTO;
+import br.unitins.joaovittor.basqueteiros.Fornecedor.service.FornecedorService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
-
 @QuarkusTest
-public class CorResourceTest {
+public class FornecedorResourceTest {
     
     @Inject
-    CorService service;
+    FornecedorService service;
 
     @Test
     public void testFindAll(){
 
         given()
         .when()
-            .get("/cores")
+            .get("/fornecedores")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("branco")));
+            .body("nomeEmpresa", hasItem(is("nike")));
 
     }
 
@@ -37,31 +36,32 @@ public class CorResourceTest {
     public void testFindById() {
         given()
         .when()
-            .get("/cores/search/id/1")
+            .get("/fornecedores/search/id/2")
         .then()
             .statusCode(200)
-            .body("id", is(1));
+            .body("telefone", is("888"));
     }
 
     @Test
-    public void testFindByNome(){
+    public void testFindByNomeEmpresa(){
         given()
         .when()
-            .get("/cores/search/nome/p")
+            .get("/fornecedores/search/nome_empresa/nike")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("preto")));
+            .body("telefone", hasItem(is("999")));
     }
 
     @Test
     public void testCreate(){
-        CorDTO dto = new CorDTO("cinza");
+        
+        FornecedorDTO dto = new FornecedorDTO("testeNome", "testeempresa@gmail.com", "999999999999", "123");
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .post("/cores")
+            .post("/fornecedores")
         .then()
             .statusCode(200)
             .body("id", is(3));
@@ -69,30 +69,34 @@ public class CorResourceTest {
 
     @Test
     public void testUpdate(){
-        CorDTO dto = new CorDTO("amarelo");
+        
+        FornecedorDTO dto = new FornecedorDTO("update", "testeempresaupdate@gmail.com", "999999999999", "123");
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .put("/cores/3")
+            .put("/fornecedores/3")
         .then()
             .statusCode(204);
     }
 
     @Test
     public void testDelete(){
-        
-        CorResponseDTO response = service.create(new CorDTO("vermelho"));
+
+        FornecedorDTO dto = new FornecedorDTO("testeDelet", "testeDelet@gmail.com", "999999999999", "123");
+
+        FornecedorResponseDTO response = service.create(dto);
 
         given()
         .when()
             .pathParam("id", response.id())
-            .delete("/cores/{id}")
+            .delete("/fornecedores/{id}")
         .then()
             .statusCode(204);
 
         service.delete(response.id());
         assertNull(service.findById(response.id()));
     }
+
 }

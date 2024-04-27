@@ -13,6 +13,6 @@ public interface FornecedorService {
     public boolean delete(Long id);
     public List<FornecedorResponseDTO> findAll();
     public FornecedorResponseDTO findById(Long id);
-    public List<FornecedorResponseDTO> findByNome(String nome);
+    public List<FornecedorResponseDTO> findByNomeEmpresa(String nome);
 
 } 

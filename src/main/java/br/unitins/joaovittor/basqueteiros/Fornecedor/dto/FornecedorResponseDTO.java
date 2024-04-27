@@ -6,7 +6,7 @@ import br.unitins.joaovittor.basqueteiros.Fornecedor.model.Fornecedor;
 
 public record FornecedorResponseDTO (
     Long id,
-    String nome,
+    String nomeEmpresa,
     String cnpj,
     String email,
     String telefone,

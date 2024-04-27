@@ -57,8 +57,8 @@ public class MarcaResource {
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome( @PathParam("nome") String nome){
-        service.findByNome(nome);
-        return Response.status(Status.OK).build();
+        
+        return Response.ok(service.findByNome(nome)).build();
     }
 
 }

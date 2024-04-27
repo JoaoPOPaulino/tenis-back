@@ -1,35 +1,34 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
+import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioDTO;
+import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
+import br.unitins.joaovittor.basqueteiros.Usuario.service.UsuarioService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
-
 @QuarkusTest
-public class CorResourceTest {
+public class UsuarioResourceTest {
     
     @Inject
-    CorService service;
+    UsuarioService service;
 
     @Test
     public void testFindAll(){
 
         given()
         .when()
-            .get("/cores")
+            .get("/usuarios")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("branco")));
+            .body("login", hasItem(is("joo")));
 
     }
 
@@ -37,45 +36,52 @@ public class CorResourceTest {
     public void testFindById() {
         given()
         .when()
-            .get("/cores/search/id/1")
+            .get("/usuarios/search/id/2")
         .then()
             .statusCode(200)
-            .body("id", is(1));
+            .body("cpf", is("999.999.999-99"));
     }
 
     @Test
     public void testFindByNome(){
         given()
         .when()
-            .get("/cores/search/nome/p")
+            .get("/usuarios/search/nome/j")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("preto")));
+            .body("login", hasItem(is("joo")));
     }
 
     @Test
     public void testCreate(){
-        CorDTO dto = new CorDTO("cinza");
+
+        UsuarioDTO dto = new UsuarioDTO(
+        "teste", "test",
+        "teste@gmail.com", "000",
+        "555.555.555-00", 5, 5, 1955);
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .post("/cores")
+            .post("/usuarios")
         .then()
             .statusCode(200)
-            .body("id", is(3));
+            .body("id", is(4));
     }
 
     @Test
     public void testUpdate(){
-        CorDTO dto = new CorDTO("amarelo");
+        UsuarioDTO dto = new UsuarioDTO(
+        "teste2", "test2",
+        "teste2@gmail.com", "000",
+        "555.555.555-10", 10, 10, 1985);
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .put("/cores/3")
+            .put("/usuarios/4")
         .then()
             .statusCode(204);
     }
@@ -83,12 +89,15 @@ public class CorResourceTest {
     @Test
     public void testDelete(){
         
-        CorResponseDTO response = service.create(new CorDTO("vermelho"));
+        UsuarioResponseDTO response = service.create(new UsuarioDTO(
+            "teste3", "test3",
+            "teste2@gmail.com", "000",
+            "555.555.555-30", 20, 5, 2020));
 
         given()
         .when()
             .pathParam("id", response.id())
-            .delete("/cores/{id}")
+            .delete("/usuarios/{id}")
         .then()
             .statusCode(204);
 

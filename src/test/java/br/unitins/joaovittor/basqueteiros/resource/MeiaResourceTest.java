@@ -1,35 +1,34 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
+import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaDTO;
+import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaResponseDTO;
+import br.unitins.joaovittor.basqueteiros.Meia.service.MeiaService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasItem;
-
 @QuarkusTest
-public class CorResourceTest {
+public class MeiaResourceTest {
     
     @Inject
-    CorService service;
+    MeiaService service;
 
     @Test
     public void testFindAll(){
 
         given()
         .when()
-            .get("/cores")
+            .get("/meias")
         .then()
             .statusCode(200)
-            .body("nome", hasItem(is("branco")));
+            .body("id", not(2));
 
     }
 
@@ -37,58 +36,61 @@ public class CorResourceTest {
     public void testFindById() {
         given()
         .when()
-            .get("/cores/search/id/1")
+            .get("/meias/search/id/1")
+        .then()
+            .statusCode(404);
+    }
+
+    @Test
+    public void testFindByNome() {
+        given()
+        .when()
+            .get("/meias/search/nome/teste")
+        .then()
+            .statusCode(404);
+        
+    }
+
+    @Test
+    public void testCreate(){
+
+        MeiaDTO dto = new MeiaDTO("meiaTeste", "descTeste", 10, 4, 20.0, 80.0, 1l, 2l, 1l);
+
+        given()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(dto)
+        .when()
+            .post("/meias")
         .then()
             .statusCode(200)
             .body("id", is(1));
     }
 
     @Test
-    public void testFindByNome(){
-        given()
-        .when()
-            .get("/cores/search/nome/p")
-        .then()
-            .statusCode(200)
-            .body("nome", hasItem(is("preto")));
-    }
-
-    @Test
-    public void testCreate(){
-        CorDTO dto = new CorDTO("cinza");
-
-        given()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(dto)
-        .when()
-            .post("/cores")
-        .then()
-            .statusCode(200)
-            .body("id", is(3));
-    }
-
-    @Test
     public void testUpdate(){
-        CorDTO dto = new CorDTO("amarelo");
+
+        MeiaDTO dto = new MeiaDTO("meiaTestee", "descTestee", 15, 2, 25.0, 90.0, 2l, 1l, 1l);
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .put("/cores/3")
+            .put("/meias/1")
         .then()
             .statusCode(204);
     }
 
     @Test
     public void testDelete(){
-        
-        CorResponseDTO response = service.create(new CorDTO("vermelho"));
+
+        MeiaDTO dto = new MeiaDTO("meiadoida", "descdoida", 15, 2, 25.0, 90.0, 2l, 1l, 1l);
+
+        MeiaResponseDTO response = service.create(dto);
 
         given()
         .when()
             .pathParam("id", response.id())
-            .delete("/cores/{id}")
+            .delete("/meias/{id}")
         .then()
             .statusCode(204);
 

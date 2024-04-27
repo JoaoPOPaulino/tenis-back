@@ -1,6 +1,8 @@
 package br.unitins.joaovittor.basqueteiros.Meia.resource;
 
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaDTO;
+import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaResponseDTO;
+import br.unitins.joaovittor.basqueteiros.Meia.model.Meia;
 import br.unitins.joaovittor.basqueteiros.Meia.service.MeiaService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -51,12 +53,23 @@ public class MeiaResource {
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
-        return Response.ok(service.findByNome(nome)).build();
+        if(service.findByNome(nome) != null)
+            return Response.ok(service.findByNome(nome)).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/search/id/{id}")
     public Response findById(@PathParam("id") long id){
-        return Response.ok(service.findById(id)).build();
+        MeiaResponseDTO response = service.findById(id);
+        if(response != null)
+            return Response.ok(response).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
+
+    // Novos (fazer test unit)
+    // find by descricao
+    // find by fornecedor (id)
+    // find by marca (id)
+    // find by cor (id)
 }

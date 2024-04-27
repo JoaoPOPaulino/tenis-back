@@ -84,7 +84,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponseDTO findById(Long id) { 
-        return UsuarioResponseDTO.valueof(repository.findById(id));
+        Usuario usuario = repository.findById(id);
+        if(usuario != null)
+            return UsuarioResponseDTO.valueof(usuario);
+        return null;
     }
 
     @Override

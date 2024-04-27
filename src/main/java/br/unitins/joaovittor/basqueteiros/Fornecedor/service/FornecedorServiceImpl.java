@@ -25,9 +25,9 @@ public class FornecedorServiceImpl implements FornecedorService{
 
         // ta dando erro ao cadastrar
 
-        verificarNome(dto.nome());
+        verificarNome(dto.nomeEmpresa());
 
-        fornecedor.setNomeEmpresa(dto.nome());
+        fornecedor.setNomeEmpresa(dto.nomeEmpresa());
         fornecedor.setEmail(dto.email());
         fornecedor.setTelefone(dto.telefone());
 
@@ -36,10 +36,10 @@ public class FornecedorServiceImpl implements FornecedorService{
         return FornecedorResponseDTO.valueof(fornecedor);
     }
 
-    public void verificarNome(String nome){
-        Fornecedor fornecedor = repository.findByNomeCompleto(nome);
+    public void verificarNome(String nomeEmpresa){
+        Fornecedor fornecedor = repository.findByNomeEmpresaCompleto(nomeEmpresa);
         if(fornecedor != null)
-            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
+            throw new ValidationException("nome", "O nome '"+nomeEmpresa+"' ja existe");
     }
 
     @Override
@@ -47,7 +47,7 @@ public class FornecedorServiceImpl implements FornecedorService{
     public void update(Long id, FornecedorDTO dto) {
         Fornecedor fornecedor = repository.findById(id);
 
-        fornecedor.setNomeEmpresa(dto.nome());
+        fornecedor.setNomeEmpresa(dto.nomeEmpresa());
         fornecedor.setEmail(dto.email());
         fornecedor.setTelefone(dto.telefone());
     }
@@ -67,14 +67,22 @@ public class FornecedorServiceImpl implements FornecedorService{
 
     @Override
     public FornecedorResponseDTO findById(Long id) {
-        return FornecedorResponseDTO.valueof(repository.findById(id));
+        Fornecedor fornecedor = repository.findById(id);
+        if(fornecedor != null)
+            return FornecedorResponseDTO.valueof(fornecedor);
+        return null;
     }
 
     @Override
-    public List<FornecedorResponseDTO> findByNome(String nome) {
-        return repository.findByNome(nome)
+    public List<FornecedorResponseDTO> findByNomeEmpresa(String nomeEmpresa) {
+
+        List<FornecedorResponseDTO> lista = repository.findByNomeEmpresa(nomeEmpresa)
         .stream()
         .map(e -> FornecedorResponseDTO.valueof(e)).toList();
+
+        if(lista.size() != 0)
+            return lista;
+        return null;
     }
     
 }

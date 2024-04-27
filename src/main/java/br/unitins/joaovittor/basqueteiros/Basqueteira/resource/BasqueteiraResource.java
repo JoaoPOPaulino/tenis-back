@@ -55,13 +55,17 @@ public class BasqueteiraResource {
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
-        return Response.ok(service.findByNome(nome)).build();
+        if(service.findByNome(nome) != null)
+            return Response.ok(service.findByNome(nome)).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") long id){
-        return Response.ok(service.findById(id)).build();
+        if(service.findById(id) != null)
+            return Response.ok(service.findById(id)).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
 }

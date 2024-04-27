@@ -29,10 +29,10 @@ values
 ('preto', CURRENT_DATE),
 ('branco', CURRENT_DATE);
 
-insert into meia(descricao, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca, id_cor)
-values
-("meia nike", "pares de meias da nike", 10, 50.00, 109.99, 1, 2, 2),
-("meia adidas", "pares de meias da adidas", 10, 45.00, 99.99, 2, 1, 2);
+-- insert into meia(descricao, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca, id_cor)
+-- values
+-- ("meia nike", "pares de meias da nike", 10, 50.00, 109.99, 1, 2, 2),
+-- ("meia adidas", "pares de meias da adidas", 10, 45.00, 99.99, 2, 1, 2);
 
 -- insert into basqueteira(nome, descricao, peso, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca, id_tamanho)
 -- values
@@ -42,7 +42,7 @@ values
 
 -- insert into produto (nome, descricao, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca)
 -- values 
---    ('Nike Air Max', 'Tênis de corrida Nike Air Max', 50, 150.00, 250.00, 1, 2),
+-- ('Nike Air Max', 'Tênis de corrida Nike Air Max', 50, 150.00, 250.00, 1, 2),
 --    ('Nike Air Force 1', 'Tênis casual Nike Air Force 1', 40, 120.00, 200.00, 1, 2),
 --    ('Nike Dri-FIT', 'Camiseta Nike Dri-FIT', 30, 25.00, 50.00, 1, 2),
 --    ('Nike Tech Fleece', 'Moletom Nike Tech Fleece', 20, 80.00, 150.00, 1, 2),
@@ -53,4 +53,4 @@ values
 --    ('Adidas Essentials Tee', 'Camiseta Adidas Essentials', 25, 20.00, 40.00, 2, 1),
 --    ('Adidas Originals Hoodie', 'Moletom Adidas Originals', 18, 70.00, 130.00, 2, 1),
 --    ('Adidas Classic Backpack', 'Mochila Adidas Classic', 12, 40.00, 90.00, 2, 1),
---    ('Adidas 3-Stripes Shorts', 'Shorts Adidas 3-Stripes', 30, 25.00, 50.00, 2, 1);
+-- ('Adidas 3-Stripes Shorts', 'Shorts Adidas 3-Stripes', 30, 25.00, 50.00, 2, 1);

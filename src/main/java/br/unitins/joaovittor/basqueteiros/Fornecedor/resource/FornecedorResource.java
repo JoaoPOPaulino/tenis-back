@@ -49,15 +49,22 @@ public class FornecedorResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/search/id/{id}")
     public Response findById(@PathParam("id") Long id){
-        return Response.ok(service.findById(id)).build();
+        if(service.findById(id) != null)
+            return Response.ok(service.findById(id)).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @GET
-    @Path("/search/nome/{nome}")
-    public Response findByNome(@PathParam("nome") String nome) {
-        return Response.ok(service.findByNome(nome)).build();
+    @Path("/search/nome_empresa/{nome_empresa}")
+    public Response findByNome(@PathParam("nome_empresa") String nomeEmpresa) {
+        if(service.findByNomeEmpresa(nomeEmpresa) != null)
+            return Response.ok(service.findByNomeEmpresa(nomeEmpresa)).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
+
+    // novos
+    // find by cnpj
 
 }

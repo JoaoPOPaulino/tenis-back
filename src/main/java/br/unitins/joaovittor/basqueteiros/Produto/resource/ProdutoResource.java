@@ -1,6 +1,9 @@
 package br.unitins.joaovittor.basqueteiros.Produto.resource;
 
+import java.util.List;
+
 import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoDTO;
+import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.service.ProdutoService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -36,7 +39,10 @@ public class ProdutoResource {
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
-        return Response.ok(service.findByNome(nome)).build();
+        List<ProdutoResponseDTO> lista = service.findByNome(nome);
+        if(lista != null)
+            return Response.ok(lista).build();
+        return Response.status(Status.NOT_FOUND).build();
     }
 
     @GET
@@ -59,5 +65,10 @@ public class ProdutoResource {
             return Response.status(Status.NO_CONTENT).build();
         return Response.status(Status.NOT_FOUND).build();
     }
+
+    // Novos (fazer test unit):
+    // find by descricao
+    // find by fornecedor (id)
+    // find by marca (id)
 
 }
