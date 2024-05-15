@@ -13,6 +13,6 @@ public interface UsuarioService {
     public boolean delete(Long id);
     public List<UsuarioResponseDTO> findAll();
     public UsuarioResponseDTO findById(Long id);
-    public List<UsuarioResponseDTO> findByNome(String nome);
+    public UsuarioResponseDTO findByUsername(String nome);
     
 }

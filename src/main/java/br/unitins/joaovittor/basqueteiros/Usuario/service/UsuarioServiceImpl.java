@@ -1,6 +1,5 @@
 package br.unitins.joaovittor.basqueteiros.Usuario.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioDTO;
@@ -25,35 +24,21 @@ public class UsuarioServiceImpl implements UsuarioService {
         
         Usuario usuario = new Usuario();
 
-        verificarLogin(dto.login());
+        verificarUsername(dto.username());
 
-        usuario.setNome(dto.nome());
-        usuario.setLogin(dto.login());
-        usuario.setEmail(dto.email());
-        usuario.setCpf(dto.cpf());
-        usuario.setTelefone(dto.telefone());
-        usuario.setDataNascimento(LocalDate.of(dto.anoAniv(), dto.mesAniv(), dto.diaAniv()));
-
+        usuario.setUsername(dto.username());
+        usuario.setPassword(dto.password());
+        
         repository.persist(usuario);
         return UsuarioResponseDTO.valueof(usuario);
     }
 
-    // metodo nao da certo pois da erro do servidor
-    // por estar definido como "unique" no model
-    // "como eu mudo o erro de 500 p 400?"
+    // testar p ver se unique(jpa) vem antes ou o method verificar
 
-    /*
-    public void verificarCpf(String cpf){
-        Usuario usuario = repository.findByCpf(cpf);
-        if(usuario != null)
-            throw new ValidationException("cpf", "O CPF '"+cpf+"' ja existe");
-    }
-    */
-
-    public void verificarLogin(String login){
-        Usuario u = repository.findByLoginCompleto(login);
+    public void verificarUsername(String login){
+        Usuario u = repository.findByUsername(login);
         if(u != null)
-        throw new ValidationException("login", "O login '"+login+"' ja existe");
+            throw new ValidationException("login", "O login '"+login+"' ja existe");
     }
 
     @Override
@@ -67,12 +52,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     public void update(Long id, UsuarioDTO dto) {
         Usuario usuario = repository.findById(id);
 
-        usuario.setNome(dto.nome());
-        usuario.setLogin(dto.login());
-        usuario.setEmail(dto.email());
-        usuario.setCpf(dto.cpf());
-        usuario.setTelefone(dto.telefone());
-        usuario.setDataNascimento(LocalDate.of(dto.anoAniv(), dto.mesAniv(), dto.diaAniv()));
+        usuario.setUsername(dto.username());
+        usuario.setPassword(dto.password());
     }
 
     @Override
@@ -91,10 +72,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<UsuarioResponseDTO> findByNome(String nome) {
-        return repository.findByNome(nome)
-                                .stream()
-                                .map(e -> UsuarioResponseDTO.valueof(e)).toList();
+    public UsuarioResponseDTO findByUsername(String username) {
+        return UsuarioResponseDTO.valueof(repository.findByUsername(username));
     }
     
 

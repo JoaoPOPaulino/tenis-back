@@ -1,27 +1,25 @@
 package br.unitins.joaovittor.basqueteiros.Usuario.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import br.unitins.joaovittor.basqueteiros.Usuario.model.Usuario;
 
 public record UsuarioResponseDTO (
     Long id,
-    String nome,
-    String login,
-    String email,
-    String telefone,
-    String cpf,
-    LocalDate dataNascimento
+    String username,
+    String password,
+    LocalDateTime dataCadastro,
+    LocalDateTime dataAlteracao
 ){
     
     public static UsuarioResponseDTO valueof(Usuario usuario){
-        return new UsuarioResponseDTO(usuario.getId(),
-            usuario.getNome(),
-            usuario.getLogin(),
-            usuario.getEmail(),
-            usuario.getTelefone(),
-            usuario.getCpf(),
-            usuario.getDataNascimento());
+        return new UsuarioResponseDTO(
+            usuario.getId(),
+            usuario.getUsername(),
+            usuario.getPassword(),
+            usuario.getDataCadastro(),
+            usuario.getDataAlteracao()
+        );
     }
 
 }
