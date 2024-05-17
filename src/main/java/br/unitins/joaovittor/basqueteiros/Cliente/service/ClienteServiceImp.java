@@ -139,6 +139,10 @@ public class ClienteServiceImp implements ClienteService {
     @Override
     public UsuarioResponseDTO login(String username, String senha) {
         Cliente cliente = repository.findByUsernameAndSenha(username, senha);
-        return UsuarioResponseDTO.valueof(cliente.getPessoaFisica());
+
+        // verificar se existe ou não
+        if(cliente != null)
+            return UsuarioResponseDTO.valueof(cliente.getPessoaFisica());
+        return null;
     }
 }

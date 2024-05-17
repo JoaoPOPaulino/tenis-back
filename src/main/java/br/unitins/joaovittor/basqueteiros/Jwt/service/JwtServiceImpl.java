@@ -22,7 +22,7 @@ public class JwtServiceImpl implements JwtService{
         Set<String> roles = new HashSet<String>();
         roles.add("Cliente");
 
-        return Jwt.issuer("teste-jwt")
+        return Jwt.issuer("basqueteiros-jwt")
             .subject(dto.username())
             .groups(roles)
             .expiresAt(expiryDate)

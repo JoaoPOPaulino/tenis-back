@@ -54,3 +54,15 @@ values
 --    ('Adidas Originals Hoodie', 'Moletom Adidas Originals', 18, 70.00, 130.00, 2, 1),
 --    ('Adidas Classic Backpack', 'Mochila Adidas Classic', 12, 40.00, 90.00, 2, 1),
 -- ('Adidas 3-Stripes Shorts', 'Shorts Adidas 3-Stripes', 30, 25.00, 50.00, 2, 1);
+
+insert into usuario (username, `password`) 
+values ('joao', 'Z7dL+3VaMV++fdWH0b8S3NV26muviRKuWXNk5ayr2RVBF9BE8tMorc/G7NB1P51lHzLhjc7irjXu+Q5f3T997w==');
+
+insert into pessoafisica (cpf, nome, telefone, data_nascimento, id_usuario)
+values ('999.999.999-00','João Víttor O','(99)9999-9999', CURRENT_DATE, 1);
+
+insert into cliente (saldo, id_pessoa_fisica)
+values (1000.00, 1);
+
+insert into endereco (cep, rua, complemento, id_cliente)
+values ('77001-000', 'Com asfalto', 'casa 2', 1);
