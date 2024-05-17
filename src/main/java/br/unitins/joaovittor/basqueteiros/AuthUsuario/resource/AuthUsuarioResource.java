@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.AuthUsuario.resource;
 
 import br.unitins.joaovittor.basqueteiros.AuthUsuario.dto.AuthUsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.Cliente.service.ClienteService;
+import br.unitins.joaovittor.basqueteiros.Funcionario.service.FuncionarioService;
 import br.unitins.joaovittor.basqueteiros.Hash.service.HashService;
 import br.unitins.joaovittor.basqueteiros.Jwt.service.JwtService;
 import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
@@ -23,6 +24,9 @@ public class AuthUsuarioResource {
     public ClienteService clienteService;
 
     @Inject
+    public FuncionarioService funcionarioService;
+
+    @Inject
     public HashService hashService;
 
     @Inject
@@ -39,13 +43,13 @@ public class AuthUsuarioResource {
             usuario = clienteService.login(dto.username(), hashSenha);
         } else if (dto.perfil() == 2){
             // funcionario
-            return Response.status(Status.NOT_IMPLEMENTED).build();
+            usuario = funcionarioService.login(dto.username(), hashSenha);
         } else {
-            return Response.status(Status.NOT_FOUND).build();
+            return Response.status(Status.NOT_FOUND).header("Perfil", "perfis existentes: 1-cliente | 2-funcionario").build();
         }
 
         if(usuario != null){
-            return Response.ok(usuario).header("Authorization", jwtService.generateJwt(usuario))
+            return Response.ok(usuario).header("Authorization", jwtService.generateJwt(dto, usuario))
         .status(Status.CREATED)
         .build();
         } else {

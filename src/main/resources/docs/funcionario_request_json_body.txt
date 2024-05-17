@@ -1,0 +1,14 @@
+{
+  "nome": "Ronaldo",
+  "telefone": "(00)0000-0000",
+  "diaNasc": 10,
+  "mesNasc": 5,
+  "anoNasc": 1975,
+  "cpf": "000.111.222-33",
+  "username": "rona",
+  "senha": "pao123",
+  "codigoContrato": "PJ#0001",
+  "diaAdmissao": 1,
+  "mesAdmissao": 2,
+  "anoAdmissao": 2023
+}

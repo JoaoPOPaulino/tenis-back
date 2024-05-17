@@ -10,7 +10,7 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class PessoaFisica extends Pessoa{
     
-    @Column(name = "cpf", unique = true)
+    @Column(name = "cpf", unique = true, nullable = false)
     private String cpf;
 
     @OneToOne

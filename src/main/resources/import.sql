@@ -55,6 +55,8 @@ values
 --    ('Adidas Classic Backpack', 'Mochila Adidas Classic', 12, 40.00, 90.00, 2, 1),
 -- ('Adidas 3-Stripes Shorts', 'Shorts Adidas 3-Stripes', 30, 25.00, 50.00, 2, 1);
 
+
+-- ADICIONANDO CLIENTE
 insert into usuario (username, `password`) 
 values ('joao', 'Z7dL+3VaMV++fdWH0b8S3NV26muviRKuWXNk5ayr2RVBF9BE8tMorc/G7NB1P51lHzLhjc7irjXu+Q5f3T997w==');
 
@@ -66,3 +68,13 @@ values (1000.00, 1);
 
 insert into endereco (cep, rua, complemento, id_cliente)
 values ('77001-000', 'Com asfalto', 'casa 2', 1);
+
+-- ADICIONANDO FUNCIONARIO
+insert into usuario (username, `password`) 
+values ('rona', 'xMjCHZuQU+YIM0rmuq63vX4UgfwSDSsKE+9a+njtZWkjyD9dE9q6eZP7S5DMoRKXICJ//q4op6+AUmEVeMzkyw==');
+
+insert into pessoafisica (cpf, nome, telefone, data_nascimento, id_usuario)
+values ('000.111.222-33','Ronaldo','(00)0000-0000', CURRENT_DATE, 2);
+
+insert into funcionario(codigo_contrato, data_admissao, id_pessoa_fisica)
+values ('PJ#0001', CURRENT_DATE, 2);
