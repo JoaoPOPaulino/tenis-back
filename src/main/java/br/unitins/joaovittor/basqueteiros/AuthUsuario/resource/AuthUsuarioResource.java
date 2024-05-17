@@ -43,8 +43,14 @@ public class AuthUsuarioResource {
         } else {
             return Response.status(Status.NOT_FOUND).build();
         }
-        return Response.ok(usuario).header("Authorization", jwtService.generateJwt(usuario))
+
+        if(usuario != null){
+            return Response.ok(usuario).header("Authorization", jwtService.generateJwt(usuario))
         .status(Status.CREATED)
         .build();
+        } else {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+        
     }
 }
