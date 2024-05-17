@@ -2,23 +2,23 @@ package br.unitins.joaovittor.basqueteiros.Usuario.dto;
 
 import java.time.LocalDateTime;
 
-import br.unitins.joaovittor.basqueteiros.Usuario.model.Usuario;
+import br.unitins.joaovittor.basqueteiros.PessoaFisica.model.PessoaFisica;
 
 public record UsuarioResponseDTO (
     Long id,
     String username,
-    String password,
+    String nome,
     LocalDateTime dataCadastro,
     LocalDateTime dataAlteracao
 ){
     
-    public static UsuarioResponseDTO valueof(Usuario usuario){
+    public static UsuarioResponseDTO valueof(PessoaFisica pf){
         return new UsuarioResponseDTO(
-            usuario.getId(),
-            usuario.getUsername(),
-            usuario.getPassword(),
-            usuario.getDataCadastro(),
-            usuario.getDataAlteracao()
+            pf.getId(),
+            pf.getUsuario().getUsername(),
+            pf.getNome(),
+            pf.getDataCadastro(),
+            pf.getDataAlteracao()
         );
     }
 

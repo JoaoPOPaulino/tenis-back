@@ -4,6 +4,7 @@ import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.Cliente.dto.ClienteDTO;
 import br.unitins.joaovittor.basqueteiros.Cliente.dto.ClienteResponseDTO;
+import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
 import jakarta.validation.Valid;
 
 public interface ClienteService {
@@ -16,4 +17,5 @@ public interface ClienteService {
     public List<ClienteResponseDTO> findByNome(String nome);
     public ClienteResponseDTO findByUsername(String username);
     public ClienteResponseDTO findByCpf(String cpf);
+    public UsuarioResponseDTO login(String username, String hashSenha);
 }

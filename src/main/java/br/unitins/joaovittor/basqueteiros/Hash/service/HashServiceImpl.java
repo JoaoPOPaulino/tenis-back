@@ -13,7 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class HashServiceImpl implements HashService {
 
     // sequencia aleatória a ser adicionada na senha
-    private String salt = "#blahxyz17";
+    private String salt = "it##4r0f0d411";
     // contagem de iteracoes
     private Integer iterationCount = 405;
     // comprimento do hash em bits

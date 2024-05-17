@@ -13,6 +13,7 @@ import br.unitins.joaovittor.basqueteiros.Endereco.model.Endereco;
 import br.unitins.joaovittor.basqueteiros.Hash.service.HashService;
 import br.unitins.joaovittor.basqueteiros.PessoaFisica.model.PessoaFisica;
 import br.unitins.joaovittor.basqueteiros.PessoaFisica.repository.PessoaFisicaRepository;
+import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Usuario.model.Usuario;
 import br.unitins.joaovittor.basqueteiros.Usuario.repository.UsuarioRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -90,6 +91,7 @@ public class ClienteServiceImp implements ClienteService {
         
     }
 
+    @Transactional // tive que abrir transactional p funcinar (???)
     @Override
     public List<ClienteResponseDTO> findAll() {
         return repository.findAll()
@@ -132,5 +134,11 @@ public class ClienteServiceImp implements ClienteService {
         if(cliente != null)
             return ClienteResponseDTO.valueof(cliente);
         return null;       
+    }
+
+    @Override
+    public UsuarioResponseDTO login(String username, String senha) {
+        Cliente cliente = repository.findByUsernameAndSenha(username, senha);
+        return UsuarioResponseDTO.valueof(cliente.getPessoaFisica());
     }
 }
