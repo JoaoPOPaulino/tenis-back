@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.Cor.resource;
 
 import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
 import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -44,11 +45,13 @@ public class CorResource {
     }
 
     @GET
+    @RolesAllowed("Cliente")
     public Response findAll(){
         return Response.ok(service.findAll()).build();
     }
 
     @GET
+    @RolesAllowed("Funcionario")
     @Path("/search/id/{id}")
     public Response findById( @PathParam("id") Long id){
         return Response.ok(service.findById(id)).build();
