@@ -5,10 +5,13 @@ import br.unitins.joaovittor.basqueteiros.Fornecedor.model.Fornecedor;
 import br.unitins.joaovittor.basqueteiros.Marca.model.Marca;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Produto extends DefaultEntity{
     
     @Column(name = "nome")

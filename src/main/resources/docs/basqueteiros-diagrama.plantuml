@@ -103,7 +103,7 @@ class Produto{
 Pedido "*" -left-> "1" Cliente
 Pedido "1" *--> "*" ItemPedido
 
-ItemPedido "*" --> "*" Produto
+ItemPedido "*" --> "1" Produto
 
 Basqueteira "*" *--> "1" TamanhoCano
 Basqueteira "*" *--> "1" Tamanho
