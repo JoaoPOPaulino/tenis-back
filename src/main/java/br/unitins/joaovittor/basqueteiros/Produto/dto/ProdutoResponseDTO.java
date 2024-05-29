@@ -11,6 +11,7 @@ public record ProdutoResponseDTO(
     int quantidade,
     Double precoCompra,
     Double precoVenda,
+    String nomeImagem,
     FornecedorResponseDTO fornecedor,
     MarcaResponseDTO marca
 ) {
@@ -22,6 +23,7 @@ public record ProdutoResponseDTO(
             produto.getQuantidade(), 
             produto.getPrecoCompra(), 
             produto.getPrecoVenda(), 
+            produto.getNomeImagem(),
             FornecedorResponseDTO.valueof(produto.getFornecedor()),
             MarcaResponseDTO.valueof(produto.getMarca())
         );

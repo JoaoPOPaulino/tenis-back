@@ -14,6 +14,8 @@ import jakarta.persistence.ManyToOne;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Produto extends DefaultEntity{
     
+    private String nomeImagem;
+
     @Column(name = "nome")
     private String nome;
 
@@ -91,6 +93,14 @@ public class Produto extends DefaultEntity{
 
     public void setMarca(Marca marca) {
         this.marca = marca;
+    }
+
+    public String getNomeImagem() {
+        return nomeImagem;
+    }
+
+    public void setNomeImagem(String nomeImagem) {
+        this.nomeImagem = nomeImagem;
     }
 
 }
