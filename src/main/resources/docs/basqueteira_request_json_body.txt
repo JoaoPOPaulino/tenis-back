@@ -1,0 +1,12 @@
+{
+  "nome": "tenis legal",
+  "descricao": "mt top",
+  "peso": 120,
+  "idTamanhoCano": 1,
+  "quantidade": 20,
+  "precoCompra": 10,
+  "precoVenda": 100,
+  "idFornecedor": 1,
+  "idMarca": 2,
+  "idTamanho": 2
+}

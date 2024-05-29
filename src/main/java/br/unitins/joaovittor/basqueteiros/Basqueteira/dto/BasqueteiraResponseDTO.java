@@ -1,5 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.Basqueteira.dto;
 
+import java.time.LocalDateTime;
+
 import br.unitins.joaovittor.basqueteiros.Basqueteira.model.Basqueteira;
 import br.unitins.joaovittor.basqueteiros.EnumTamanhoCano.model.TamanhoCano;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorResponseDTO;
@@ -15,6 +17,8 @@ public record BasqueteiraResponseDTO(
     int quantidade,
     Double precoCompra,
     Double precoVenda,
+    LocalDateTime dataCadastro,
+    LocalDateTime dataAlteracao,
     FornecedorResponseDTO fornecedor,
     MarcaResponseDTO marca,
     TamanhoResponseDTO tamanho
@@ -28,6 +32,8 @@ public record BasqueteiraResponseDTO(
         basqueteira.getQuantidade(), 
         basqueteira.getPrecoCompra(), 
         basqueteira.getPrecoVenda(), 
+        basqueteira.getDataCadastro(),
+        basqueteira.getDataAlteracao(),
         FornecedorResponseDTO.valueof(basqueteira.getFornecedor()), 
         MarcaResponseDTO.valueof(basqueteira.getMarca()), 
         TamanhoResponseDTO.valueof(basqueteira.getTamanho()));

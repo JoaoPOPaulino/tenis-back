@@ -1,0 +1,17 @@
+{
+  "idCliente": 1,
+  "itens": [
+    {
+      "preco": 10,
+      "desconto": 10,
+      "quantidade": 15,
+      "idProduto": 1
+    },
+    {
+      "preco": 20,
+      "desconto": 20,
+      "quantidade": 10,
+      "idProduto": 2
+    }
+  ]
+}

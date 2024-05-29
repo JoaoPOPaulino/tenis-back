@@ -1,0 +1,11 @@
+{
+  "nome": "meia",
+  "descricao": "meiaaa",
+  "quantidade": 20,
+  "qtdPares": 4,
+  "precoCompra": 40,
+  "precoVenda": 80,
+  "idFornecedor": 1,
+  "idMarca": 2,
+  "idCor": 1
+}

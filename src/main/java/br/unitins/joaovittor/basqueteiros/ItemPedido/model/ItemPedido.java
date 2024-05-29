@@ -3,6 +3,7 @@ package br.unitins.joaovittor.basqueteiros.ItemPedido.model;
 import br.unitins.joaovittor.basqueteiros.DefaultEntity.model.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.Produto.model.Produto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -13,6 +14,7 @@ public class ItemPedido extends DefaultEntity{
     private Integer quantidade;
 
     @ManyToOne
+    @JoinColumn(name = "id_produto")
     private Produto produto;
 
     public Double getValor() {

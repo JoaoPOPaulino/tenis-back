@@ -15,7 +15,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Pedido extends DefaultEntity{
     
-    // private Pagamento p;
+    // Implementar pagamento
 
     private LocalDateTime data;
 
@@ -28,6 +28,22 @@ public class Pedido extends DefaultEntity{
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_pedido")
     private List<ItemPedido> itens;
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemPedido> itens) {
+        this.itens = itens;
+    }
 
     public LocalDateTime getData() {
         return data;
