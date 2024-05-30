@@ -2,13 +2,13 @@ package br.unitins.joaovittor.basqueteiros.Produto.resource;
 
 import java.util.List;
 
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+// import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.service.ProdutoFileServiceImpl;
 import br.unitins.joaovittor.basqueteiros.Produto.service.ProdutoService;
-import br.unitins.joaovittor.basqueteiros.form.ImageForm;
+// import br.unitins.joaovittor.basqueteiros.form.ImageForm;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -31,8 +31,8 @@ public class ProdutoResource {
     @Inject
     public ProdutoService service;
 
-    @Inject
-    public ProdutoFileServiceImpl fileService;
+    // @Inject
+    // public ProdutoFileServiceImpl fileService;
 
     @POST
     public Response create(ProdutoDTO dto){
@@ -74,20 +74,20 @@ public class ProdutoResource {
         return Response.status(Status.NOT_FOUND).build();
     }
 
-    @PATCH
-    @Path("/{id}/image/upload")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response upload(@PathParam("id") Long id, @MultipartForm ImageForm form) {
-        fileService.upload(id, form.getNomeImagem(), form.getImagem());
-        return Response.noContent().build();
-    }
+    // @PATCH
+    // @Path("/{id}/image/upload")
+    // @Consumes(MediaType.MULTIPART_FORM_DATA)
+    // public Response upload(@PathParam("id") Long id, @MultipartForm ImageForm form) {
+    //     fileService.upload(id, form.getNomeImagem(), form.getImagem());
+    //     return Response.noContent().build();
+    // }
 
-    @GET
-    @Path("/image/download/{nomeImagem}")
-    public Response download(@PathParam("nomeImagem") String nomeImagem) {
-        return Response.ok(fileService.download(nomeImagem))
-               .header("Content-Disposition", "attachment;filename=" + nomeImagem).build();
-    }
+    // @GET
+    // @Path("/image/download/{nomeImagem}")
+    // public Response download(@PathParam("nomeImagem") String nomeImagem) {
+    //     return Response.ok(fileService.download(nomeImagem))
+    //            .header("Content-Disposition", "attachment;filename=" + nomeImagem).build();
+    // }
 
     // Novos (fazer test unit):
     // find by descricao
