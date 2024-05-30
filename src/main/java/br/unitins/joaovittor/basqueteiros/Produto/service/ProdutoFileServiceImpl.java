@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +17,7 @@ import br.unitins.joaovittor.basqueteiros.Produto.repository.ProdutoRepository;
 import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class ProdutoFileServiceImpl implements FileService{
@@ -21,12 +25,13 @@ public class ProdutoFileServiceImpl implements FileService{
     public final String PATH_USER = System.getProperty("user.home")
                                     + File.separator + "quarkus"
                                     + File.separator + "images"
-                                    + File.separator + "psicologo" + File.separator;
+                                    + File.separator + "produtos" + File.separator;
 
     @Inject
     public ProdutoRepository produtoRepository;
 
     @Override
+    @Transactional
     public void upload(Long id, String nomeImagem, byte[] imagem) {
         Produto produto = produtoRepository.findById(id);
         try {
@@ -59,7 +64,10 @@ public class ProdutoFileServiceImpl implements FileService{
             diretorio.mkdirs();
 
         // gerar nome do arquivo 
-        String nomeArquivo = UUID.randomUUID() 
+        String nomeArquivo = LocalDateTime.now()
+                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-'T'-HH'h'-mm'm'-ss's'")) 
+                                + "_"
+                                + UUID.randomUUID()
                                 + "." 
                                 + mimeType.substring(mimeType.lastIndexOf("/") + 1);
         String path = PATH_USER + nomeArquivo;
@@ -67,7 +75,7 @@ public class ProdutoFileServiceImpl implements FileService{
         // salvar o arquivo
         File file = new File(path);
         if (file.exists())
-          throw new IOException("Este arquivo ja existe. Programador, tu deve melhorar esse codigo");
+          throw new IOException("Este arquivo ja existe.");
 
         // criar o arquivo no SO
         file.createNewFile();

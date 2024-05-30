@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Produto extends DefaultEntity{
     
+    @Column(name = "nome_imagem")
     private String nomeImagem;
 
     @Column(name = "nome")
