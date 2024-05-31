@@ -11,6 +11,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Path("/pedidos")
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,7 +23,9 @@ public class PedidoResource {
 
     @POST
     public Response create(PedidoDTO dto){
-        return Response.ok(service.create(dto)).build();
+        if(service.create(dto) != null)
+            return Response.ok(service.create(dto)).build(); // nao esta retornando o response :(
+        return Response.status(Status.BAD_REQUEST).header("Quantidade", "Quantidade de produto insuficiente").build();
     }
 
     @GET
