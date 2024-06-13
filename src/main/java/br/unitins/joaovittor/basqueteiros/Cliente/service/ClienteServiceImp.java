@@ -84,7 +84,7 @@ public class ClienteServiceImp implements ClienteService {
             cliente.getListaEndereco().add(end);
         }
 
-        cliente.setSaldo(dto.saldo());
+        cliente.setSaldo(0d);
         cliente.setPessoaFisica(pf);
 
         repository.persist(cliente);
@@ -125,7 +125,7 @@ public class ClienteServiceImp implements ClienteService {
         Cliente cliente = repository.findById(id);
 
         if(cliente != null){
-            cliente.setSaldo(dto.saldo());
+            cliente.setSaldo(0d);
             cliente.setPessoaFisica(pf);
 
             // Assim apagaria a lista antiga:

@@ -25,6 +25,5 @@ public record ClienteDTO(
     String senha,
 
     // Parte Cliente
-    Double saldo,
     List<EnderecoDTO> listaEndereco
 ) {}
