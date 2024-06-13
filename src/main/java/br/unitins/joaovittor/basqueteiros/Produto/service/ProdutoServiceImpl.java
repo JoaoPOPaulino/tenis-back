@@ -57,6 +57,10 @@ public class ProdutoServiceImpl implements ProdutoService{
     public void update(Long id, ProdutoDTO dto) {
         Produto produto = repository.findById(id);
 
+        // o certo é fazer essa verificação ou deixar retornar 200 mesmo se não existir?
+        // pq independentemente, o retorno é null
+        if(produto != null);
+        
         produto.setNome(dto.nome());
         produto.setDescricao(dto.descricao());
         produto.setQuantidade(dto.quantidade());
