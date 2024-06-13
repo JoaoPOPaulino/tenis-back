@@ -24,5 +24,9 @@ public class ClienteRepository implements PanacheRepository<Cliente> {
     public Cliente findByUsernameAndSenha(String username, String senha){
         return find("pessoaFisica.usuario.username = ?1 AND pessoaFisica.usuario.password = ?2", username, senha).firstResult();
     }
+
+    public Cliente findByIdUsuario(Long idUsuario){
+        return find("pessoaFisica.usuario.id = ?1", idUsuario).firstResult();
+    }
     
 }

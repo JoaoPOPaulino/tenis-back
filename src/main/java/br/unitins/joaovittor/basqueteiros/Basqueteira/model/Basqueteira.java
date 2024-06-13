@@ -5,13 +5,10 @@ import br.unitins.joaovittor.basqueteiros.Produto.model.Produto;
 import br.unitins.joaovittor.basqueteiros.Tamanho.model.Tamanho;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-// @Inheritance(strategy = InheritanceType.JOINED)
 public class Basqueteira extends Produto{
     
     @ManyToOne

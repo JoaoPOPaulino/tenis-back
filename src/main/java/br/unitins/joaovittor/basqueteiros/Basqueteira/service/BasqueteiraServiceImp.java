@@ -36,8 +36,6 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
     public BasqueteiraResponseDTO create(@Valid BasqueteiraDTO dto) {
         Basqueteira basqueteira = new Basqueteira();
 
-        verificarNome(dto.nome());
-
         basqueteira.setNome(dto.nome());
         basqueteira.setTamanhoCano(TamanhoCano.valueOf(dto.idTamanhoCano()));
         basqueteira.setDescricao(dto.descricao());
@@ -51,12 +49,6 @@ public class BasqueteiraServiceImp implements BasqueteiraService{
 
         repository.persist(basqueteira);
         return BasqueteiraResponseDTO.valueof(basqueteira);
-    }
-
-    public void verificarNome(String nome){
-        Basqueteira basqueteira = repository.findByNomeCompleto(nome);
-        if(basqueteira != null)
-            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
     }
 
     @Override

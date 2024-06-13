@@ -1,11 +1,16 @@
 package br.unitins.joaovittor.basqueteiros.Funcionario.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import br.unitins.joaovittor.basqueteiros.Funcionario.dto.FuncionarioUsernameUpdateDTO;
+import br.unitins.joaovittor.basqueteiros.Funcionario.model.Funcionario;
+import br.unitins.joaovittor.basqueteiros.Funcionario.dto.FuncionarioPasswordUpdateDTO;
 import br.unitins.joaovittor.basqueteiros.Funcionario.dto.FuncionarioDTO;
 import br.unitins.joaovittor.basqueteiros.Funcionario.dto.FuncionarioResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Funcionario.model.Funcionario;
 import br.unitins.joaovittor.basqueteiros.Funcionario.repository.FuncionarioRepository;
 import br.unitins.joaovittor.basqueteiros.Hash.service.HashService;
 import br.unitins.joaovittor.basqueteiros.PessoaFisica.model.PessoaFisica;
@@ -13,10 +18,12 @@ import br.unitins.joaovittor.basqueteiros.PessoaFisica.repository.PessoaFisicaRe
 import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Usuario.model.Usuario;
 import br.unitins.joaovittor.basqueteiros.Usuario.repository.UsuarioRepository;
+import br.unitins.joaovittor.basqueteiros.Usuario.service.UsuarioService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.xml.bind.ValidationException;
 
 @ApplicationScoped
 public class FuncionarioServiceImp implements FuncionarioService {
@@ -25,13 +32,19 @@ public class FuncionarioServiceImp implements FuncionarioService {
     FuncionarioRepository repository;
 
     @Inject
-    HashService hashService;
+    PessoaFisicaRepository pessoaFisicaRepository;
 
     @Inject
     UsuarioRepository usuarioRepository;
 
     @Inject
-    PessoaFisicaRepository pessoaFisicaRepository;
+    UsuarioService usuarioService;
+
+    @Inject
+    HashService hashService;
+
+    @Inject
+    JsonWebToken jwt;
 
     @Override
     @Transactional
@@ -74,12 +87,69 @@ public class FuncionarioServiceImp implements FuncionarioService {
 
     @Override
     @Transactional
-    public void update(Long id, FuncionarioDTO dto) {
+    public void update(Long id, FuncionarioDTO dto) throws ValidationException {
+        Usuario usuario = repository.findById(id).getPessoaFisica().getUsuario();
+        if(usuario != null){
+            usuario.setUsername(dto.username());
+            // fazer hash da nova senha
+            usuario.setPassword(hashService.getHashSenha(dto.senha()));
+        } else {
+            throw new ValidationException("Funcionario inexistente");
+        }
+
+        PessoaFisica pf = repository.findById(id).getPessoaFisica();
+        if(pf != null){
+            pf.setNome(dto.nome());
+            pf.setTelefone(dto.telefone());
+            pf.setDataNascimento(LocalDate.of(dto.anoNasc(),dto.mesNasc(),dto.diaNasc()));
+            pf.setCpf(dto.cpf());
+            pf.setUsuario(usuario);
+        } else {
+            throw new ValidationException("Funcionario inexistente");
+        }
         
-        
+        Funcionario funcionario = repository.findById(id);
+
+        if(funcionario != null){
+            funcionario.setCodigoContrato(dto.codigoContrato());
+            LocalDate dataAdmissao = LocalDate.of(dto.anoAdmissao(), dto.mesAdmissao(), dto.diaAdmissao());
+            funcionario.setDataAdmissao(dataAdmissao);
+            funcionario.setPessoaFisica(pf);
+        } else {
+            throw new ValidationException("Funcionario inexistente");
+        }
     }
 
-    // tive que abrir transactional p funcinar (???)
+    @Override
+    @Transactional
+    public void updateUsuarioPassword(FuncionarioPasswordUpdateDTO passwordUpdateDTO) {
+
+        Usuario usuario = usuarioRepository.findById(Long.valueOf(jwt.getClaim("userId").toString()));
+        Funcionario funcionario = repository.findByIdUsuario(usuario.getId());
+        if (usuario == null || funcionario == null) {
+            throw new InternalError();
+        }
+
+        if(usuario.getPassword().equals(hashService.getHashSenha(passwordUpdateDTO.oldPassword()))){
+            usuario.setDataAlteracao(LocalDateTime.now());
+            usuario.setPassword(hashService.getHashSenha(passwordUpdateDTO.newPassword()));
+            usuarioService.update(usuario);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateUsuarioUsername(FuncionarioUsernameUpdateDTO usernameUpdateDTO) {
+        Usuario usuario = usuarioRepository.findById(Long.valueOf(jwt.getClaim("userId").toString()));
+        Funcionario funcionario = repository.findByIdUsuario(usuario.getId());
+        if (usuario == null || funcionario == null) {
+            throw new InternalError();
+        }
+        funcionario.getPessoaFisica().getUsuario().setUsername(usernameUpdateDTO.newUsername());
+        usuarioService.update(funcionario.getPessoaFisica().getUsuario());
+        repository.persist(funcionario);
+    }
+
     @Override
     public List<FuncionarioResponseDTO> findAll() {
         return repository.findAll()
@@ -132,4 +202,5 @@ public class FuncionarioServiceImp implements FuncionarioService {
             return UsuarioResponseDTO.valueof(funcionario.getPessoaFisica());
         return null;
     }
+
 }

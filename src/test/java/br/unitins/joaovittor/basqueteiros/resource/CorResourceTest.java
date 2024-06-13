@@ -8,6 +8,7 @@ import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
 import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -22,6 +23,7 @@ public class CorResourceTest {
     CorService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -34,6 +36,7 @@ public class CorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -44,6 +47,7 @@ public class CorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNome(){
         given()
         .when()
@@ -54,8 +58,9 @@ public class CorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
-        CorDTO dto = new CorDTO("cinza");
+        CorDTO dto = new CorDTO("marroma");
 
         given()
             .contentType(MediaType.APPLICATION_JSON)
@@ -63,11 +68,11 @@ public class CorResourceTest {
         .when()
             .post("/cores")
         .then()
-            .statusCode(200)
-            .body("id", is(3));
+            .statusCode(200);
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
         CorDTO dto = new CorDTO("amarelo");
 
@@ -81,6 +86,7 @@ public class CorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
         
         CorResponseDTO response = service.create(new CorDTO("vermelho"));

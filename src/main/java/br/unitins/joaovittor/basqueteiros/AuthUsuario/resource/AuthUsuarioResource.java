@@ -50,8 +50,8 @@ public class AuthUsuarioResource {
 
         if(usuario != null){
             return Response.ok(usuario).header("Authorization", jwtService.generateJwt(dto, usuario))
-        .status(Status.CREATED)
-        .build();
+                            .status(Status.CREATED)
+                            .build();
         } else {
             return Response.status(Status.NOT_FOUND).build();
         }

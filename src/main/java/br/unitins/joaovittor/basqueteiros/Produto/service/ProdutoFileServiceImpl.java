@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -48,15 +47,11 @@ public class ProdutoFileServiceImpl implements FileService{
 
     private String salvarImagem(String nomeImagem, byte[] imagem) throws IOException{
         // verificar o tipo da imagem
-        String mimeType = Files.probeContentType(new File(nomeImagem).toPath());
-        List<String> listMimeType = Arrays.asList("image/jpg", "image/gif", "image/png", "image/jpeg");
-        if (!listMimeType.contains(mimeType)) 
-            throw new IOException("Tipo de imagem não suportado.");
+        String mimeType = verificarExtensao(nomeImagem);
 
         // verificar o tamanho do arquivo - nao permitir maior que 10mb
-        if (imagem.length > 1024 * 1024 * 10) {
-            throw new IOException("Arquivo muito grande, tamanho máximo 10mb.");
-        }
+        verificarTamanhoImagem(imagem);
+
 
         // criar pasta quando nao existir
         File diretorio = new File(PATH_USER);
@@ -64,12 +59,7 @@ public class ProdutoFileServiceImpl implements FileService{
             diretorio.mkdirs();
 
         // gerar nome do arquivo 
-        String nomeArquivo = LocalDateTime.now()
-                             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-'T'-HH'h'-mm'm'-ss's'")) 
-                                + "_"
-                                + UUID.randomUUID()
-                                + "." 
-                                + mimeType.substring(mimeType.lastIndexOf("/") + 1);
+        String nomeArquivo = gerarNomeImagem(mimeType);
         String path = PATH_USER + nomeArquivo;
 
         // salvar o arquivo
@@ -88,4 +78,27 @@ public class ProdutoFileServiceImpl implements FileService{
         return nomeArquivo;
     }
     
+    public String verificarExtensao(String nomeImagem) throws IOException{
+        String mimeType =  Files.probeContentType(new File(nomeImagem).toPath());
+        List<String> listMimeType = Arrays.asList("image/jpg", "image/gif", "image/png", "image/jpeg");
+        if (!listMimeType.contains(mimeType)) 
+            throw new IOException("Tipo de imagem não suportado.");
+        return mimeType;
+    }
+
+    public void verificarTamanhoImagem(byte[] imagem) throws IOException{
+        if (imagem.length > 1024 * 1024 * 10) {
+            throw new IOException("Arquivo muito grande, tamanho máximo 10mb.");
+        }
+    }
+
+    public String gerarNomeImagem(String mimeType){
+        // Nome sempre diferente pois possui "LocalDate.now()"
+        return LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd-'T'-HH'h'-mm'm'-ss's'")) 
+                + "_"
+                + UUID.randomUUID()
+                + "." 
+                + mimeType.substring(mimeType.lastIndexOf("/") + 1);
+    }
 }

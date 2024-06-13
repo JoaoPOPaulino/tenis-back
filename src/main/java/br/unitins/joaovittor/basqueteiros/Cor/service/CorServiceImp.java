@@ -23,18 +23,10 @@ public class CorServiceImp implements CorService {
     public CorResponseDTO create(@Valid CorDTO dto) {
         Cor Cor = new Cor();
 
-        verificarNome(dto.nome());
-
         Cor.setNome(dto.nome());
 
         repository.persist(Cor);
         return CorResponseDTO.valueof(Cor);
-    }
-
-    public void verificarNome(String nome){
-        Cor cor = repository.findByNomeCompleto(nome);
-        if(cor != null)
-            throw new ValidationException("nome", "O nome '"+nome+"' ja existe");
     }
 
     @Override

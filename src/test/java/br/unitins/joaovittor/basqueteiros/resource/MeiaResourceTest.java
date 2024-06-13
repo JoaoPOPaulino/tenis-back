@@ -11,6 +11,7 @@ import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.service.MeiaService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -21,6 +22,7 @@ public class MeiaResourceTest {
     MeiaService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -33,6 +35,7 @@ public class MeiaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -42,16 +45,18 @@ public class MeiaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNome() {
         given()
         .when()
             .get("/meias/search/nome/teste")
         .then()
-            .statusCode(404);
+            .statusCode(200);
         
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
 
         MeiaDTO dto = new MeiaDTO("meiaTeste", "descTeste", 10, 4, 20.0, 80.0, 1l, 2l, 1l);
@@ -67,6 +72,7 @@ public class MeiaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
 
         MeiaDTO dto = new MeiaDTO("meiaTestee", "descTestee", 15, 2, 25.0, 90.0, 2l, 1l, 1l);
@@ -81,6 +87,7 @@ public class MeiaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
 
         MeiaDTO dto = new MeiaDTO("meiadoida", "descdoida", 15, 2, 25.0, 90.0, 2l, 1l, 1l);

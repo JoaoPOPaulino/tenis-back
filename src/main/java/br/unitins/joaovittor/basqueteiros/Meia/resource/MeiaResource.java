@@ -3,6 +3,7 @@ package br.unitins.joaovittor.basqueteiros.Meia.resource;
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.dto.MeiaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Meia.service.MeiaService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -19,6 +20,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/meias")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("Funcionario")
 public class MeiaResource {
     
     @Inject

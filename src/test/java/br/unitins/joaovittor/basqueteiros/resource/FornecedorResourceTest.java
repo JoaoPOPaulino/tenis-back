@@ -11,6 +11,7 @@ import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorDTO;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.service.FornecedorService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -21,6 +22,7 @@ public class FornecedorResourceTest {
     FornecedorService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -33,6 +35,7 @@ public class FornecedorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -43,6 +46,7 @@ public class FornecedorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNomeEmpresa(){
         given()
         .when()
@@ -53,6 +57,7 @@ public class FornecedorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
         
         FornecedorDTO dto = new FornecedorDTO("testeNome", "testeempresa@gmail.com", "999999999999", "123");
@@ -68,6 +73,7 @@ public class FornecedorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
         
         FornecedorDTO dto = new FornecedorDTO("update", "testeempresaupdate@gmail.com", "999999999999", "123");
@@ -82,6 +88,7 @@ public class FornecedorResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
 
         FornecedorDTO dto = new FornecedorDTO("testeDelet", "testeDelet@gmail.com", "999999999999", "123");

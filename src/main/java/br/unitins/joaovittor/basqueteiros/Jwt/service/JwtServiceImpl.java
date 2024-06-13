@@ -2,8 +2,12 @@ package br.unitins.joaovittor.basqueteiros.Jwt.service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import org.jose4j.jwt.JwtClaims;
 
 import br.unitins.joaovittor.basqueteiros.AuthUsuario.dto.AuthUsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.Usuario.dto.UsuarioResponseDTO;
@@ -28,6 +32,7 @@ public class JwtServiceImpl implements JwtService{
         }
 
         return Jwt.issuer("basqueteiros-jwt")
+            .claim("userId", dto.id())
             .subject(dto.username())
             .groups(roles)
             .expiresAt(expiryDate)

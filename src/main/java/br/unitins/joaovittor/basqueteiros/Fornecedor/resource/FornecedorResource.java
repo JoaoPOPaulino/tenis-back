@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.Fornecedor.resource;
 
 import br.unitins.joaovittor.basqueteiros.Fornecedor.dto.FornecedorDTO;
 import br.unitins.joaovittor.basqueteiros.Fornecedor.service.FornecedorService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -18,6 +19,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/fornecedores")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed("Funcionario")
 public class FornecedorResource {
 
     @Inject
@@ -63,8 +65,5 @@ public class FornecedorResource {
             return Response.ok(service.findByNomeEmpresa(nomeEmpresa)).build();
         return Response.status(Status.NOT_FOUND).build();
     }
-
-    // novos
-    // find by cnpj
 
 }

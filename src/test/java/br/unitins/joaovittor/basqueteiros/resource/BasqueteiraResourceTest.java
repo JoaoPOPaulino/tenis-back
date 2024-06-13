@@ -11,6 +11,7 @@ import br.unitins.joaovittor.basqueteiros.Basqueteira.dto.BasqueteiraDTO;
 import br.unitins.joaovittor.basqueteiros.Basqueteira.dto.BasqueteiraResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Basqueteira.service.BasqueteiraService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -21,6 +22,7 @@ public class BasqueteiraResourceTest {
     BasqueteiraService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -33,6 +35,7 @@ public class BasqueteiraResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -42,6 +45,7 @@ public class BasqueteiraResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNome() {
         given()
         .when()
@@ -52,6 +56,7 @@ public class BasqueteiraResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
 
         BasqueteiraDTO dto = new BasqueteiraDTO("basqueteiraTop", "desc", 100d, 2, 15, 150d, 300d, 1l, 2l, 5l);
@@ -63,11 +68,12 @@ public class BasqueteiraResourceTest {
             .post("/basqueteiras")
         .then()
             .statusCode(200)
-            .body("id", is(1));
+            .body("id", is(29));
 
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
 
         BasqueteiraDTO dto = new BasqueteiraDTO("basqueteiraTop", "desc", 100d, 2, 15, 150d, 300d, 1l, 2l, 5l);
@@ -82,6 +88,7 @@ public class BasqueteiraResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
 
         BasqueteiraDTO dto = new BasqueteiraDTO("basqueteiraLendaria", "desc", 100d, 2, 15, 150d, 300d, 1l, 2l, 5l);

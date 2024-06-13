@@ -11,6 +11,7 @@ import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoDTO;
 import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Tamanho.service.TamanhoService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -21,6 +22,7 @@ public class TamanhoResourceTest {
     TamanhoService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -33,6 +35,7 @@ public class TamanhoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -43,6 +46,7 @@ public class TamanhoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNumeracao() {
         given()
         .when()
@@ -53,6 +57,7 @@ public class TamanhoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
         TamanhoDTO dto = new TamanhoDTO(20, "15");
 
@@ -67,6 +72,7 @@ public class TamanhoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
         TamanhoDTO dto = new TamanhoDTO(25, "18");
 
@@ -80,6 +86,7 @@ public class TamanhoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
         
         TamanhoResponseDTO response = service.create(new TamanhoDTO(22, "16"));

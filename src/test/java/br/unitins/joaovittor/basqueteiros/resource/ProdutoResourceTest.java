@@ -11,6 +11,7 @@ import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.service.ProdutoService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -21,6 +22,7 @@ public class ProdutoResourceTest {
     ProdutoService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -33,6 +35,7 @@ public class ProdutoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -42,6 +45,7 @@ public class ProdutoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNome() {
         given()
         .when()
@@ -52,6 +56,7 @@ public class ProdutoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
 
         ProdutoDTO dto = new ProdutoDTO("produto", "desc", 10, 100d, 200d, 1l, 2l);
@@ -67,6 +72,7 @@ public class ProdutoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
 
         ProdutoDTO dto = new ProdutoDTO("naosei", "desc", 15, 100d, 200d, 1l, 2l);
@@ -81,6 +87,7 @@ public class ProdutoResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
 
         ProdutoResponseDTO response = service.create(new ProdutoDTO("testt", "desc2", 22, 105d, 250d, 1l, 2l));

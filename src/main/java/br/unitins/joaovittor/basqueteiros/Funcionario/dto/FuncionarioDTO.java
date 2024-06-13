@@ -12,8 +12,13 @@ public record FuncionarioDTO(
     int anoNasc,
 
     // Parte PessoaFisica
+    @NotBlank
     String cpf,
+    
+    @NotBlank
     String username,
+
+    @NotBlank
     String senha,
 
     // Parte Funcionario

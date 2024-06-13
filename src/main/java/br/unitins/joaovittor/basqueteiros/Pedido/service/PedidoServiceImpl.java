@@ -11,10 +11,10 @@ import br.unitins.joaovittor.basqueteiros.Pedido.dto.PedidoDTO;
 import br.unitins.joaovittor.basqueteiros.Pedido.dto.PedidoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Pedido.model.Pedido;
 import br.unitins.joaovittor.basqueteiros.Pedido.repository.PedidoRepository;
-import br.unitins.joaovittor.basqueteiros.Produto.dto.ProdutoDTO;
 import br.unitins.joaovittor.basqueteiros.Produto.model.Produto;
 import br.unitins.joaovittor.basqueteiros.Produto.repository.ProdutoRepository;
 import br.unitins.joaovittor.basqueteiros.Produto.service.ProdutoService;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -60,38 +60,41 @@ public class PedidoServiceImpl implements PedidoService{
                 // calcular valor total sem desconto
                 itemUnidade.setValor(produto.getPrecoVenda());
                 // valor com desconto, mas nao armazenado:
-                // produto.getPrecoVenda() - itemDTO.desconto();
+                // itemUnidade.setValor(produto.getPrecoVenda() - itemDTO.desconto());
 
                 itens.add(itemUnidade);
                 
                 // valor total do pedido
-                pedido.setValorTotal(pedido.getValorTotal() + itemUnidade.getValor());
+                pedido.setValorTotal(pedido.getValorTotal() + (itemUnidade.getValor() * itemUnidade.getQuantidade())); 
 
                 // estoque do produto
-                ProdutoDTO produtoDTO = new ProdutoDTO(
-                    produto.getNome(), 
-                    produto.getDescricao(), 
-                    (produto.getQuantidade() - itemDTO.quantidade()), 
-                    produto.getPrecoCompra(), 
-                    produto.getPrecoVenda(), 
-                    produto.getFornecedor().getId(), 
-                    produto.getMarca().getId());
-
-                // depois mudar para um PATH, e nao PUT(update) !!!!!!!!    
-                produtoService.update(itemDTO.idProduto(), produtoDTO);
-
-                // SALDO DO CLIENTE = CUIDAR DO TIPO DE PAGAMENTO ETC = IMPLEMENTAR
+                produtoService.updateEstoque(itemDTO.idProduto(), itemDTO.quantidade());
 
             } else{
                 // quantidade insuficiente daquele item
+                throw new ValidationException("Estoque Insuficiente", 
+                                             "estoque insuficiente do produto: "+produto.getNome()
+                                             +"\n"
+                                             +"Estoque do produto:"+produto.getQuantidade());
             }
             
         }
 
-        pedido.setItens(itens);
+        if(pedido.getValorTotal() <= pedido.getCliente().getSaldo()){
 
-        repository.persist(pedido);
-        return PedidoResponseDTO.valueOf(pedido);
+            // SALDO DO CLIENTE = CUIDAR DO TIPO DE PAGAMENTO ETC = IMPLEMENTAR
+            
+
+            pedido.setItens(itens);
+            repository.persist(pedido);
+            return PedidoResponseDTO.valueOf(pedido);
+        } else{
+            throw new ValidationException("Saldo insuficiente",
+                                          "Valor total do pedido: "+pedido.getValorTotal()
+                                          +"\n"
+                                          +"Saldo atual: "+pedido.getCliente().getSaldo());
+        }
+        
     }
 
     @Override

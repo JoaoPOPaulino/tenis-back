@@ -1,0 +1,48 @@
+{
+  "nome": "cleber",
+  "telefone": "321",
+  "diaNasc": 30,
+  "mesNasc": 1,
+  "anoNasc": 1950,
+  "cpf": "222.111.111-22",
+  "username": "clb",
+  "senha": "clb123",
+  "saldo": 300,
+  "listaEndereco": [
+    {
+      "cep": "01021-000",
+      "rua": "Casa",
+      "complemento": "02"
+    },
+    {
+      "cep": "01012-001",
+      "rua": "Nova",
+      "complemento": "Casa 01"
+    }
+  ]
+}
+
+============
+{
+  "nome": "joao vittor2",
+  "telefone": "123",
+  "diaNasc": 16,
+  "mesNasc": 9,
+  "anoNasc": 2004,
+  "cpf": "111.111.111-12",
+  "username": "joao2",
+  "senha": "123",
+  "saldo": 1000,
+  "listaEndereco": [
+    {
+      "cep": "01001-000",
+      "rua": "Com calçada",
+      "complemento": "02"
+    },
+    {
+      "cep": "01022-001",
+      "rua": "Asfaltada",
+      "complemento": "Casa 03"
+    }
+  ]
+}

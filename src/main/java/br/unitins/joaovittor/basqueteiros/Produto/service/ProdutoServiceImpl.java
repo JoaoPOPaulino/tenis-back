@@ -68,6 +68,14 @@ public class ProdutoServiceImpl implements ProdutoService{
 
     @Override
     @Transactional
+    public void updateEstoque(Long id, int qtdComprada) {
+        // FAZER PATH DE ESTOQUE PRODUTO
+        Produto produto = repository.findById(id);
+        produto.setQuantidade(produto.getQuantidade() - qtdComprada);
+    }
+
+    @Override
+    @Transactional
     public boolean delete(Long id) {
         return repository.deleteById(id);
     }
@@ -98,5 +106,5 @@ public class ProdutoServiceImpl implements ProdutoService{
             return lista;
         return null;
     }
-    
+
 }

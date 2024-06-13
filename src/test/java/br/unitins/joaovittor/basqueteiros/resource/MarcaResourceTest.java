@@ -4,6 +4,7 @@ import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaDTO;
 import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.Marca.service.MarcaService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
@@ -22,6 +23,7 @@ public class MarcaResourceTest {
     MarcaService service;
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindAll(){
 
         given()
@@ -34,6 +36,7 @@ public class MarcaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindById() {
         given()
         .when()
@@ -44,6 +47,7 @@ public class MarcaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testFindByNome(){
         given()
         .when()
@@ -54,6 +58,7 @@ public class MarcaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testCreate(){
         MarcaDTO dto = new MarcaDTO("puma");
 
@@ -68,6 +73,7 @@ public class MarcaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testUpdate(){
         MarcaDTO dto = new MarcaDTO("under armor");
 
@@ -81,6 +87,7 @@ public class MarcaResourceTest {
     }
 
     @Test
+    @TestSecurity(user = "tester", roles = "Funcionario")
     public void testDelete(){
         
         MarcaResponseDTO response = service.create(new MarcaDTO("mizuno"));
