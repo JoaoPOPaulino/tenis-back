@@ -59,13 +59,11 @@ public class PedidoServiceImpl implements PedidoService{
 
                 // calcular valor total sem desconto
                 itemUnidade.setValor(produto.getPrecoVenda());
-                // valor com desconto, mas nao armazenado:
-                // itemUnidade.setValor(produto.getPrecoVenda() - itemDTO.desconto());
 
                 itens.add(itemUnidade);
                 
-                // valor total do pedido
-                pedido.setValorTotal(pedido.getValorTotal() + (itemUnidade.getValor() * itemUnidade.getQuantidade())); 
+                // valor total do pedido (com desconto subtraindo o pedido)
+                pedido.setValorTotal((pedido.getValorTotal() + (itemUnidade.getValor() * itemUnidade.getQuantidade()))-itemDTO.desconto()); 
 
                 // estoque do produto
                 produtoService.updateEstoque(itemDTO.idProduto(), itemDTO.quantidade());

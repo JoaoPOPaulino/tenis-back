@@ -68,7 +68,7 @@ public class BasqueteiraResourceTest {
             .post("/basqueteiras")
         .then()
             .statusCode(200)
-            .body("id", is(29));
+            .body("peso", is(100d));
 
     }
 

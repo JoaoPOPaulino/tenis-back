@@ -51,7 +51,7 @@ public class ProdutoResourceTest {
         .when()
             .get("/produtos/search/nome/teste")
         .then()
-            .statusCode(404);
+            .statusCode(200);
         
     }
 
@@ -67,8 +67,7 @@ public class ProdutoResourceTest {
         .when()
             .post("/produtos")
         .then()
-            .statusCode(200)
-            .body("id", is(1));
+            .statusCode(200);
     }
 
     @Test

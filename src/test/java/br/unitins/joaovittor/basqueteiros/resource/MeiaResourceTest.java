@@ -49,7 +49,7 @@ public class MeiaResourceTest {
     public void testFindByNome() {
         given()
         .when()
-            .get("/meias/search/nome/teste")
+            .get("/meias/search/nome/Meia Ultraboost")
         .then()
             .statusCode(200);
         
@@ -68,7 +68,7 @@ public class MeiaResourceTest {
             .post("/meias")
         .then()
             .statusCode(200)
-            .body("id", is(1));
+            .body("nome", is("meiaTeste"));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class MeiaResourceTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(dto)
         .when()
-            .put("/meias/1")
+            .put("/meias/9")
         .then()
             .statusCode(204);
     }
