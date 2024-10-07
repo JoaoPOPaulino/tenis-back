@@ -1,10 +1,10 @@
-package br.unitins.joaovittor.basqueteiros.Pedido.resource;
+package br.unitins.topicos2.basqueteiros.Pedido.resource;
 
 import org.jboss.logging.Logger;
 
-import br.unitins.joaovittor.basqueteiros.Cor.resource.CorResource;
-import br.unitins.joaovittor.basqueteiros.Pedido.dto.PedidoDTO;
-import br.unitins.joaovittor.basqueteiros.Pedido.service.PedidoService;
+import br.unitins.topicos2.basqueteiros.Cor.resource.CorResource;
+import br.unitins.topicos2.basqueteiros.Pedido.dto.PedidoDTO;
+import br.unitins.topicos2.basqueteiros.Pedido.service.PedidoService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

@@ -1,8 +1,8 @@
-package br.unitins.joaovittor.basqueteiros.Pessoa.model;
+package br.unitins.topicos2.basqueteiros.Pessoa.model;
 
 import java.time.LocalDate;
 
-import br.unitins.joaovittor.basqueteiros.DefaultEntity.model.DefaultEntity;
+import br.unitins.topicos2.basqueteiros.DefaultEntity.model.DefaultEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 

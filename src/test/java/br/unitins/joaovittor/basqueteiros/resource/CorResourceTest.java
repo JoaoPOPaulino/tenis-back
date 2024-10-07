@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.dto.CorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Cor.service.CorService;
+import br.unitins.topicos2.basqueteiros.Cor.dto.CorDTO;
+import br.unitins.topicos2.basqueteiros.Cor.dto.CorResponseDTO;
+import br.unitins.topicos2.basqueteiros.Cor.service.CorService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;

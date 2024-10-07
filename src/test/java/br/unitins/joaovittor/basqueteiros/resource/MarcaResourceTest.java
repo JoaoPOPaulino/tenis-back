@@ -1,8 +1,5 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
-import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaDTO;
-import br.unitins.joaovittor.basqueteiros.Marca.dto.MarcaResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Marca.service.MarcaService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
@@ -11,6 +8,11 @@ import jakarta.ws.rs.core.MediaType;
 import static io.restassured.RestAssured.given;
 
 import org.junit.jupiter.api.Test;
+
+import br.unitins.topicos2.basqueteiros.Marca.dto.MarcaDTO;
+import br.unitins.topicos2.basqueteiros.Marca.dto.MarcaResponseDTO;
+import br.unitins.topicos2.basqueteiros.Marca.service.MarcaService;
+
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import static org.hamcrest.CoreMatchers.is;

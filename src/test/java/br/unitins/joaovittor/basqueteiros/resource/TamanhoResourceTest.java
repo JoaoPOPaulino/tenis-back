@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
-import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoDTO;
-import br.unitins.joaovittor.basqueteiros.Tamanho.dto.TamanhoResponseDTO;
-import br.unitins.joaovittor.basqueteiros.Tamanho.service.TamanhoService;
+import br.unitins.topicos2.basqueteiros.Tamanho.dto.TamanhoDTO;
+import br.unitins.topicos2.basqueteiros.Tamanho.dto.TamanhoResponseDTO;
+import br.unitins.topicos2.basqueteiros.Tamanho.service.TamanhoService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
