@@ -1,11 +1,16 @@
 package br.unitins.joaovittor.basqueteiros.validation;
 
+import br.unitins.joaovittor.basqueteiros.application.Error;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidationError extends br.unitins.joaovittor.basqueteiros.util.Error {
+public class ValidationError extends Error {
 
-    record FieldError(String fieldName, String message) {};
+    record FieldError(String fieldName, String message) {
+
+    }
+    ;
 
     private List<FieldError> errors = null;
 
@@ -14,13 +19,14 @@ public class ValidationError extends br.unitins.joaovittor.basqueteiros.util.Err
     }
 
     public void addFieldError(String fieldName, String message) {
-        if (errors == null)
+        if (errors == null) {
             errors = new ArrayList<FieldError>();
+        }
         errors.add(new FieldError(fieldName, message));
     }
 
     public List<FieldError> getErrors() {
         return errors.stream().toList();
     }
-  
+
 }

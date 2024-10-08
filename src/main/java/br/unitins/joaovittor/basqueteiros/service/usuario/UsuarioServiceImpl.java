@@ -3,13 +3,14 @@ package br.unitins.joaovittor.basqueteiros.service.usuario;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.unitins.joaovittor.basqueteiros.Usuario.repository.UsuarioRepository;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
 import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
+import br.unitins.joaovittor.basqueteiros.repository.UsuarioRepository;
 import br.unitins.joaovittor.basqueteiros.service.hash.HashService;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -98,6 +99,12 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new ValidationException("login", "Login não encontrado");
         }
         return UsuarioResponseDTO.valueOf(usuario);
+    }
+
+    @Override
+    public UsuarioResponseDTO updatePerfil(long id, Integer perfil) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updatePerfil'");
     }
 
 }

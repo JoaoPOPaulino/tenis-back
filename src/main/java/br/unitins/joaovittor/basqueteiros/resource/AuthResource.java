@@ -2,8 +2,11 @@ package br.unitins.joaovittor.basqueteiros.resource;
 
 import org.jboss.logging.Logger;
 
-import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioDTO;
-
+import br.unitins.joaovittor.basqueteiros.dto.login.LoginDTO;
+import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
+import br.unitins.joaovittor.basqueteiros.service.hash.HashService;
+import br.unitins.joaovittor.basqueteiros.service.jwt.JwtService;
+import br.unitins.joaovittor.basqueteiros.service.usuario.UsuarioService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -34,7 +37,7 @@ public class AuthResource {
         LOG.info("Iniciando autenticação.");
         String hashSenha = hashService.getHashSenha(dto.senha());
 
-        UsuarioDTO result = service.findByLoginAndSenha(dto.login(),
+        UsuarioResponseDTO result = service.findByLoginAndSenha(dto.login(),
                 hashSenha);
 
         if (result != null) {
@@ -46,6 +49,7 @@ public class AuthResource {
             LOG.warn("Login e senha incorretos.");
             return Response.status(Response.Status.UNAUTHORIZED).entity("Login ou senha incorretos").build();
         }
+
     }
 
 }
