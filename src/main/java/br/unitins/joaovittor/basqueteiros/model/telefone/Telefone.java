@@ -1,7 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.model.telefone;
 
-
-import br.unitins.joaovittor.basqueteiros.dto.usuario.telefoneDTO.TelefoneDTO;
+import br.unitins.joaovittor.basqueteiros.dto.telefone.TelefoneDTO;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +8,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Telefone extends DefaultEntity {
+
     @NotBlank
     @Size(min = 2, max = 2)
     private String codigoArea;

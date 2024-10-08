@@ -90,6 +90,4 @@ public class Usuario extends DefaultEntity {
         this.listaTelefone = listaTelefone;
     }
 
-    
-
 }

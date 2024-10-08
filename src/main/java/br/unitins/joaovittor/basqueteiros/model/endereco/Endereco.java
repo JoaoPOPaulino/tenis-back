@@ -1,6 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.model.endereco;
 
-import br.unitins.joaovittor.basqueteiros.dto.usuario.enderecoDTO.EnderecoDTO;
+import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 
 import jakarta.persistence.Entity;

@@ -1,8 +1,8 @@
-package br.unitins.topicos2.basqueteiros.model.tipoUsuario;
+package br.unitins.joaovittor.basqueteiros.model.tipoUsuario;
 
 public enum TipoUsuario {
-   ADMINISTRADOR (1,  "Administrador"),
-   USUARIO(2,  "Usuario");
+    ADMINISTRADOR(1, "Administrador"),
+    USUARIO(2, "Usuario");
 
     private final Integer id;
     private final String label;
@@ -21,8 +21,9 @@ public enum TipoUsuario {
     }
 
     public static TipoUsuario valueOf(Integer id) throws IllegalArgumentException {
-        if ((id == null))
+        if ((id == null)) {
             return null;
+        }
         for (TipoUsuario tipoUsuario : TipoUsuario.values()) {
             if (tipoUsuario.getId().equals(id)) {
                 return tipoUsuario;
@@ -30,6 +31,5 @@ public enum TipoUsuario {
         }
         throw new IllegalArgumentException("Id inválido: " + id);
     }
-
 
 }
