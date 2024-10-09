@@ -2,15 +2,15 @@ package br.unitins.joaovittor.basqueteiros.service.marca;
 
 import java.util.List;
 
-import br.unitins.joaovittor.basqueteiros.dto.marcaDTO.MarcaDTO;
-import br.unitins.joaovittor.basqueteiros.dto.marcaDTO.MarcaResponseDTO;
+import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaDTO;
+import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.marca.Marca;
 import br.unitins.joaovittor.basqueteiros.repository.MarcaRepository;
 import jakarta.transaction.Transactional;
 
 public class MarcaServiceImpl implements MarcaService {
 
-  private final MarcaRepository marcaRepository;
+    private final MarcaRepository marcaRepository;
 
     // Injeção de dependência do repositório
     public MarcaServiceImpl(MarcaRepository marcaRepository) {
