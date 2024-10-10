@@ -24,7 +24,7 @@ public record UsuarioResponseDTO(
                 usuario.getEmail(),
                 usuario.getLogin(),
                 usuario.getSenha(),
-                usuario.getTipousaurio(),
+                usuario.getTipoUsuario(),
                 usuario.getListaTelefone()
                         .stream()
                         .map(t -> TelefoneDTO.valueOf(t)).toList(),

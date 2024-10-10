@@ -1,13 +1,16 @@
 package br.unitins.joaovittor.basqueteiros.model.tipoUsuario;
 
+
 public enum TipoUsuario {
     ADMINISTRADOR(1, "Administrador"),
     USUARIO(2, "Usuario");
 
+    //@Id
     private final Integer id;
     private final String label;
 
     TipoUsuario(Integer id, String label) {
+    
         this.id = id;
         this.label = label;
     }

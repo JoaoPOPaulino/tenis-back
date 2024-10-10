@@ -37,7 +37,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         novoUsuario.setEmail(dto.email());
         novoUsuario.setLogin(dto.login());
         novoUsuario.setSenha(hashService.getHashSenha(dto.senha()));
-        novoUsuario.setTipousaurio(TipoUsuario.USUARIO);
+        novoUsuario.setTipoUsuario(TipoUsuario.USUARIO);
         novoUsuario.setListaTelefone(new ArrayList<>());
         novoUsuario.setEndereco(new Endereco());
 

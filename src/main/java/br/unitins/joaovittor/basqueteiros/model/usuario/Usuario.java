@@ -7,7 +7,10 @@ import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
 import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -21,7 +24,11 @@ public class Usuario extends DefaultEntity {
     private String email;
     private String login;
     private String senha;
-    private TipoUsuario tipousaurio;
+
+   
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_usuario")
+    private TipoUsuario tipoUsuario;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_telefone", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_telefone"))
@@ -74,12 +81,12 @@ public class Usuario extends DefaultEntity {
         this.email = email;
     }
 
-    public TipoUsuario getTipousaurio() {
-        return tipousaurio;
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
     }
 
-    public void setTipousaurio(TipoUsuario tipousaurio) {
-        this.tipousaurio = tipousaurio;
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public List<Telefone> getListaTelefone() {
