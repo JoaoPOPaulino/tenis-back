@@ -1,7 +1,8 @@
 package br.unitins.joaovittor.basqueteiros.dto.tenis;
 
+import br.unitins.joaovittor.basqueteiros.dto.estoque.EstoqueResponseDTO;
+import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaResponseDTO;
-import br.unitins.joaovittor.basqueteiros.dto.tamanho.TamanhoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
 
 import java.util.Set;
@@ -13,7 +14,8 @@ public record TenisResponseDTO(
         float preco,
         String descricao,
         MarcaResponseDTO marca,
-        Set<TamanhoResponseDTO> tamanhos) {
+        Set<FornecedorResponseDTO> fornecedores,
+        Set<EstoqueResponseDTO> estoque) {
 
     public static TenisResponseDTO valueOf(Tenis tenis) {
         return new TenisResponseDTO(
@@ -22,8 +24,12 @@ public record TenisResponseDTO(
                 tenis.getPreco(),
                 tenis.getDescricao(),
                 MarcaResponseDTO.valueOf(tenis.getMarca()),
-                tenis.getTamanho().stream()
-                        .map(TamanhoResponseDTO::valueOf)
-                        .collect(Collectors.toSet()));
+                tenis.getFornecedor().stream()
+                        .map(FornecedorResponseDTO::valueOf)
+                        .collect(Collectors.toSet()),
+                tenis.getEstoque().stream()
+                        .map(EstoqueResponseDTO::valueOf)
+                        .collect(Collectors.toSet())
+        );
     }
 }

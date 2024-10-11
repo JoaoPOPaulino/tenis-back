@@ -1,32 +1,22 @@
 package br.unitins.joaovittor.basqueteiros.model.tamanho;
 
-import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
-import jakarta.persistence.Entity;
+public enum Tamanho {
+    PP(38),
+    P(39),
+    M(40),
+    G(41),
+    GG(42),
+    X(43),
+    XG(44);
 
-@Entity
-public class Tamanho extends DefaultEntity {
+    private final Integer numero;
 
-    private Integer numero;
-    private Integer qntEstoque;
-
-    public Integer getNumero() {
-        return numero;
-    }
-
-    public void setNumero(Integer numero) {
+    Tamanho(Integer numero) {
         this.numero = numero;
     }
 
-    public Integer getQntEstoque() {
-        return qntEstoque;
-    }
-
-    public void setQntEstoque(Integer qntEstoque) {
-        if (qntEstoque < 0) {
-            throw new IllegalArgumentException("Quantidade de estoque não pode ser negativa");
-        }
-
-        this.qntEstoque = qntEstoque;
+    public Integer getNumero() {
+        return numero;
     }
 
 }

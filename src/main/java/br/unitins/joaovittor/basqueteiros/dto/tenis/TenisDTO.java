@@ -1,7 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.dto.tenis;
 
 import java.util.Set;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -15,7 +14,9 @@ public record TenisDTO(
         String descricao,
         @NotNull(message = "A marca é obrigatória")
         Long marcaId,
-        @NotNull(message = "Pelo menos um tamanho deve ser selecionado")
-        Set<Long> tamanhoId) {
+        @NotNull(message = "Pelo menos um fornecedor deve ser selecionado")
+        Set<Long> fornecedorIds,
+        @NotNull(message = "O estoque é obrigatório")
+        Set<Long> estoqueIds) {
 
 }
