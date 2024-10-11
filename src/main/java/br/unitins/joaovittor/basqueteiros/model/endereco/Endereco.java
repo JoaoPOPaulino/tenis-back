@@ -2,16 +2,27 @@ package br.unitins.joaovittor.basqueteiros.model.endereco;
 
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "endereco")
 public class Endereco extends DefaultEntity {
 
+    @Column(name = "estado", length = 50, nullable = false)
     private String estado;
+
+    @Column(name = "cidade", length = 100, nullable = false)
     private String cidade;
+
+    @Column(name = "quadra", length = 50, nullable = true)
     private String quadra;
+
+    @Column(name = "rua", length = 100, nullable = false)
     private String rua;
+
+    @Column(name = "numero", nullable = true)
     private Integer numero;
 
     public Endereco() {

@@ -6,8 +6,10 @@ import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaDTO;
 import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.marca.Marca;
 import br.unitins.joaovittor.basqueteiros.repository.MarcaRepository;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+@ApplicationScoped
 public class MarcaServiceImpl implements MarcaService {
 
     private final MarcaRepository marcaRepository;

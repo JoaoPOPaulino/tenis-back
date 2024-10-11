@@ -1,11 +1,13 @@
 package br.unitins.joaovittor.basqueteiros.model.tenis;
 
 import java.util.Set;
+
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
+import br.unitins.joaovittor.basqueteiros.model.estoque.Estoque;
 import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
 import br.unitins.joaovittor.basqueteiros.model.marca.Marca;
-import br.unitins.joaovittor.basqueteiros.model.estoque.Estoque;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -13,6 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+@Entity
 public class Tenis extends DefaultEntity {
 
     private String nome;

@@ -7,12 +7,14 @@ import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
 import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
+@Entity
 public class Fornecedor extends DefaultEntity {
 
     private String nome;
