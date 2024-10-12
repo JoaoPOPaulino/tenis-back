@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.model.usuario;
 
 import java.util.List;
 
+import br.unitins.joaovittor.basqueteiros.model.cartao.Cartao;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
@@ -26,14 +27,13 @@ public class Usuario extends DefaultEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_telefone", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_telefone"))
-    private List<Telefone> listaTelefone;
+    private List<Telefone> telefone;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "usuario_endereco", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_endereco"))
-    private Endereco endereco;
+    private List<Endereco> endereco;
 
-    public Usuario() {
-    }
+    private List<Cartao> cartoes;
 
     public String getNome() {
         return nome;
@@ -59,14 +59,6 @@ public class Usuario extends DefaultEntity {
         this.senha = senha;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -83,12 +75,28 @@ public class Usuario extends DefaultEntity {
         this.tipoUsuario = tipoUsuario;
     }
 
-    public List<Telefone> getListaTelefone() {
-        return listaTelefone;
+    public List<Telefone> getTelefone() {
+        return telefone;
     }
 
-    public void setListaTelefone(List<Telefone> listaTelefone) {
-        this.listaTelefone = listaTelefone;
+    public void setTelefone(List<Telefone> telefone) {
+        this.telefone = telefone;
+    }
+
+    public List<Cartao> getCartoes() {
+        return cartoes;
+    }
+
+    public void setCartoes(List<Cartao> cartoes) {
+        this.cartoes = cartoes;
+    }
+
+    public List<Endereco> getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(List<Endereco> endereco) {
+        this.endereco = endereco;
     }
 
 }

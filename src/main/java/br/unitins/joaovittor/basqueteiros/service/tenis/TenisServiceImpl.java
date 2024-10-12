@@ -1,36 +1,39 @@
 package br.unitins.joaovittor.basqueteiros.service.tenis;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisDTO;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisResponseDTO;
-import br.unitins.joaovittor.basqueteiros.model.estoque.Estoque;
-import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
 import br.unitins.joaovittor.basqueteiros.model.marca.Marca;
 import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
-import br.unitins.joaovittor.basqueteiros.repository.EstoqueRepository;
 import br.unitins.joaovittor.basqueteiros.repository.FornecedorRepository;
 import br.unitins.joaovittor.basqueteiros.repository.MarcaRepository;
 import br.unitins.joaovittor.basqueteiros.repository.TenisRepository;
+import static io.quarkus.hibernate.orm.panache.Panache.getEntityManager;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class TenisServiceImpl implements TenisService {
 
-    private final TenisRepository tenisRepository;
-    private final FornecedorRepository fornecedorRepository;
-    private final EstoqueRepository estoqueRepository;
-    private final MarcaRepository marcaRepository;
+    @Inject
+    TenisRepository tenisRepository;
 
-    public TenisServiceImpl(TenisRepository tenisRepository, FornecedorRepository fornecedorRepository,
-            EstoqueRepository estoqueRepository, MarcaRepository marcaRepository) {
+    @Inject
+    FornecedorRepository fornecedorRepository;
+
+    @Inject
+    MarcaRepository marcaRepository;
+
+    // Construtor para injeção de dependências
+    @Inject
+    public TenisServiceImpl(TenisRepository tenisRepository,
+            FornecedorRepository fornecedorRepository,
+            MarcaRepository marcaRepository) {
         this.tenisRepository = tenisRepository;
         this.fornecedorRepository = fornecedorRepository;
-        this.estoqueRepository = estoqueRepository;
         this.marcaRepository = marcaRepository;
     }
 
@@ -42,17 +45,8 @@ public class TenisServiceImpl implements TenisService {
         tenis.setPreco(tenisDTO.preco());
         tenis.setDescricao(tenisDTO.descricao());
 
-        // Buscar marca
-        Marca marca = marcaRepository.findById(tenisDTO.marcaId());
+        Marca marca = marcaRepository.findById(tenisDTO.idMarca());
         tenis.setMarca(marca);
-
-        // Buscar fornecedores e converter List<Fornecedor> para Set<Fornecedor>
-        Set<Fornecedor> fornecedores = new HashSet<>(fornecedorRepository.findAllByIds(tenisDTO.fornecedorIds()));
-        tenis.setFornecedor(fornecedores);
-
-        // Buscar estoques e converter List<Estoque> para Set<Estoque>
-        Set<Estoque> estoques = new HashSet<>(estoqueRepository.findAllByIds(tenisDTO.estoqueIds()));
-        tenis.setEstoque(estoques);
 
         tenisRepository.persist(tenis);
         return tenis;
@@ -65,17 +59,7 @@ public class TenisServiceImpl implements TenisService {
 
     @Override
     public List<Tenis> buscarTenisPorNome(String nome) {
-        return tenisRepository.findByNome(nome);
-    }
-
-    @Override
-    public List<Tenis> buscarTenisPorMarca(String marcaNome) {
-        return tenisRepository.findByMarca(marcaNome);
-    }
-
-    @Override
-    public List<Tenis> buscarTenisPorPrecoRange(float minPreco, float maxPreco) {
-        return tenisRepository.findByPrecoRange(minPreco, maxPreco);
+        return tenisRepository.findByNome(nome).list();
     }
 
     @Override
@@ -94,4 +78,24 @@ public class TenisServiceImpl implements TenisService {
             tenisRepository.delete(tenis);
         }
     }
+
+    @Override
+    public List<Tenis> buscarTenisPorMarca(String marcaNome) {
+        String jpql = "SELECT t FROM Tenis t WHERE t.marca.nome = :marcaNome";
+        return getEntityManager()
+                .createQuery(jpql, Tenis.class)
+                .setParameter("marcaNome", marcaNome)
+                .getResultList();
+    }
+
+    @Override
+    public List<Tenis> buscarTenisPorPrecoRange(float minPreco, float maxPreco) {
+        String jpql = "SELECT t FROM Tenis t WHERE t.preco BETWEEN :minPreco AND :maxPreco";
+        return getEntityManager()
+                .createQuery(jpql, Tenis.class)
+                .setParameter("minPreco", minPreco)
+                .setParameter("maxPreco", maxPreco)
+                .getResultList();
+    }
+
 }

@@ -84,7 +84,7 @@ public class CidadeServiceImpl implements CidadeService {
     public CidadeResponseDTO findById(Long id) {
         Cidade cidade = cidadeRepository.findById(id);
         if (cidade == null) {
-            throw new NotFoundException("Cidade não encontrada.");
+            throw new NotFoundException("Cidade nÃ£o encontrada.");
         }
 
         return CidadeResponseDTO.valueOf(cidade);

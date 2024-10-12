@@ -1,5 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.model.fornecedor;
 
+import java.util.List;
+
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import jakarta.persistence.CascadeType;
@@ -19,7 +21,7 @@ public class Fornecedor extends DefaultEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "fornecedor_endereco", joinColumns = @JoinColumn(name = "id_fornecedor"), inverseJoinColumns = @JoinColumn(name = "id_endereco"))
-    private Endereco endereco;
+    List<Endereco> endereco;
 
     public String getNome() {
         return nome;
@@ -37,11 +39,11 @@ public class Fornecedor extends DefaultEntity {
         this.cnpj = cnpj;
     }
 
-    public Endereco getEndereco() {
+    public List<Endereco> getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(Endereco endereco) {
+    public void setEndereco(List<Endereco> endereco) {
         this.endereco = endereco;
     }
 

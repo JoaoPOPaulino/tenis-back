@@ -2,24 +2,31 @@ package br.unitins.joaovittor.basqueteiros.service.fornecedor;
 
 import java.util.List;
 
+import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorDTO;
 import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
-import jakarta.validation.Valid;
-import jakarta.ws.rs.NotFoundException;
 
 public interface FornecedorService {
 
-    FornecedorResponseDTO insert(@Valid FornecedorDTO fornecedorDTO);
+    FornecedorResponseDTO create(FornecedorDTO dto);
+
+    FornecedorResponseDTO update(Long id, FornecedorDTO dto);
 
     void delete(Long id);
 
+    List<FornecedorResponseDTO> findAll(int page, int pageSize);
+
     FornecedorResponseDTO findById(Long id);
 
-    List<FornecedorResponseDTO> findByNome(String nome);
+    List<FornecedorResponseDTO> findByNome(String nome, int page, int pageSize);
 
-    List<FornecedorResponseDTO> findAll();
+    FornecedorResponseDTO createEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO);
 
-    FornecedorResponseDTO update(Long id, @Valid FornecedorDTO fornecedorDTO);
+    FornecedorResponseDTO updateEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO);
 
+    FornecedorResponseDTO removeEnderecos(Long fornecedorId, Long enderecoId);
+
+    long count();
+
+    long countByNome(String nome);
 }

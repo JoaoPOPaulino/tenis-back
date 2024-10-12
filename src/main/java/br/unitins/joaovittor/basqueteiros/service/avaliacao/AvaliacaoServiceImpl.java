@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.service.avaliacao;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoResponseDTO;
@@ -14,6 +15,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
+import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class AvaliacaoServiceImpl implements AvaliacaoService {
@@ -54,20 +56,32 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         validate(dto);
 
         Avaliacao entity = avaliacaoRepository.findById(id);
+
+        entity.setTenis(tenisRepository.findById(dto.idTenis()));
+        entity.setConteudo(dto.conteudo());
+
+        return AvaliacaoResponseDTO.valueOf(entity);
     }
 
     @Override
-    public List<AvaliacaoResponseDTO> findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public AvaliacaoResponseDTO findById(Long id) {
+        Avaliacao avaliacao = avaliacaoRepository.findById(id);
+        if (avaliacao == null) {
+            throw new NotFoundException("Avaliacao não encontrada.");
+        }
+
+        return AvaliacaoResponseDTO.valueOf(avaliacao);
     }
 
     @Override
     public List<AvaliacaoResponseDTO> findAll(int page, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Avaliacao> list = avaliacaoRepository.findAll().page(page, pageSize).list();
+
+        return list.stream().map(e -> AvaliacaoResponseDTO.valueOf(e)).collect(Collectors.toList());
     }
 
     @Override
     public void delete(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        avaliacaoRepository.deleteById(id);
     }
 }

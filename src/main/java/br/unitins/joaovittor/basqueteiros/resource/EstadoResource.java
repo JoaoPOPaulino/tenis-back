@@ -1,57 +1,47 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
 import java.util.List;
-import java.util.Optional;
 
-import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
-import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoResponseDTO;
-import br.unitins.joaovittor.basqueteiros.service.endereco.EnderecoService;
+import br.unitins.joaovittor.basqueteiros.application.Result;
+import br.unitins.joaovittor.basqueteiros.dto.estado.EstadoDTO;
+import br.unitins.joaovittor.basqueteiros.dto.estado.EstadoResponseDTO;
+import br.unitins.joaovittor.basqueteiros.service.estado.EstadoService;
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jboss.logging.Logger;
+import jakarta.ws.rs.core.Response.Status;
 
-Path
-
-("/cidades")
+@Path("/estados")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class CidadeResource {
+public class EstadoResource {
 
     @Inject
-    CidadeService cidadeService;
+    EstadoService estadoService;
 
     @POST
-    public Response create(CidadeDTO dto) {
-        Result result = null;
-
-        try {
-            CidadeResponseDTO cidade = cidadeService.create(dto);
-            return Response.status(Status.CREATED).entity(cidade).build();
-        } catch (ConstraintViolationException e) {
-            result = new Result(e.getConstraintViolations());
-        } catch (Exception e) {
-            result = new Result(e.getMessage(), false);
-        }
-
-        return Response.status(Status.NOT_FOUND).entity(result).build();
+    public Response create(EstadoDTO dto) {
+        EstadoResponseDTO estado = estadoService.create(dto);
+        return Response.status(Status.CREATED).entity(estado).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, CidadeDTO dto) {
+    public Response update(@PathParam("id") Long id, EstadoDTO dto) {
         try {
-            CidadeResponseDTO cidade = cidadeService.update(id, dto);
-            return Response.ok(cidade).build();
+            EstadoResponseDTO estado = estadoService.update(id, dto);
+            return Response.ok(estado).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
             return Response.status(Status.NOT_FOUND).entity(result).build();
@@ -65,7 +55,7 @@ public class CidadeResource {
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
         try {
-            cidadeService.delete(id);
+            estadoService.delete(id);
             return Response.status(Status.NO_CONTENT).build();
         } catch (Exception e) {
             Result result = new Result(e.getMessage(), false);
@@ -74,36 +64,36 @@ public class CidadeResource {
     }
 
     @GET
-    public List<CidadeResponseDTO> findAll(
+    public List<EstadoResponseDTO> findAll(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
-        return cidadeService.findAll(page, pageSize);
+        return estadoService.findAll(page, pageSize);
     }
 
     @GET
     @Path("/{id}")
-    public CidadeResponseDTO findById(@PathParam("id") Long id) {
-        return cidadeService.findById(id);
+    public EstadoResponseDTO findById(@PathParam("id") Long id) {
+        return estadoService.findById(id);
     }
 
     @GET
     @Path("/count")
     public long count() {
-        return cidadeService.count();
+        return estadoService.count();
     }
 
     @GET
     @Path("/search/{nome}/count")
     public long count(@PathParam("nome") String nome) {
-        return cidadeService.countByNome(nome);
+        return estadoService.countByNome(nome);
     }
 
     @GET
     @Path("/search/{nome}")
-    public List<CidadeResponseDTO> search(
+    public List<EstadoResponseDTO> search(
             @PathParam("nome") String nome,
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
-        return cidadeService.findByNome(nome, page, pageSize);
+        return estadoService.findByNome(nome, page, pageSize);
     }
 }

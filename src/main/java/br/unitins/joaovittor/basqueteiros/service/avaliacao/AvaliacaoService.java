@@ -11,7 +11,7 @@ public interface AvaliacaoService {
 
     AvaliacaoResponseDTO update(Long id, AvaliacaoDTO dto);
 
-    List<AvaliacaoResponseDTO> findById(Long id);
+    AvaliacaoResponseDTO findById(Long id);
 
     List<AvaliacaoResponseDTO> findAll(int page, int pageSize);
 

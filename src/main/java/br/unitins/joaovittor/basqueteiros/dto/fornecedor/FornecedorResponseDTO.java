@@ -16,6 +16,8 @@ public record FornecedorResponseDTO(
                 fornecedor.getId(),
                 fornecedor.getNome(),
                 fornecedor.getCnpj(),
-                List.of(EnderecoDTO.valueOf(fornecedor.getEndereco())));
+                fornecedor.getEndereco().
+                        stream().map(enderecos -> EnderecoDTO.valueOf(enderecos)).toList()
+        );
     }
 }

@@ -1,13 +1,25 @@
 package br.unitins.joaovittor.basqueteiros.service.marca;
 
+import java.util.List;
+
 import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaDTO;
 import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaResponseDTO;
 
 public interface MarcaService {
 
-    MarcaResponseDTO createMarca(MarcaDTO marcaDTO);
+    MarcaResponseDTO create(MarcaDTO dto);
 
-    MarcaResponseDTO getMarcaById(Long id);
+    MarcaResponseDTO update(Long id, MarcaDTO dto);
 
-    MarcaResponseDTO getMarcaByNome(String nome);
+    void delete(Long id);
+
+    List<MarcaResponseDTO> findAll(int page, int pageSize);
+
+    MarcaResponseDTO findById(Long id);
+
+    List<MarcaResponseDTO> findByNome(String nome, int page, int pageSize);
+
+    long count();
+
+    long countByNome(String nome);
 }

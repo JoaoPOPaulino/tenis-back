@@ -18,66 +18,136 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
 import org.jboss.logging.Logger;
 
-@Path("/fornecedores")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public class FornecedorResource {
+import br.unitins.joaovittor.basqueteiros.application.Result;
+import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response.Status;
 
-    private static final Logger LOGGER = Logger.getLogger(FornecedorResource.class.getName());
+@Path("/fornecedores")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class FornecedorResource {
 
     @Inject
     FornecedorService fornecedorService;
 
     @POST
-    public Response criarFornecedor(@Valid FornecedorDTO fornecedorDTO) {
-        FornecedorResponseDTO fornecedor = fornecedorService.insert(fornecedorDTO);
-        LOGGER.info("Fornecedor criado com sucesso: " + fornecedor);
-        return Response.status(Response.Status.CREATED).entity(fornecedor).build();
-    }
+    public Response create(FornecedorDTO dto) {
+        Result result = null;
 
-    @GET
-    @Path("/{id}")
-    public Response buscarFornecedorPorId(@PathParam("id") Long id) {
-        Optional<FornecedorResponseDTO> fornecedorOpt = Optional.ofNullable(fornecedorService.findById(id));
-        return fornecedorOpt.map(fornecedor -> {
-            LOGGER.info("Fornecedor encontrado: " + fornecedor);
-            return Response.ok(fornecedor).build();
-        }).orElseGet(() -> {
-            LOGGER.warn("Fornecedor não encontrado para ID: " + id);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        });
-    }
+        try {
+            FornecedorResponseDTO fornecedor = fornecedorService.create(dto);
+            return Response.status(Status.CREATED).entity(fornecedor).build();
+        } catch (ConstraintViolationException e) {
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            result = new Result(e.getMessage(), false);
+        }
 
-    @GET
-    @Path("/nome/{nome}")
-    public Response buscarFornecedoresPorNome(@PathParam("nome") String nome) {
-        List<FornecedorResponseDTO> fornecedores = fornecedorService.findByNome(nome);
-        LOGGER.info("Fornecedores encontrados para o nome: " + nome);
-        return Response.ok(fornecedores).build();
-    }
-
-    @GET
-    public Response listarTodosFornecedores() {
-        List<FornecedorResponseDTO> fornecedores = fornecedorService.findAll();
-        LOGGER.info("Listando todos os fornecedores");
-        return Response.ok(fornecedores).build();
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response atualizarFornecedor(@PathParam("id") Long id, @Valid FornecedorDTO fornecedorDTO) {
-        FornecedorResponseDTO fornecedor = fornecedorService.update(id, fornecedorDTO);
-        LOGGER.info("Fornecedor atualizado com sucesso: ID " + id);
-        return Response.ok(fornecedor).build();
+    public Response update(@PathParam("id") Long id, FornecedorDTO dto) {
+        try {
+            FornecedorResponseDTO fornecedor = fornecedorService.update(id, dto);
+            return Response.ok(fornecedor).build();
+        } catch (ConstraintViolationException e) {
+            Result result = new Result(e.getConstraintViolations());
+            return Response.status(Status.NOT_FOUND).entity(result).build();
+        } catch (Exception e) {
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Status.NOT_FOUND).entity(result).build();
+        }
     }
 
     @DELETE
     @Path("/{id}")
-    public Response excluirFornecedor(@PathParam("id") Long id) {
-        fornecedorService.delete(id);
-        LOGGER.info("Fornecedor excluído com sucesso: ID " + id);
-        return Response.noContent().build();
+    public Response delete(@PathParam("id") Long id) {
+        try {
+            fornecedorService.delete(id);
+            return Response.status(Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Status.NOT_FOUND).entity(result).build();
+        }
+    }
+
+    @GET
+    public List<FornecedorResponseDTO> findAll(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        return fornecedorService.findAll(page, pageSize);
+    }
+
+    @GET
+    @Path("/{id}")
+    public FornecedorResponseDTO findById(@PathParam("id") Long id) {
+        return fornecedorService.findById(id);
+    }
+
+    @POST
+    @Path("/{id}/enderecos")
+    @Transactional
+    public Response createEnderecos(List<EnderecoDTO> enderecosDTO, @PathParam("id") Long id) {
+        try {
+            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.createEnderecos(id, enderecosDTO);
+            return Response.ok(fornecedorAtualizado).build();
+        } catch (NotFoundException e) {
+            return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{id}/enderecos")
+    public Response updateEnderecos(List<EnderecoDTO> enderecosDTO, @PathParam("id") Long id) {
+        try {
+            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.updateEnderecos(id, enderecosDTO);
+            return Response.ok(fornecedorAtualizado).build();
+        } catch (NotFoundException e) {
+            return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    @DELETE
+    @Path("/{userId}/enderecos/{enderecoId}")
+    @Transactional
+    public Response removeEnderecos(@PathParam("userId") Long userId, @PathParam("enderecoId") Long enderecoId) {
+        try {
+            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.removeEnderecos(userId, enderecoId);
+            return Response.ok(fornecedorAtualizado).build();
+        } catch (NotFoundException e) {
+            return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/count")
+    public long count() {
+        return fornecedorService.count();
+    }
+
+    @GET
+    @Path("/search/{nome}/count")
+    public long count(@PathParam("nome") String nome) {
+        return fornecedorService.countByNome(nome);
+    }
+
+    @GET
+    @Path("/search/{nome}")
+    public List<FornecedorResponseDTO> search(
+            @PathParam("nome") String nome,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        return fornecedorService.findByNome(nome, page, pageSize);
     }
 }
