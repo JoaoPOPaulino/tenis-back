@@ -14,7 +14,6 @@ public class PerfilConverter implements AttributeConverter<TipoUsuario, Integer>
 
     @Override
     public TipoUsuario convertToEntityAttribute(Integer id) {
-        return TipoUsuario.valueOf(id);
+        return TipoUsuario.fromId(id);
     }
-
 }

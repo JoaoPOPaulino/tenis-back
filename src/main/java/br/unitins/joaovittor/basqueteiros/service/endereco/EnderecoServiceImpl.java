@@ -20,18 +20,15 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     @Override
     public List<EnderecoResponseDTO> findAll() {
-        List<Endereco> enderecos = enderecoRepository.listAll();
-        return enderecos.stream()
+        return enderecoRepository.listAll()
+                .stream()
                 .map(EnderecoResponseDTO::valueOf)
                 .collect(Collectors.toList());
     }
 
     @Override
     public EnderecoResponseDTO findById(Long id) {
-        Endereco endereco = enderecoRepository.findById(id);
-        if (endereco == null) {
-            throw new NotFoundException("Endereço não encontrado");
-        }
+        Endereco endereco = obterEnderecoPorId(id);
         return EnderecoResponseDTO.valueOf(endereco);
     }
 
@@ -45,24 +42,31 @@ public class EnderecoServiceImpl implements EnderecoService {
     @Override
     @Transactional
     public void update(Long id, EnderecoDTO enderecoDTO) {
-        Endereco endereco = enderecoRepository.findById(id);
-        if (endereco == null) {
-            throw new NotFoundException("Endereço não encontrado");
-        }
-        endereco.setEstado(enderecoDTO.estado());
-        endereco.setCidade(enderecoDTO.cidade());
-        endereco.setQuadra(enderecoDTO.quadra());
-        endereco.setRua(enderecoDTO.rua());
-        endereco.setNumero(enderecoDTO.numero());
+        Endereco endereco = obterEnderecoPorId(id);
+        atualizarEndereco(endereco, enderecoDTO);
         enderecoRepository.persist(endereco);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
+        Endereco endereco = obterEnderecoPorId(id);
+        enderecoRepository.delete(endereco);
+    }
+
+    private Endereco obterEnderecoPorId(Long id) {
         Endereco endereco = enderecoRepository.findById(id);
-        if (endereco != null) {
-            enderecoRepository.delete(endereco);
+        if (endereco == null) {
+            throw new NotFoundException("Endereço não encontrado");
         }
+        return endereco;
+    }
+
+    private void atualizarEndereco(Endereco endereco, EnderecoDTO enderecoDTO) {
+        endereco.setEstado(enderecoDTO.estado());
+        endereco.setCidade(enderecoDTO.cidade());
+        endereco.setQuadra(enderecoDTO.quadra());
+        endereco.setRua(enderecoDTO.rua());
+        endereco.setNumero(enderecoDTO.numero());
     }
 }

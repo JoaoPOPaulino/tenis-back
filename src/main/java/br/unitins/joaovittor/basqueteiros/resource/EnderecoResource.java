@@ -1,11 +1,13 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.service.endereco.EnderecoService;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -16,44 +18,92 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.logging.Logger;
 
-@Path("/enderecos")
-@Produces(MediaType.APPLICATION_JSON)
+Path
+
+("/cidades")
 @Consumes(MediaType.APPLICATION_JSON)
-public class EnderecoResource {
+@Produces(MediaType.APPLICATION_JSON)
+public class CidadeResource {
 
     @Inject
-    EnderecoService enderecoService;
-
-    @GET
-    public List<EnderecoResponseDTO> listAll() {
-        return enderecoService.findAll();
-    }
-
-    @GET
-    @Path("/{id}")
-    public Response getById(@PathParam("id") Long id) {
-        EnderecoResponseDTO endereco = enderecoService.findById(id);
-        return Response.ok(endereco).build();
-    }
+    CidadeService cidadeService;
 
     @POST
-    public Response create(EnderecoDTO enderecoDTO) {
-        enderecoService.create(enderecoDTO);
-        return Response.status(Response.Status.CREATED).build();
+    public Response create(CidadeDTO dto) {
+        Result result = null;
+
+        try {
+            CidadeResponseDTO cidade = cidadeService.create(dto);
+            return Response.status(Status.CREATED).entity(cidade).build();
+        } catch (ConstraintViolationException e) {
+            result = new Result(e.getConstraintViolations());
+        } catch (Exception e) {
+            result = new Result(e.getMessage(), false);
+        }
+
+        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, EnderecoDTO enderecoDTO) {
-        enderecoService.update(id, enderecoDTO);
-        return Response.ok().build();
+    public Response update(@PathParam("id") Long id, CidadeDTO dto) {
+        try {
+            CidadeResponseDTO cidade = cidadeService.update(id, dto);
+            return Response.ok(cidade).build();
+        } catch (ConstraintViolationException e) {
+            Result result = new Result(e.getConstraintViolations());
+            return Response.status(Status.NOT_FOUND).entity(result).build();
+        } catch (Exception e) {
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Status.NOT_FOUND).entity(result).build();
+        }
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        enderecoService.delete(id);
-        return Response.noContent().build();
+        try {
+            cidadeService.delete(id);
+            return Response.status(Status.NO_CONTENT).build();
+        } catch (Exception e) {
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Status.NOT_FOUND).entity(result).build();
+        }
+    }
+
+    @GET
+    public List<CidadeResponseDTO> findAll(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        return cidadeService.findAll(page, pageSize);
+    }
+
+    @GET
+    @Path("/{id}")
+    public CidadeResponseDTO findById(@PathParam("id") Long id) {
+        return cidadeService.findById(id);
+    }
+
+    @GET
+    @Path("/count")
+    public long count() {
+        return cidadeService.count();
+    }
+
+    @GET
+    @Path("/search/{nome}/count")
+    public long count(@PathParam("nome") String nome) {
+        return cidadeService.countByNome(nome);
+    }
+
+    @GET
+    @Path("/search/{nome}")
+    public List<CidadeResponseDTO> search(
+            @PathParam("nome") String nome,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        return cidadeService.findByNome(nome, page, pageSize);
     }
 }

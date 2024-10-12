@@ -80,7 +80,8 @@ public class TenisServiceImpl implements TenisService {
 
     @Override
     public List<TenisResponseDTO> listarTodosTenis() {
-        return tenisRepository.listAll().stream()
+        return tenisRepository.listAll()
+                .stream()
                 .map(TenisResponseDTO::valueOf)
                 .collect(Collectors.toList());
     }

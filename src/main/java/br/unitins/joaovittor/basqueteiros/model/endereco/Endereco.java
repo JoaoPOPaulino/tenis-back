@@ -1,8 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.model.endereco;
 
-import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import br.unitins.joaovittor.basqueteiros.model.cidade.Cidade;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -10,49 +9,17 @@ import jakarta.persistence.Table;
 @Table(name = "endereco")
 public class Endereco extends DefaultEntity {
 
-    @Column(name = "estado", length = 50, nullable = false)
-    private String estado;
+    private Cidade cidade;
 
-    @Column(name = "cidade", length = 100, nullable = false)
-    private String cidade;
+    private String cep;
 
-    @Column(name = "quadra", length = 50, nullable = true)
     private String quadra;
 
-    @Column(name = "rua", length = 100, nullable = false)
     private String rua;
 
-    @Column(name = "numero", nullable = true)
-    private Integer numero;
+    private String numero;
 
-    public Endereco() {
-
-    }
-
-    public Endereco(EnderecoDTO dto) {
-        this.estado = dto.estado();
-        this.cidade = dto.cidade();
-        this.quadra = dto.quadra();
-        this.quadra = dto.quadra();
-        this.rua = dto.rua();
-        this.numero = dto.numero();
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
+    private String complemento;
 
     public String getQuadra() {
         return quadra;
@@ -70,11 +37,35 @@ public class Endereco extends DefaultEntity {
         this.rua = rua;
     }
 
-    public Integer getNumero() {
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
     }
 }

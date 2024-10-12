@@ -7,10 +7,7 @@ import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
 import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -25,9 +22,6 @@ public class Usuario extends DefaultEntity {
     private String login;
     private String senha;
 
-   
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_usuario")
     private TipoUsuario tipoUsuario;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

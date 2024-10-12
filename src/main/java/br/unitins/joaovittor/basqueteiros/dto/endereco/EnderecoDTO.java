@@ -1,31 +1,31 @@
 package br.unitins.joaovittor.basqueteiros.dto.endereco;
 
+import br.unitins.joaovittor.basqueteiros.dto.cidade.CidadeResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 public record EnderecoDTO(
-        @NotBlank(message = "O estado não pode ser nulo.")
-        String estado,
-        @NotBlank(message = "A cidade não pode ser nula.")
-        String cidade,
-        @NotBlank(message = "A quadra não pode ser nula.")
+        Long id,
+        @NotBlank(message = "CEP é obrigatório")
+        String cep,
+        @NotBlank(message = "Quadra é obrigatório")
         String quadra,
-        @NotBlank(message = "A rua não pode ser nula.")
-        @Size(max = 100, message = "O nome da rua não pode ultrapassar 100 caracteres.")
+        @NotBlank(message = "Rua é obrigatório")
         String rua,
-        @NotBlank(message = "O número não pode ser nulo.")
-        @Pattern(regexp = "^\\d+$", message = "O número deve ser numérico.")
-        Integer numero) {
+        @NotBlank(message = "Número é obrigatório")
+        String numero,
+        @NotBlank(message = "Complemento é obrigatório")
+        String complemento,
+        CidadeResponseDTO cidade) {
 
     public static EnderecoDTO valueOf(Endereco endereco) {
         return new EnderecoDTO(
-                endereco.getEstado(),
-                endereco.getCidade(),
+                endereco.getId(),
+                endereco.getCep(),
                 endereco.getQuadra(),
                 endereco.getRua(),
-                endereco.getNumero());
+                endereco.getNumero(),
+                endereco.getComplemento(),
+                CidadeResponseDTO.valueOf(endereco.getCidade()));
     }
-
 }

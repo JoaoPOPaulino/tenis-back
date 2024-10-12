@@ -6,17 +6,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record TenisDTO(
+        @NotNull(message = "A marca é obrigatória")
+        Long idMarca,
         @NotBlank(message = "O nome é obrigatório")
         String nome,
         @Positive(message = "O preço deve ser positivo")
         float preco,
-        @NotBlank(message = "A descrição é obrigatória")
-        String descricao,
-        @NotNull(message = "A marca é obrigatória")
-        Long marcaId,
-        @NotNull(message = "Pelo menos um fornecedor deve ser selecionado")
-        Set<Long> fornecedorIds,
         @NotNull(message = "O estoque é obrigatório")
-        Set<Long> estoqueIds) {
+        Integer estoque,
+        @NotBlank(message = "O modelo é obrigatório")
+        String modelo,
+        @NotBlank(message = "A descrição é obrigatória")
+        String descricao) {
 
 }

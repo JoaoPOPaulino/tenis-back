@@ -22,8 +22,8 @@ public enum TipoUsuario {
         return label;
     }
 
-    public static TipoUsuario valueOf(Integer id) throws IllegalArgumentException {
-        if ((id == null)) {
+    public static TipoUsuario fromId(Integer id) throws IllegalArgumentException {
+        if (id == null) {
             return null;
         }
         for (TipoUsuario tipoUsuario : TipoUsuario.values()) {

@@ -1,30 +1,21 @@
 package br.unitins.joaovittor.basqueteiros.dto.fornecedor;
 
-import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
-import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
-import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
-import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
-
 import java.util.List;
+
+import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
 
 public record FornecedorResponseDTO(
         Long id,
         String nome,
         String cnpj,
-        Endereco endereco,
-        String email,
-        List<Telefone> telefones,
-        List<Tenis> produtosFornecidos) {
+        List<EnderecoDTO> enderecos) {
 
     public static FornecedorResponseDTO valueOf(Fornecedor fornecedor) {
         return new FornecedorResponseDTO(
                 fornecedor.getId(),
                 fornecedor.getNome(),
                 fornecedor.getCnpj(),
-                fornecedor.getEndereco(),
-                fornecedor.getEmail(),
-                fornecedor.getListaTelefone(),
-                fornecedor.getProdutosFornecidos()
-        );
+                List.of(EnderecoDTO.valueOf(fornecedor.getEndereco())));
     }
 }

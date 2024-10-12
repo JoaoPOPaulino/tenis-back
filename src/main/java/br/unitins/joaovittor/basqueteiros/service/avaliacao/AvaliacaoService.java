@@ -1,18 +1,19 @@
 package br.unitins.joaovittor.basqueteiros.service.avaliacao;
 
-import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoDTO;
-import br.unitins.joaovittor.basqueteiros.model.avaliacao.Avaliacao;
 import java.util.List;
+
+import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoDTO;
+import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoResponseDTO;
 
 public interface AvaliacaoService {
 
-    Avaliacao criarAvaliacao(AvaliacaoDTO avaliacaoDTO, Long usuarioId);
+    AvaliacaoResponseDTO create(AvaliacaoDTO dto);
 
-    Avaliacao buscarAvaliacaoPorId(Long id);
+    AvaliacaoResponseDTO update(Long id, AvaliacaoDTO dto);
 
-    List<Avaliacao> buscarAvaliacoesPorUsuarioId(Long usuarioId);
+    List<AvaliacaoResponseDTO> findById(Long id);
 
-    List<Avaliacao> listarTodasAvaliacoes();
+    List<AvaliacaoResponseDTO> findAll(int page, int pageSize);
 
-    void excluirAvaliacao(Long id);
+    void delete(Long id);
 }

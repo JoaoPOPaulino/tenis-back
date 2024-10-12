@@ -4,7 +4,9 @@ import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorDTO;
 import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
+import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.NotFoundException;
 
 public interface FornecedorService {
 
@@ -19,4 +21,5 @@ public interface FornecedorService {
     List<FornecedorResponseDTO> findAll();
 
     FornecedorResponseDTO update(Long id, @Valid FornecedorDTO fornecedorDTO);
+
 }
