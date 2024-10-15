@@ -8,12 +8,14 @@ import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
 import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Usuario extends DefaultEntity {
@@ -23,16 +25,19 @@ public class Usuario extends DefaultEntity {
     private String login;
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_usuario")
     private TipoUsuario tipoUsuario;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinTable(name = "usuario_telefone", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_telefone"))
     private List<Telefone> telefone;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "usuario_endereco", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_endereco"))
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Endereco> endereco;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "usuario_cartao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_cartao"))
     private List<Cartao> cartoes;
 
     public String getNome() {

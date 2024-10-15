@@ -2,8 +2,10 @@ package br.unitins.joaovittor.basqueteiros.model.avaliacao;
 
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
+import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
+@Entity
 public class Avaliacao extends DefaultEntity {
 
     @ManyToOne
