@@ -5,6 +5,7 @@ import java.util.List;
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import br.unitins.joaovittor.basqueteiros.dto.telefone.TelefoneDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
 import jakarta.validation.Valid;
@@ -42,5 +43,11 @@ public interface UsuarioService {
     UsuarioResponseDTO updateCartao(Long id, Long cartaoId, CartaoDTO cartaoDTO);
 
     UsuarioResponseDTO deleteCartao(Long id, Long cartaoId);
+
+    UsuarioResponseDTO createTelefones(Long usuarioId, List<TelefoneDTO> telefonesDTO);
+
+    
+
+    
 
 }

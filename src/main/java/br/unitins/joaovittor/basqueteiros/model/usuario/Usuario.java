@@ -34,7 +34,7 @@ public class Usuario extends DefaultEntity {
     private List<Telefone> telefone;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Endereco> endereco;
+    private List<Endereco> enderecos;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "usuario_cartao", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_cartao"))
@@ -97,11 +97,11 @@ public class Usuario extends DefaultEntity {
     }
 
     public List<Endereco> getEndereco() {
-        return endereco;
+        return enderecos;
     }
 
     public void setEndereco(List<Endereco> endereco) {
-        this.endereco = endereco;
+        this.enderecos = endereco;
     }
 
 }

@@ -1,5 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.dto.usuario;
 
+import java.util.Collections;
 import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoResponseDTO;
@@ -20,15 +21,17 @@ public record UsuarioResponseDTO(
         List<CartaoResponseDTO> cartoes,
         TipoUsuario idPerfil) {
 
-    public static UsuarioResponseDTO valueOf(Usuario usuario) {
-        if (usuario == null) {
-            return null;
+        public static UsuarioResponseDTO valueOf(Usuario usuario) {
+                if (usuario == null) {
+                    throw new IllegalArgumentException("Usuario não pode ser null");
+        
+        
         }
 
-        List<EnderecoDTO> endereco = null;
+        List<EnderecoDTO> enderecos = null;
 
         if (usuario.getEndereco() != null && !usuario.getEndereco().isEmpty()) {
-            endereco = usuario.getEndereco().stream().map(e -> EnderecoDTO.valueOf(e)).toList();
+            enderecos = usuario.getEndereco().stream().map(e -> EnderecoDTO.valueOf(e)).toList();
         }
 
         List<CartaoResponseDTO> cartoes = null;
@@ -37,6 +40,9 @@ public record UsuarioResponseDTO(
             cartoes = usuario.getCartoes().stream().map(c -> CartaoResponseDTO.valueOf(c)).toList();
         }
 
+        List<TelefoneDTO> telefones = usuario.getTelefone() == null ? Collections.emptyList() :
+                usuario.getTelefone().stream().map(TelefoneDTO::valueOf).toList();
+
         return new UsuarioResponseDTO(
                 usuario.getId(),
                 usuario.getNome(),
@@ -44,10 +50,11 @@ public record UsuarioResponseDTO(
                 usuario.getLogin(),
                 usuario.getSenha(),
                 usuario.getTipoUsuario(),
-                usuario.getTelefone()
-                        .stream()
-                        .map(t -> TelefoneDTO.valueOf(t)).toList(),
-                endereco,
+                telefones,
+                //usuario.getTelefone()
+                        //.stream()
+                        //.map(t -> TelefoneDTO.valueOf(t)).toList(),
+                enderecos,
                 cartoes,
                 usuario.getTipoUsuario());
     }
