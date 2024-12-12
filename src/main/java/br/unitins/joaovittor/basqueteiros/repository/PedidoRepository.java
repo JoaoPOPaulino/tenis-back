@@ -1,5 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.model.pedido.Pedido;
@@ -9,11 +10,15 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class PedidoRepository implements PanacheRepository<Pedido> {
 
-    public List<Pedido> findAll(String login) {
-        return find("usuario.login = ?1", login).list();
+    public List<Pedido> findByUsuario(Long usuarioId) {
+        return list("usuario.id", usuarioId);
     }
 
-    public List<Pedido> findAll(Long idUsuario) {
-        return find("usuario.id = ?1", idUsuario).list();
+    public List<Pedido> findByPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+        return find("data BETWEEN ?1 AND ?2", inicio, fim).list();
+    }
+
+    public List<Pedido> findPedidosAtivos() {
+        return list("ativo", true);
     }
 }

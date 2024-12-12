@@ -1,6 +1,6 @@
 package br.unitins.joaovittor.basqueteiros.model.converterjpa;
 
-import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
+import br.unitins.joaovittor.basqueteiros.model.tipo_usuario.TipoUsuario;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

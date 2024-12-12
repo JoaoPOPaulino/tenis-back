@@ -1,22 +1,15 @@
 package br.unitins.joaovittor.basqueteiros.dto.tenis;
 
-import java.util.Set;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import java.math.BigDecimal;
+
+import br.unitins.joaovittor.basqueteiros.model.tamanho.Tamanho;
 
 public record TenisDTO(
-        @NotNull(message = "A marca é obrigatória")
+        String descricao,
         Long idMarca,
-        @NotBlank(message = "O nome é obrigatório")
-        String nome,
-        @Positive(message = "O preço deve ser positivo")
-        float preco,
-        @NotNull(message = "O estoque é obrigatório")
-        Integer estoque,
-        @NotBlank(message = "O modelo é obrigatório")
         String modelo,
-        @NotBlank(message = "A descrição é obrigatória")
-        String descricao) {
+        Tamanho tamanho,
+        BigDecimal preco // assumindo que vem da classe Produto
+        ) {
 
 }

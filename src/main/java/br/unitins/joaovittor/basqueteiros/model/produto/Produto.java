@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.model.produto;
 
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -12,11 +13,17 @@ import jakarta.persistence.ManyToOne;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Produto extends DefaultEntity {
 
+    @Column(nullable = false)
     private String nome;
+
+    @Column(nullable = false)
     private Float preco;
+
+    @Column(nullable = false)
     private int estoque;
+
     @ManyToOne
-    @JoinColumn(name = "id_fornecedor")
+    @JoinColumn(nullable = false)
     private Fornecedor fornecedor;
 
     public String getNome() {
@@ -50,4 +57,5 @@ public abstract class Produto extends DefaultEntity {
     public void setFornecedor(Fornecedor fornecedor) {
         this.fornecedor = fornecedor;
     }
+
 }

@@ -2,6 +2,7 @@ package br.unitins.joaovittor.basqueteiros.model.cidade;
 
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.estado.Estado;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -9,10 +10,11 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Cidade extends DefaultEntity {
 
+    @Column(nullable = false)
     private String nome;
 
-    @JoinColumn(name = "id_estado")
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Estado estado;
 
     public String getNome() {

@@ -15,8 +15,8 @@ import br.unitins.joaovittor.basqueteiros.model.cartao.Cartao;
 import br.unitins.joaovittor.basqueteiros.model.cidade.Cidade;
 import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
-import br.unitins.joaovittor.basqueteiros.model.tipoCartao.Tipo;
-import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
+import br.unitins.joaovittor.basqueteiros.model.tipo_cartao.TipoCartao;
+import br.unitins.joaovittor.basqueteiros.model.tipo_usuario.TipoUsuario;
 import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
 import br.unitins.joaovittor.basqueteiros.repository.CartaoRepository;
 import br.unitins.joaovittor.basqueteiros.repository.CidadeRepository;
@@ -50,33 +50,33 @@ public class UsuarioServiceImpl implements UsuarioService {
     CartaoRepository cartaoRepository;
 
     @Override
-@Transactional
-public UsuarioResponseDTO create(@Valid UsuarioDTO dto) throws ConstraintViolationException {
-    // Verifica se o login já existe
-    if (usuarioRepository.findByLogin(dto.login()) != null) {
-        throw new ValidationException("login", "O login informado já existe, informe outro.");
+    @Transactional
+    public UsuarioResponseDTO create(@Valid UsuarioDTO dto) throws ConstraintViolationException {
+        // Verifica se o login já existe
+        if (usuarioRepository.findByLogin(dto.login()) != null) {
+            throw new ValidationException("login", "O login informado já existe, informe outro.");
+        }
+
+        // Valida se o ID do perfil (tipo de usuário) é inválido
+        if (dto.idPerfil() == 0) {
+            throw new IllegalArgumentException("ID do Tipo de Usuário não pode ser 0.");
+        }
+
+        // Criação do usuário
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.nome());
+        usuario.setEmail(dto.email());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(hashServiceImpl.getHashSenha(dto.senha()));
+
+        // Define o tipo de usuário, já com a validação feita
+        usuario.setTipoUsuario(TipoUsuario.fromId(dto.idPerfil()));
+
+        // Persiste o usuário
+        usuarioRepository.persist(usuario);
+
+        return UsuarioResponseDTO.valueOf(usuario);
     }
-
-    // Valida se o ID do perfil (tipo de usuário) é inválido
-    if (dto.idPerfil() == 0) {
-        throw new IllegalArgumentException("ID do Tipo de Usuário não pode ser 0.");
-    }
-
-    // Criação do usuário
-    Usuario usuario = new Usuario();
-    usuario.setNome(dto.nome());
-    usuario.setEmail(dto.email());
-    usuario.setLogin(dto.login());
-    usuario.setSenha(hashServiceImpl.getHashSenha(dto.senha()));
-
-    // Define o tipo de usuário, já com a validação feita
-    usuario.setTipoUsuario(TipoUsuario.fromId(dto.idPerfil()));
-
-    // Persiste o usuário
-    usuarioRepository.persist(usuario);
-
-    return UsuarioResponseDTO.valueOf(usuario);
-}
 
     @Override
     @Transactional
@@ -241,7 +241,7 @@ public UsuarioResponseDTO create(@Valid UsuarioDTO dto) throws ConstraintViolati
         for (CartaoDTO dto : cartaoDTO) {
             Cartao cartao = new Cartao();
 
-            cartao.setTipo(Tipo.valueOf(dto.idTipo()));
+            cartao.setTipo(TipoCartao.valueOf(dto.idTipo()));
             cartao.setNumero(dto.numero());
             cartao.setCvv(dto.cvv());
             cartao.setValidade(dto.validade());
@@ -273,7 +273,7 @@ public UsuarioResponseDTO create(@Valid UsuarioDTO dto) throws ConstraintViolati
             cartaoExistente.setValidade(cartaoDTO.validade());
             cartaoExistente.setTitular(cartaoDTO.titular());
             cartaoExistente.setCpf(cartaoDTO.cpf());
-            cartaoExistente.setTipo(Tipo.valueOf(cartaoDTO.idTipo()));
+            cartaoExistente.setTipo(TipoCartao.valueOf(cartaoDTO.idTipo()));
         } else {
             throw new NotFoundException("Cartão não encontrado para o usuário especificado.");
         }
@@ -318,28 +318,28 @@ public UsuarioResponseDTO create(@Valid UsuarioDTO dto) throws ConstraintViolati
     @Override
     @Transactional
     public UsuarioResponseDTO createTelefones(Long usuarioId, List<TelefoneDTO> telefonesDTO) {
-    // Busca o usuário pelo ID
-    Usuario usuarioExistente = usuarioRepository.findById(usuarioId);
-    if (usuarioExistente == null) {
-        throw new NotFoundException("Usuário não encontrado.");
+        // Busca o usuário pelo ID
+        Usuario usuarioExistente = usuarioRepository.findById(usuarioId);
+        if (usuarioExistente == null) {
+            throw new NotFoundException("Usuário não encontrado.");
+        }
+
+        // Recupera a lista existente de telefones do usuário
+        List<Telefone> telefonesExistentes = usuarioExistente.getTelefone();
+
+        // Itera sobre a lista de DTOs de telefone e adiciona os novos telefones ao usuário
+        for (TelefoneDTO telefoneDTO : telefonesDTO) {
+            Telefone novoTelefone = new Telefone();
+            novoTelefone.setCodigoArea(telefoneDTO.codigoArea());
+            novoTelefone.setNumero(telefoneDTO.numero());
+
+            telefonesExistentes.add(novoTelefone);
+        }
+
+        // Persiste o usuário com os novos telefones
+        usuarioRepository.persist(usuarioExistente);
+
+        // Retorna o DTO de resposta atualizado
+        return UsuarioResponseDTO.valueOf(usuarioExistente);
     }
-
-    // Recupera a lista existente de telefones do usuário
-    List<Telefone> telefonesExistentes = usuarioExistente.getTelefone();
-
-    // Itera sobre a lista de DTOs de telefone e adiciona os novos telefones ao usuário
-    for (TelefoneDTO telefoneDTO : telefonesDTO) {
-        Telefone novoTelefone = new Telefone();
-        novoTelefone.setCodigoArea(telefoneDTO.codigoArea());
-        novoTelefone.setNumero(telefoneDTO.numero());
-        
-        telefonesExistentes.add(novoTelefone);
-    }
-
-    // Persiste o usuário com os novos telefones
-    usuarioRepository.persist(usuarioExistente);
-
-    // Retorna o DTO de resposta atualizado
-    return UsuarioResponseDTO.valueOf(usuarioExistente);
-}
 }

@@ -3,25 +3,21 @@ package br.unitins.joaovittor.basqueteiros.dto.cartao;
 import java.time.LocalDate;
 
 import br.unitins.joaovittor.basqueteiros.model.cartao.Cartao;
-import br.unitins.joaovittor.basqueteiros.model.tipoCartao.Tipo;
+import br.unitins.joaovittor.basqueteiros.model.tipo_cartao.TipoCartao;
 
 public record CartaoResponseDTO(
         Long id,
-        Tipo tipo,
-        String numero,
-        String cvv,
+        TipoCartao tipoCartao,
+        String numeroMascarado,
         LocalDate validade,
-        String titular,
-        String cpf) {
+        String titular) {
 
     public static CartaoResponseDTO valueOf(Cartao cartao) {
         return new CartaoResponseDTO(
-                cartao.getId(),
-                cartao.getTipo(),
-                cartao.getNumero(),
-                cartao.getCvv(),
+                cartao.getId(), (TipoCartao) cartao.getTipoCartao(),
+                "****" + cartao.getNumero().substring(12),
                 cartao.getValidade(),
-                cartao.getTitular(),
-                cartao.getCpf());
+                cartao.getTitular()
+        );
     }
 }

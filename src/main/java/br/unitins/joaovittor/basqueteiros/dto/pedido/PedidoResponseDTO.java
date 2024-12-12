@@ -1,36 +1,32 @@
 package br.unitins.joaovittor.basqueteiros.dto.pedido;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoResponseDTO;
-import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.dto.item.ItemResponseDTO;
-import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.pedido.Pedido;
 
 public record PedidoResponseDTO(
         Long id,
-        String data,
-        UsuarioResponseDTO usuario,
-        Float preco,
+        LocalDateTime data,
+        Float total,
         List<ItemResponseDTO> itens,
-        EnderecoDTO endereco,
+        EnderecoResponseDTO endereco, // Mudando para EnderecoResponseDTO
         CartaoResponseDTO cartao) {
 
     public static PedidoResponseDTO valueOf(Pedido pedido) {
-        String formattedData = pedido.getData() != null
-                ? pedido.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
-                : null;
-
         return new PedidoResponseDTO(
                 pedido.getId(),
-                formattedData,
-                UsuarioResponseDTO.valueOf(pedido.getUsuario()),
+                pedido.getData(),
                 pedido.getTotal(),
-                ItemResponseDTO.valueOf(pedido.getItens()),
-                EnderecoDTO.valueOf(pedido.getEndereco()),
-                CartaoResponseDTO.valueOf(pedido.getCartao()));
+                pedido.getItens().stream()
+                        .map(ItemResponseDTO::valueOf)
+                        .collect(Collectors.toList()),
+                EnderecoResponseDTO.valueOf(pedido.getEndereco()),
+                CartaoResponseDTO.valueOf(pedido.getCartao())
+        );
     }
-
 }

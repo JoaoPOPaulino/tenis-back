@@ -1,6 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.model.pedido;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.unitins.joaovittor.basqueteiros.model.cartao.Cartao;
@@ -9,6 +10,7 @@ import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.item.Item;
 import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,18 +19,24 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Pedido extends DefaultEntity {
 
+    @Column(nullable = false)
     private LocalDateTime data;
+
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(nullable = false)
     private Usuario usuario;
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "pedido")
-    private List<Item> itens;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido")
+    private List<Item> itens = new ArrayList<>();
+
+    @Column(nullable = false)
     private Float total;
+
     @ManyToOne
-    @JoinColumn(name = "id_endereco")
+    @JoinColumn(nullable = false)
     private Endereco endereco;
+
     @ManyToOne
-    @JoinColumn(name = "id_cartao")
     private Cartao cartao;
 
     public LocalDateTime getData() {
@@ -77,6 +85,12 @@ public class Pedido extends DefaultEntity {
 
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
+    }
+
+    public Float calcularTotal() {
+        return itens.stream()
+                .map(Item::getSubTotal)
+                .reduce(0f, Float::sum);
     }
 
 }

@@ -2,11 +2,14 @@ package br.unitins.joaovittor.basqueteiros.dto.usuario;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.telefone.TelefoneDTO;
-import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
+import br.unitins.joaovittor.basqueteiros.model.tipo_usuario.TipoUsuario;
 import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
 
 public record UsuarioResponseDTO(
@@ -14,48 +17,43 @@ public record UsuarioResponseDTO(
         String nome,
         String email,
         String login,
-        String senha,
         TipoUsuario tipoUsuario,
         List<TelefoneDTO> telefone,
         List<EnderecoDTO> endereco,
         List<CartaoResponseDTO> cartoes,
         TipoUsuario idPerfil) {
 
-        public static UsuarioResponseDTO valueOf(Usuario usuario) {
-                if (usuario == null) {
-                    throw new IllegalArgumentException("Usuario não pode ser null");
-        
-        
-        }
-
-        List<EnderecoDTO> enderecos = null;
-
-        if (usuario.getEndereco() != null && !usuario.getEndereco().isEmpty()) {
-            enderecos = usuario.getEndereco().stream().map(e -> EnderecoDTO.valueOf(e)).toList();
-        }
-
-        List<CartaoResponseDTO> cartoes = null;
-
-        if (usuario.getCartoes() != null && !usuario.getCartoes().isEmpty()) {
-            cartoes = usuario.getCartoes().stream().map(c -> CartaoResponseDTO.valueOf(c)).toList();
-        }
-
-        List<TelefoneDTO> telefones = usuario.getTelefone() == null ? Collections.emptyList() :
-                usuario.getTelefone().stream().map(TelefoneDTO::valueOf).toList();
+    public static UsuarioResponseDTO valueOf(Usuario usuario) {
+        Objects.requireNonNull(usuario, "Usuario não pode ser null");
 
         return new UsuarioResponseDTO(
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getLogin(),
-                usuario.getSenha(),
                 usuario.getTipoUsuario(),
-                telefones,
-                //usuario.getTelefone()
-                        //.stream()
-                        //.map(t -> TelefoneDTO.valueOf(t)).toList(),
-                enderecos,
-                cartoes,
-                usuario.getTipoUsuario());
+                Optional.ofNullable(usuario.getTelefones())
+                        .map(telefones -> telefones.stream()
+                        .map(TelefoneDTO::from) // Usando from em vez de valueOf
+                        .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList()),
+                Optional.ofNullable(usuario.getEnderecos())
+                        .map(enderecos -> enderecos.stream()
+                        .map(end -> new EnderecoDTO( // Construindo diretamente
+                        end.getCep(),
+                        end.getQuadra(),
+                        end.getRua(),
+                        end.getNumero(),
+                        end.getComplemento(),
+                        end.getCidade().getId()))
+                        .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList()),
+                Optional.ofNullable(usuario.getCartoes())
+                        .map(cartoes -> cartoes.stream()
+                        .map(CartaoResponseDTO::valueOf)
+                        .collect(Collectors.toList()))
+                        .orElse(Collections.emptyList()),
+                usuario.getTipoUsuario()
+        );
     }
 }

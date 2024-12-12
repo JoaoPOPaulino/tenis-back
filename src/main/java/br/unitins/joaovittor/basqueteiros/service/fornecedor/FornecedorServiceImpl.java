@@ -1,19 +1,14 @@
 package br.unitins.joaovittor.basqueteiros.service.fornecedor;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorDTO;
 import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
 import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
-import br.unitins.joaovittor.basqueteiros.repository.EstadoRepository;
 import br.unitins.joaovittor.basqueteiros.repository.FornecedorRepository;
-import br.unitins.joaovittor.basqueteiros.repository.TenisRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -29,247 +24,148 @@ public class FornecedorServiceImpl implements FornecedorService {
     FornecedorRepository fornecedorRepository;
 
     @Inject
-    EstadoRepository estadoRepository;
-
-    @Inject
-    TenisRepository tenisRepository;
-
-    @Inject
     Validator validator;
 
     @Override
     @Transactional
-    public FornecedorResponseDTO create(FornecedorDTO dto) throws ConstraintViolationException {
+    public FornecedorResponseDTO create(FornecedorDTO dto) {
         validate(dto);
 
-        Fornecedor entity = new Fornecedor();
+        Fornecedor fornecedor = new Fornecedor();
+        updateFornecedorFromDTO(fornecedor, dto);
 
-        entity.setNome(dto.nome());
-
-        if (dto.enderecos() != null && !dto.enderecos().isEmpty()) {
-            entity.setEndereco(new ArrayList<Endereco>());
-
-            for (EnderecoDTO enderecoDTO : dto.enderecos()) {
-                Endereco endereco = new Endereco();
-                endereco.setNumero(enderecoDTO.numero());
-                endereco.setCep(enderecoDTO.cep());
-                endereco.setQuadra(enderecoDTO.quadra());
-                endereco.setRua(enderecoDTO.rua());
-                endereco.setComplemento(enderecoDTO.complemento());
-                entity.getEndereco().add(endereco);
-            }
-        }
-
-        fornecedorRepository.persist(entity);
-
-        return FornecedorResponseDTO.valueOf(entity);
-    }
-
-    @Override
-    @Transactional
-    public FornecedorResponseDTO update(Long id, FornecedorDTO dto) throws ConstraintViolationException {
-        validate(dto);
-
-        Fornecedor entity = fornecedorRepository.findById(id);
-        entity.setNome(dto.nome());
-
-        List<Endereco> enderecos = entity.getEndereco();
-        List<EnderecoDTO> enderecosDTO = dto.enderecos();
-
-        for (EnderecoDTO enderecoDTO : enderecosDTO) {
-            boolean foundEndereco = false;
-            for (Endereco endereco : enderecos) {
-                if (endereco.getId().equals(enderecoDTO.id())) {
-                    endereco.setNumero(enderecoDTO.numero());
-                    endereco.setCep(enderecoDTO.cep());
-                    endereco.setQuadra(enderecoDTO.quadra());
-                    endereco.setRua(enderecoDTO.rua());
-                    endereco.setComplemento(enderecoDTO.complemento());
-                    entity.getEndereco().add(endereco);
-                    foundEndereco = true;
-                    break;
-                }
-            }
-
-            if (!foundEndereco) {
-                Endereco endereco = new Endereco();
-                endereco.setNumero(enderecoDTO.numero());
-                endereco.setCep(enderecoDTO.cep());
-                endereco.setQuadra(enderecoDTO.quadra());
-                endereco.setRua(enderecoDTO.rua());
-                endereco.setComplemento(enderecoDTO.complemento());
-                entity.getEndereco().add(endereco);
-            }
-        }
-
-        fornecedorRepository.persist(entity);
-
-        return FornecedorResponseDTO.valueOf(entity);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        fornecedorRepository.deleteById(id);
-    }
-
-    @Override
-    public List<FornecedorResponseDTO> findAll(int page, int pageSize) {
-        List<Fornecedor> list = fornecedorRepository.findAll().page(page, pageSize).list();
-
-        return list.stream().map(e -> FornecedorResponseDTO.valueOf(e)).collect(Collectors.toList());
-    }
-
-    @Override
-    public FornecedorResponseDTO findById(Long id) {
-        Fornecedor fornecedor = fornecedorRepository.findById(id);
-        if (fornecedor == null) {
-            throw new NotFoundException("Fornecedor não encontrada.");
-        }
+        fornecedorRepository.persist(fornecedor);
 
         return FornecedorResponseDTO.valueOf(fornecedor);
     }
 
     @Override
-    public List<FornecedorResponseDTO> findByNome(String nome, int page, int pageSize) {
-        List<Fornecedor> list = fornecedorRepository.findByNome(nome).page(page, pageSize).list();
+    @Transactional
+    public FornecedorResponseDTO update(Long id, FornecedorDTO dto) {
+        validate(dto);
 
-        return list.stream().map(e -> FornecedorResponseDTO.valueOf(e)).collect(Collectors.toList());
+        Fornecedor fornecedor = findFornecedorOrThrow(id);
+        updateFornecedorFromDTO(fornecedor, dto);
+
+        fornecedorRepository.persist(fornecedor);
+
+        return FornecedorResponseDTO.valueOf(fornecedor);
     }
 
     @Override
     @Transactional
     public FornecedorResponseDTO createEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO) {
-        Fornecedor entity = fornecedorRepository.findById(fornecedorId);
+        Fornecedor fornecedor = findFornecedorOrThrow(fornecedorId);
 
-        if (entity == null) {
-            throw new NotFoundException("Fornecedor não encontrado.");
-        }
+        enderecosDTO.stream()
+                .map(this::createEnderecoFromDTO)
+                .forEach(fornecedor::addEndereco);
 
-        List<Endereco> enderecos = entity.getEndereco();
+        fornecedorRepository.persist(fornecedor);
 
-        for (EnderecoDTO enderecoDTO : enderecosDTO) {
-            Endereco endereco = new Endereco();
-            endereco.setNumero(enderecoDTO.numero());
-            endereco.setCep(enderecoDTO.cep());
-            endereco.setQuadra(enderecoDTO.quadra());
-            endereco.setRua(enderecoDTO.rua());
-            endereco.setComplemento(enderecoDTO.complemento());
-            enderecos.add(endereco);
-        }
-
-        fornecedorRepository.persist(entity);
-
-        return FornecedorResponseDTO.valueOf(entity);
+        return FornecedorResponseDTO.valueOf(fornecedor);
     }
 
     @Override
     @Transactional
     public FornecedorResponseDTO updateEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO) {
-        Fornecedor entity = fornecedorRepository.findById(fornecedorId);
+        Fornecedor fornecedor = findFornecedorOrThrow(fornecedorId);
 
-        if (entity == null) {
-            throw new NotFoundException("Fornecedor não encontrado.");
-        }
+        // Limpa a lista atual e adiciona os novos endereços
+        fornecedor.getEnderecos().clear();
+        enderecosDTO.stream()
+                .map(this::createEnderecoFromDTO)
+                .forEach(fornecedor::addEndereco);
 
-        List<Endereco> enderecos = entity.getEndereco();
-
-        Iterator<Endereco> iterator = enderecos.iterator();
-        while (iterator.hasNext()) {
-            Endereco endereco = iterator.next();
-            boolean foundEndereco = false;
-
-            for (EnderecoDTO enderecoDTO : enderecosDTO) {
-                if (endereco.getId().equals(enderecoDTO.id())) {
-                    endereco.setNumero(enderecoDTO.numero());
-                    endereco.setCep(enderecoDTO.cep());
-                    endereco.setQuadra(enderecoDTO.quadra());
-                    endereco.setRua(enderecoDTO.rua());
-                    endereco.setComplemento(enderecoDTO.complemento());
-                    endereco.setCep(enderecoDTO.cep());
-
-                    foundEndereco = true;
-
-                    break;
-                }
-            }
-
-            if (!foundEndereco) {
-                iterator.remove();
-            }
-        }
-
-        for (EnderecoDTO enderecoDTO : enderecosDTO) {
-            boolean foundEndereco = false;
-            for (Endereco endereco : enderecos) {
-                if (endereco.getId().equals(enderecoDTO.id())) {
-                    endereco.setNumero(enderecoDTO.numero());
-                    endereco.setCep(enderecoDTO.cep());
-                    endereco.setQuadra(enderecoDTO.quadra());
-                    endereco.setRua(enderecoDTO.rua());
-                    endereco.setComplemento(enderecoDTO.complemento());
-                    endereco.setCep(enderecoDTO.cep());
-
-                    foundEndereco = true;
-
-                    break;
-                }
-            }
-
-            if (!foundEndereco) {
-                Endereco endereco = new Endereco();
-                endereco.setNumero(enderecoDTO.numero());
-                endereco.setCep(enderecoDTO.cep());
-                endereco.setQuadra(enderecoDTO.quadra());
-                endereco.setRua(enderecoDTO.rua());
-                endereco.setComplemento(enderecoDTO.complemento());
-                entity.getEndereco().add(endereco);
-            }
-        }
-
-        fornecedorRepository.persist(entity);
-
-        return FornecedorResponseDTO.valueOf(entity);
+        fornecedorRepository.persist(fornecedor);
+        return FornecedorResponseDTO.valueOf(fornecedor);
     }
 
     @Override
     @Transactional
     public FornecedorResponseDTO removeEnderecos(Long fornecedorId, Long enderecoId) {
-        Fornecedor usuario = fornecedorRepository.findById(fornecedorId);
+        Fornecedor fornecedor = findFornecedorOrThrow(fornecedorId);
 
-        if (usuario == null) {
-            throw new NotFoundException("Fornecedor não encontrado.");
+        boolean removed = fornecedor.getEnderecos().removeIf(
+                endereco -> endereco.getId().equals(enderecoId)
+        );
+
+        if (!removed) {
+            throw new NotFoundException("Endereço não encontrado");
         }
 
-        List<Endereco> enderecos = usuario.getEndereco();
+        fornecedorRepository.persist(fornecedor);
+        return FornecedorResponseDTO.valueOf(fornecedor);
+    }
 
-        Iterator<Endereco> iterator = enderecos.iterator();
-        while (iterator.hasNext()) {
-            Endereco endereco = iterator.next();
-            if (endereco.getId().equals(enderecoId)) {
-                iterator.remove();
-                fornecedorRepository.persist(usuario);
-                return FornecedorResponseDTO.valueOf(usuario);
-            }
+    private void updateFornecedorFromDTO(Fornecedor fornecedor, FornecedorDTO dto) {
+        fornecedor.setNome(dto.nome());
+        fornecedor.setCnpj(dto.cnpj());
+
+        if (dto.enderecos() != null) {
+            dto.enderecos().stream()
+                    .map(this::createEnderecoFromDTO)
+                    .forEach(fornecedor::addEndereco);
         }
+    }
 
-        throw new NotFoundException("Endereco não encontrado para este usuário.");
+    // Métodos auxiliares
+    private void validate(FornecedorDTO dto) {
+        Set<ConstraintViolation<FornecedorDTO>> violations = validator.validate(dto);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
+    private Fornecedor findFornecedorOrThrow(Long id) {
+        return fornecedorRepository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("Fornecedor não encontrado"));
+    }
+
+    private Endereco createEnderecoFromDTO(EnderecoDTO dto) {
+        Endereco endereco = new Endereco();
+        endereco.setNumero(dto.numero());
+        endereco.setCep(dto.cep());
+        endereco.setQuadra(dto.quadra());
+        endereco.setRua(dto.rua());
+        endereco.setComplemento(dto.complemento());
+        // Adicionar cidade se necessário
+        return endereco;
+    }
+
+    @Override
+    public void delete(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    }
+
+    @Override
+    public List<FornecedorResponseDTO> findAll(int page, int pageSize) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
+
+    @Override
+    public FornecedorResponseDTO findById(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+    }
+
+    @Override
+    public List<FornecedorResponseDTO> findByNome(String nome, int page, int pageSize) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findByNome'");
     }
 
     @Override
     public long count() {
-        return fornecedorRepository.count();
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'count'");
     }
 
     @Override
     public long countByNome(String nome) {
-        return fornecedorRepository.findByNome(nome).count();
-    }
-
-    private void validate(FornecedorDTO fornecedorDTO) throws ConstraintViolationException {
-        Set<ConstraintViolation<FornecedorDTO>> violations = validator.validate(fornecedorDTO);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'countByNome'");
     }
 }

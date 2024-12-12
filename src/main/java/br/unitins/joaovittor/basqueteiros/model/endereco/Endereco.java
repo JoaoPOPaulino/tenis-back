@@ -3,34 +3,53 @@ package br.unitins.joaovittor.basqueteiros.model.endereco;
 import br.unitins.joaovittor.basqueteiros.model.cidade.Cidade;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "endereco")
 public class Endereco extends DefaultEntity {
 
     @ManyToOne
-    @JoinColumn(name = "id_cidade")
+    @JoinColumn(nullable = false)
     private Cidade cidade;
-    
+
+    @Column(nullable = false, length = 8)
     private String cep;
 
+    @Column(nullable = false)
     private String quadra;
 
+    @Column(nullable = false)
     private String rua;
 
+    @Column(nullable = false)
     private String numero;
 
     private String complemento;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(nullable = false)
     private Usuario usuario;
 
-    public Endereco() {
+    private boolean principal;
+    private boolean ativo = true;
+
+    public Cidade getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(Cidade cidade) {
+        this.cidade = cidade;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 
     public String getQuadra() {
@@ -49,28 +68,12 @@ public class Endereco extends DefaultEntity {
         this.rua = rua;
     }
 
-    public Cidade getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(Cidade cidade) {
-        this.cidade = cidade;
-    }
-
     public String getNumero() {
         return numero;
     }
 
     public void setNumero(String numero) {
         this.numero = numero;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
     }
 
     public String getComplemento() {
@@ -88,4 +91,21 @@ public class Endereco extends DefaultEntity {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+
+    public boolean isPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(boolean principal) {
+        this.principal = principal;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
 }

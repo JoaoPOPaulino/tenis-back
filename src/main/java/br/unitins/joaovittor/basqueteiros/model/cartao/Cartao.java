@@ -3,25 +3,49 @@ package br.unitins.joaovittor.basqueteiros.model.cartao;
 import java.time.LocalDate;
 
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
-import br.unitins.joaovittor.basqueteiros.model.tipoCartao.Tipo;
+import br.unitins.joaovittor.basqueteiros.model.tipo_cartao.TipoCartao;
+import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Cartao extends DefaultEntity {
 
-    private Tipo tipo;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoCartao tipoCartao;
+
+    @Column(nullable = false, unique = true)
     private String numero;
+
+    @Column(length = 3, nullable = false)
     private String cvv;
+
+    @Column(nullable = false)
     private LocalDate validade;
+
+    @Column(nullable = false)
     private String titular;
+
+    @Column(nullable = false)
     private String cpf;
 
-    public Tipo getTipo() {
-        return tipo;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Usuario usuario;
+
+    private boolean ativo = true;
+
+    public TipoCartao getTipoCartao() {
+        return tipoCartao;
     }
 
-    public void setTipo(Tipo tipo) {
-        this.tipo = tipo;
+    public void setTipoCartao(TipoCartao tipoCartao) {
+        this.tipoCartao = tipoCartao;
     }
 
     public String getNumero() {
@@ -63,4 +87,21 @@ public class Cartao extends DefaultEntity {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
 }

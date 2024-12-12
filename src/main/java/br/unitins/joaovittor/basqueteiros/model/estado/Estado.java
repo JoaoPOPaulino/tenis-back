@@ -7,10 +7,13 @@ import jakarta.persistence.Entity;
 @Entity
 public class Estado extends DefaultEntity {
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, unique = true)
     private String nome;
-    @Column(nullable = false, length = 2)
+
+    @Column(nullable = false, unique = true, length = 2)
     private String sigla;
+
+    private boolean ativo = true;
 
     public String getNome() {
         return nome;
@@ -26,5 +29,13 @@ public class Estado extends DefaultEntity {
 
     public void setSigla(String sigla) {
         this.sigla = sigla;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

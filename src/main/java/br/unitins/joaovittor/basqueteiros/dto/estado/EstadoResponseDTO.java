@@ -5,12 +5,15 @@ import br.unitins.joaovittor.basqueteiros.model.estado.Estado;
 public record EstadoResponseDTO(
         Long id,
         String nome,
-        String sigla) {
+        String sigla,
+        boolean ativo) {
 
     public static EstadoResponseDTO valueOf(Estado estado) {
         return new EstadoResponseDTO(
                 estado.getId(),
                 estado.getNome(),
-                estado.getSigla());
+                estado.getSigla(),
+                estado.isAtivo()
+        );
     }
 }

@@ -1,23 +1,42 @@
 package br.unitins.joaovittor.basqueteiros.model.tenis;
 
+import java.util.Objects;
+
 import br.unitins.joaovittor.basqueteiros.model.marca.Marca;
 import br.unitins.joaovittor.basqueteiros.model.produto.Produto;
+import br.unitins.joaovittor.basqueteiros.model.tamanho.Tamanho;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Tenis extends Produto {
 
-    @Column(length = 100000)
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     @ManyToOne
-    @JoinColumn(name = "id_marca")
+    @JoinColumn(name = "id_marca", nullable = false)
     private Marca marca;
 
+    @Column(nullable = false)
     private String modelo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Tamanho tamanho;
+
+    public Tenis() {
+    }
+
+    public Tenis(String modelo, Marca marca, Tamanho tamanho) {
+        this.modelo = modelo;
+        this.marca = marca;
+        this.tamanho = tamanho;
+    }
 
     public String getDescricao() {
         return descricao;
@@ -32,7 +51,7 @@ public class Tenis extends Produto {
     }
 
     public void setMarca(Marca marca) {
-        this.marca = marca;
+        this.marca = Objects.requireNonNull(marca, "Marca não pode ser nula");
     }
 
     public String getModelo() {
@@ -40,7 +59,14 @@ public class Tenis extends Produto {
     }
 
     public void setModelo(String modelo) {
-        this.modelo = modelo;
+        this.modelo = Objects.requireNonNull(modelo, "Modelo não pode ser nulo");
     }
 
+    public Tamanho getTamanho() {
+        return tamanho;
+    }
+
+    public void setTamanho(Tamanho tamanho) {
+        this.tamanho = Objects.requireNonNull(tamanho, "Tamanho não pode ser nulo");
+    }
 }

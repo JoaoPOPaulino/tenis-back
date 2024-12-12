@@ -31,57 +31,81 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
 
     @Override
     @Transactional
-    public AvaliacaoResponseDTO create(AvaliacaoDTO dto) throws ConstraintViolationException {
+    public AvaliacaoResponseDTO create(AvaliacaoDTO dto) {
+        // Validações
         validate(dto);
+        validarTenisExiste(dto.idTenis());
 
-        Avaliacao entity = new Avaliacao();
+        // Criação da entidade
+        Avaliacao avaliacao = new Avaliacao();
+        updateAvaliacaoFromDTO(avaliacao, dto);
 
-        entity.setTenis(tenisRepository.findById(dto.idTenis()));
-        entity.setConteudo(dto.conteudo());
+        // Persistência
+        avaliacaoRepository.persist(avaliacao);
 
-        avaliacaoRepository.persist(entity);
-
-        return AvaliacaoResponseDTO.valueOf(entity);
+        return AvaliacaoResponseDTO.valueOf(avaliacao);
     }
 
-    private void validate(AvaliacaoDTO dto) throws ConstraintViolationException {
+    @Override
+    @Transactional
+    public AvaliacaoResponseDTO update(Long id, AvaliacaoDTO dto) {
+        // Validações
+        validate(dto);
+        validarTenisExiste(dto.idTenis());
+
+        // Busca e atualização
+        Avaliacao avaliacao = findAvaliacaoOrThrow(id);
+        updateAvaliacaoFromDTO(avaliacao, dto);
+
+        // Persistência
+        avaliacaoRepository.persist(avaliacao);
+
+        return AvaliacaoResponseDTO.valueOf(avaliacao);
+    }
+
+    @Override
+    public AvaliacaoResponseDTO findById(Long id) {
+        return AvaliacaoResponseDTO.valueOf(findAvaliacaoOrThrow(id));
+    }
+
+    @Override
+    public List<AvaliacaoResponseDTO> findAll(int page, int pageSize) {
+        return avaliacaoRepository.findAll()
+                .page(page, pageSize)
+                .list()
+                .stream()
+                .map(AvaliacaoResponseDTO::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (!avaliacaoRepository.deleteById(id)) {
+            throw new NotFoundException("Avaliação não encontrada");
+        }
+    }
+
+    private void validate(AvaliacaoDTO dto) {
         Set<ConstraintViolation<AvaliacaoDTO>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
     }
 
-    @Override
-    public AvaliacaoResponseDTO update(Long id, AvaliacaoDTO dto) throws ConstraintViolationException {
-        validate(dto);
-
-        Avaliacao entity = avaliacaoRepository.findById(id);
-
-        entity.setTenis(tenisRepository.findById(dto.idTenis()));
-        entity.setConteudo(dto.conteudo());
-
-        return AvaliacaoResponseDTO.valueOf(entity);
-    }
-
-    @Override
-    public AvaliacaoResponseDTO findById(Long id) {
-        Avaliacao avaliacao = avaliacaoRepository.findById(id);
-        if (avaliacao == null) {
-            throw new NotFoundException("Avaliacao não encontrada.");
+    private void validarTenisExiste(Long idTenis) {
+        if (!tenisRepository.findByIdOptional(idTenis).isPresent()) {
+            throw new NotFoundException("Tênis não encontrado");
         }
-
-        return AvaliacaoResponseDTO.valueOf(avaliacao);
     }
 
-    @Override
-    public List<AvaliacaoResponseDTO> findAll(int page, int pageSize) {
-        List<Avaliacao> list = avaliacaoRepository.findAll().page(page, pageSize).list();
-
-        return list.stream().map(e -> AvaliacaoResponseDTO.valueOf(e)).collect(Collectors.toList());
+    private Avaliacao findAvaliacaoOrThrow(Long id) {
+        return avaliacaoRepository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("Avaliação não encontrada"));
     }
 
-    @Override
-    public void delete(Long id) {
-        avaliacaoRepository.deleteById(id);
+    private void updateAvaliacaoFromDTO(Avaliacao avaliacao, AvaliacaoDTO dto) {
+        avaliacao.setTenis(tenisRepository.findById(dto.idTenis()));
+        avaliacao.setConteudo(dto.conteudo());
     }
 }

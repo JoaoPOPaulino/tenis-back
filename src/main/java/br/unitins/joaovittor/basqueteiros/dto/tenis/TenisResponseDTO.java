@@ -1,26 +1,25 @@
 package br.unitins.joaovittor.basqueteiros.dto.tenis;
 
 import br.unitins.joaovittor.basqueteiros.dto.marca.MarcaResponseDTO;
+import br.unitins.joaovittor.basqueteiros.model.tamanho.Tamanho;
 import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
 
 public record TenisResponseDTO(
         Long id,
+        String descricao,
         MarcaResponseDTO marca,
-        String nome,
-        float preco,
-        Integer estoque,
         String modelo,
-        String descricao) {
+        Tamanho tamanho,
+        Float preco) {
 
     public static TenisResponseDTO valueOf(Tenis tenis) {
         return new TenisResponseDTO(
                 tenis.getId(),
+                tenis.getDescricao(),
                 MarcaResponseDTO.valueOf(tenis.getMarca()),
-                tenis.getNome(),
-                tenis.getPreco(),
-                tenis.getEstoque(),
                 tenis.getModelo(),
-                tenis.getDescricao()
+                tenis.getTamanho(),
+                tenis.getPreco()
         );
     }
 }

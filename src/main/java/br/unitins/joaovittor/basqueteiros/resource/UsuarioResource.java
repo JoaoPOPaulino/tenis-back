@@ -8,8 +8,8 @@ import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.telefone.TelefoneDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
-import br.unitins.joaovittor.basqueteiros.model.tipoCartao.Tipo;
-import br.unitins.joaovittor.basqueteiros.model.tipoUsuario.TipoUsuario;
+import br.unitins.joaovittor.basqueteiros.model.tipo_cartao.TipoCartao;
+import br.unitins.joaovittor.basqueteiros.model.tipo_usuario.TipoUsuario;
 import br.unitins.joaovittor.basqueteiros.service.usuario.UsuarioService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -170,7 +170,7 @@ public class UsuarioResource {
     @GET
     @Path("/tipos")
     public Response getTipos() {
-        return Response.ok(Tipo.values()).build();
+        return Response.ok(TipoCartao.values()).build();
     }
 
     @GET
@@ -181,20 +181,20 @@ public class UsuarioResource {
     }
 
     @POST
-@Transactional
-@Path("/{usuarioId}/telefones")
-public Response createTelefones(@PathParam("usuarioId") Long usuarioId, List<TelefoneDTO> telefonesDTO) {
-    try {
-        UsuarioResponseDTO usuarioAtualizado = service.createTelefones(usuarioId, telefonesDTO);
-        return Response.ok(usuarioAtualizado).build();
+    @Transactional
+    @Path("/{usuarioId}/telefones")
+    public Response createTelefones(@PathParam("usuarioId") Long usuarioId, List<TelefoneDTO> telefonesDTO) {
+        try {
+            UsuarioResponseDTO usuarioAtualizado = service.createTelefones(usuarioId, telefonesDTO);
+            return Response.ok(usuarioAtualizado).build();
         } catch (NotFoundException e) {
             return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
         } catch (ConstraintViolationException e) {
-        Result result = new Result(e.getConstraintViolations());
-        return Response.status(Status.BAD_REQUEST).entity(result).build();
+            Result result = new Result(e.getConstraintViolations());
+            return Response.status(Status.BAD_REQUEST).entity(result).build();
         } catch (Exception e) {
             Result result = new Result(e.getMessage(), false);
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(result).build();
         }
-}
+    }
 }
