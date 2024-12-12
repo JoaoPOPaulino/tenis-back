@@ -46,8 +46,9 @@ public interface UsuarioService {
 
     UsuarioResponseDTO createTelefones(Long usuarioId, List<TelefoneDTO> telefonesDTO);
 
-    
+    UsuarioResponseDTO updateTelefone(Long id, Long telefoneId, TelefoneDTO dto);
 
-    
+    UsuarioResponseDTO removeTelefone(Long id, Long telefoneId);
 
+    List<TelefoneDTO> findTelefonesByUsuarioId(Long id);
 }

@@ -14,7 +14,8 @@ public record CartaoResponseDTO(
 
     public static CartaoResponseDTO valueOf(Cartao cartao) {
         return new CartaoResponseDTO(
-                cartao.getId(), (TipoCartao) cartao.getTipoCartao(),
+                cartao.getId(),
+                cartao.getTipoCartao(),
                 "****" + cartao.getNumero().substring(12),
                 cartao.getValidade(),
                 cartao.getTitular()

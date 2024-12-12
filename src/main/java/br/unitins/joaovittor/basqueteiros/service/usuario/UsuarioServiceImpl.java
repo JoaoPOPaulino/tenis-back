@@ -1,8 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.service.usuario;
 
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoDTO;
@@ -11,23 +10,18 @@ import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.telefone.TelefoneDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioDTO;
 import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
-import br.unitins.joaovittor.basqueteiros.model.cartao.Cartao;
-import br.unitins.joaovittor.basqueteiros.model.cidade.Cidade;
-import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
-import br.unitins.joaovittor.basqueteiros.model.telefone.Telefone;
-import br.unitins.joaovittor.basqueteiros.model.tipo_cartao.TipoCartao;
 import br.unitins.joaovittor.basqueteiros.model.tipo_usuario.TipoUsuario;
 import br.unitins.joaovittor.basqueteiros.model.usuario.Usuario;
-import br.unitins.joaovittor.basqueteiros.repository.CartaoRepository;
-import br.unitins.joaovittor.basqueteiros.repository.CidadeRepository;
-import br.unitins.joaovittor.basqueteiros.repository.EnderecoRepository;
 import br.unitins.joaovittor.basqueteiros.repository.UsuarioRepository;
+import br.unitins.joaovittor.basqueteiros.service.cartao.CartaoUsuarioService;
+import br.unitins.joaovittor.basqueteiros.service.endereco.EnderecoUsuarioService;
 import br.unitins.joaovittor.basqueteiros.service.hash.HashServiceImpl;
+import br.unitins.joaovittor.basqueteiros.service.telefone.TelefoneUsuarioService;
 import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.NotFoundException;
 
@@ -38,41 +32,24 @@ public class UsuarioServiceImpl implements UsuarioService {
     UsuarioRepository usuarioRepository;
 
     @Inject
-    HashServiceImpl hashServiceImpl;
+    HashServiceImpl hashService;
 
     @Inject
-    CidadeRepository cidadeRepository;
+    EnderecoUsuarioService enderecoService;
 
     @Inject
-    EnderecoRepository enderecoRepository;
+    CartaoUsuarioService cartaoService;
 
     @Inject
-    CartaoRepository cartaoRepository;
+    TelefoneUsuarioService telefoneService;
 
     @Override
     @Transactional
-    public UsuarioResponseDTO create(@Valid UsuarioDTO dto) throws ConstraintViolationException {
-        // Verifica se o login já existe
-        if (usuarioRepository.findByLogin(dto.login()) != null) {
-            throw new ValidationException("login", "O login informado já existe, informe outro.");
-        }
+    public UsuarioResponseDTO create(@Valid UsuarioDTO dto) {
+        validateNewUser(dto);
 
-        // Valida se o ID do perfil (tipo de usuário) é inválido
-        if (dto.idPerfil() == 0) {
-            throw new IllegalArgumentException("ID do Tipo de Usuário não pode ser 0.");
-        }
-
-        // Criação do usuário
         Usuario usuario = new Usuario();
-        usuario.setNome(dto.nome());
-        usuario.setEmail(dto.email());
-        usuario.setLogin(dto.login());
-        usuario.setSenha(hashServiceImpl.getHashSenha(dto.senha()));
-
-        // Define o tipo de usuário, já com a validação feita
-        usuario.setTipoUsuario(TipoUsuario.fromId(dto.idPerfil()));
-
-        // Persiste o usuário
+        updateUsuarioFromDTO(usuario, dto);
         usuarioRepository.persist(usuario);
 
         return UsuarioResponseDTO.valueOf(usuario);
@@ -80,266 +57,160 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional
-    public UsuarioResponseDTO update(Long id, UsuarioDTO dto) throws ConstraintViolationException {
-        Usuario usuarioExistente = usuarioRepository.findById(id);
-        if (usuarioExistente == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
+    public UsuarioResponseDTO update(Long id, UsuarioDTO dto) {
+        Usuario usuario = findUsuarioOrThrow(id);
+        validateExistingUser(usuario, dto);
+        updateUsuarioFromDTO(usuario, dto);
 
-        usuarioExistente.setNome(dto.nome());
-        usuarioExistente.setEmail(dto.email());
-        usuarioExistente.setLogin(dto.login());
-        usuarioExistente.setSenha(hashServiceImpl.getHashSenha(dto.senha()));
-        usuarioExistente.setTipoUsuario(TipoUsuario.fromId(dto.idPerfil()));
-
-        usuarioRepository.persist(usuarioExistente);
-
-        return UsuarioResponseDTO.valueOf(usuarioExistente);
+        usuarioRepository.persist(usuario);
+        return UsuarioResponseDTO.valueOf(usuario);
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
-        usuarioRepository.deleteById(id);
-    }
-
-    @Override
-    public List<UsuarioResponseDTO> findAll(int page, int pageSize) {
-        List<Usuario> list = usuarioRepository.findAll().page(page, pageSize).list();
-        return list.stream().map(UsuarioResponseDTO::valueOf).collect(Collectors.toList());
+        if (!usuarioRepository.deleteById(id)) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
     }
 
     @Override
     public UsuarioResponseDTO findById(Long id) {
-        Usuario usuario = usuarioRepository.findById(id);
-        if (usuario == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-        return UsuarioResponseDTO.valueOf(usuario);
-    }
-
-    @Override
-    public UsuarioResponseDTO findByLogin(String login) {
-        Usuario usuario = usuarioRepository.findByLogin(login);
-        if (usuario == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-        return UsuarioResponseDTO.valueOf(usuario);
-    }
-
-    @Override
-    public UsuarioResponseDTO findByLoginAndSenha(String login, String senha) {
-        Usuario usuario = usuarioRepository.findByLoginAndSenha(login, senha);
-        if (usuario == null) {
-            throw new ValidationException("login", "Login ou senha inválido");
-        }
-        return UsuarioResponseDTO.valueOf(usuario);
+        return UsuarioResponseDTO.valueOf(findUsuarioOrThrow(id));
     }
 
     @Override
     public List<UsuarioResponseDTO> findByNome(String nome, int page, int pageSize) {
-        List<Usuario> list = usuarioRepository.findByNome(nome).page(page, pageSize).list();
-        return list.stream().map(UsuarioResponseDTO::valueOf).collect(Collectors.toList());
+        PanacheQuery<Usuario> query = usuarioRepository.findByNome(nome);
+        if (query == null) {
+            return Collections.emptyList();
+        }
+
+        return query
+                .page(page, pageSize)
+                .list()
+                .stream()
+                .map(UsuarioResponseDTO::valueOf)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public UsuarioResponseDTO createEnderecos(Long usuarioId, List<EnderecoDTO> enderecosDTO) {
-        Usuario usuarioExistente = usuarioRepository.findById(usuarioId);
-        if (usuarioExistente == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-
-        List<Endereco> enderecosExistente = usuarioExistente.getEndereco();
-
-        for (EnderecoDTO enderecoDTO : enderecosDTO) {
-            Endereco novoEndereco = new Endereco();
-            novoEndereco.setCep(enderecoDTO.cep());
-            novoEndereco.setQuadra(enderecoDTO.quadra());
-            novoEndereco.setRua(enderecoDTO.rua());
-            novoEndereco.setNumero(enderecoDTO.numero());
-            novoEndereco.setComplemento(enderecoDTO.complemento());
-
-            Cidade cidade = cidadeRepository.findById(enderecoDTO.cidade().id());
-            if (cidade == null) {
-                throw new NotFoundException("Cidade não encontrada");
-            }
-            novoEndereco.setCidade(cidade);
-            enderecosExistente.add(novoEndereco);
-        }
-
-        usuarioRepository.persist(usuarioExistente);
-        return UsuarioResponseDTO.valueOf(usuarioExistente);
+    public List<UsuarioResponseDTO> findAll(int page, int pageSize) {
+        return usuarioRepository.findAll()
+                .page(page, pageSize)
+                .list()
+                .stream()
+                .map(UsuarioResponseDTO::valueOf)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public UsuarioResponseDTO updateEndereco(Long usuarioId, Long enderecoId, EnderecoDTO enderecoDTO) {
-        Usuario usuarioExistente = usuarioRepository.findById(usuarioId);
-        if (usuarioExistente == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-
-        Optional<Endereco> enderecoOptional = usuarioExistente.getEndereco().stream()
-                .filter(endereco -> endereco.getId().equals(enderecoId))
-                .findFirst();
-
-        if (enderecoOptional.isPresent()) {
-            Endereco enderecoExistente = enderecoOptional.get();
-            enderecoExistente.setCep(enderecoDTO.cep());
-            enderecoExistente.setQuadra(enderecoDTO.quadra());
-            enderecoExistente.setRua(enderecoDTO.rua());
-            enderecoExistente.setNumero(enderecoDTO.numero());
-            enderecoExistente.setComplemento(enderecoDTO.complemento());
-
-            Cidade cidade = cidadeRepository.findById(enderecoDTO.cidade().id());
-            if (cidade == null) {
-                throw new NotFoundException("Cidade não encontrada");
-            }
-            enderecoExistente.setCidade(cidade);
-        } else {
-            throw new NotFoundException("Endereço não encontrado para o usuário especificado.");
-        }
-
-        usuarioRepository.persist(usuarioExistente);
-        return UsuarioResponseDTO.valueOf(usuarioExistente);
+    public UsuarioResponseDTO findByLoginAndSenha(String login, String senha) {
+        return usuarioRepository.findByLoginAndSenha(login, hashService.getHashSenha(senha))
+                .map(UsuarioResponseDTO::valueOf)
+                .orElseThrow(() -> new ValidationException("credenciais", "Login ou senha inválidos"));
     }
 
     @Override
-    @Transactional
-    public UsuarioResponseDTO removeEnderecos(Long usuarioId, Long enderecoId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId);
-        if (usuario == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-
-        List<Endereco> enderecos = usuario.getEndereco();
-        Iterator<Endereco> iterator = enderecos.iterator();
-
-        while (iterator.hasNext()) {
-            Endereco endereco = iterator.next();
-            if (endereco.getId().equals(enderecoId)) {
-                iterator.remove();
-                usuarioRepository.persist(usuario);
-                return UsuarioResponseDTO.valueOf(usuario);
-            }
-        }
-
-        throw new NotFoundException("Endereço não encontrado para o usuário especificado.");
-    }
-
-    @Override
-    @Transactional
-    public UsuarioResponseDTO createCartao(Long usuarioId, List<CartaoDTO> cartaoDTO) {
-        Usuario usuario = usuarioRepository.findById(usuarioId);
-        if (usuario == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-
-        List<Cartao> existingCartao = usuario.getCartoes();
-
-        for (CartaoDTO dto : cartaoDTO) {
-            Cartao cartao = new Cartao();
-
-            cartao.setTipo(TipoCartao.valueOf(dto.idTipo()));
-            cartao.setNumero(dto.numero());
-            cartao.setCvv(dto.cvv());
-            cartao.setValidade(dto.validade());
-            cartao.setTitular(dto.titular());
-            cartao.setCpf(dto.cpf());
-
-            existingCartao.add(cartao);
-        }
-        usuarioRepository.persist(usuario);
-        return UsuarioResponseDTO.valueOf(usuario);
-    }
-
-    @Override
-    @Transactional
-    public UsuarioResponseDTO updateCartao(Long usuarioId, Long cartaoId, CartaoDTO cartaoDTO) {
-        Usuario usuario = usuarioRepository.findById(usuarioId);
-        if (usuario == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-
-        Optional<Cartao> cartaoOptional = usuario.getCartoes().stream()
-                .filter(cartao -> cartao.getId().equals(cartaoId))
-                .findFirst();
-
-        if (cartaoOptional.isPresent()) {
-            Cartao cartaoExistente = cartaoOptional.get();
-            cartaoExistente.setNumero(cartaoDTO.numero());
-            cartaoExistente.setCvv(cartaoDTO.cvv());
-            cartaoExistente.setValidade(cartaoDTO.validade());
-            cartaoExistente.setTitular(cartaoDTO.titular());
-            cartaoExistente.setCpf(cartaoDTO.cpf());
-            cartaoExistente.setTipo(TipoCartao.valueOf(cartaoDTO.idTipo()));
-        } else {
-            throw new NotFoundException("Cartão não encontrado para o usuário especificado.");
-        }
-
-        usuarioRepository.persist(usuario);
-        return UsuarioResponseDTO.valueOf(usuario);
-    }
-
-    @Override
-    @Transactional
-    public UsuarioResponseDTO deleteCartao(Long usuarioId, Long cartaoId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId);
-        if (usuario == null) {
-            throw new NotFoundException("Usuário não encontrado.");
-        }
-
-        List<Cartao> cartoes = usuario.getCartoes();
-        Iterator<Cartao> iterator = cartoes.iterator();
-
-        while (iterator.hasNext()) {
-            Cartao cartao = iterator.next();
-            if (cartao.getId().equals(cartaoId)) {
-                iterator.remove();
-                usuarioRepository.persist(usuario);
-                return UsuarioResponseDTO.valueOf(usuario);
-            }
-        }
-
-        throw new NotFoundException("Cartão não encontrado para o usuário especificado.");
+    public UsuarioResponseDTO findByLogin(String login) {
+        return UsuarioResponseDTO.valueOf(
+                usuarioRepository.findByLogin(login)
+                        .orElseThrow(() -> new NotFoundException("Usuário não encontrado"))
+        );
     }
 
     @Override
     public EnderecoDTO findEnderecoByUsuarioId(Long id, Long enderecoId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return enderecoService.findEnderecoByUsuarioId(id, enderecoId);
+    }
+
+    @Override
+    public UsuarioResponseDTO createEnderecos(Long id, List<EnderecoDTO> enderecosDTO) {
+        return enderecoService.addEnderecos(id, enderecosDTO);
+    }
+
+    @Override
+    public UsuarioResponseDTO updateEndereco(Long id, Long enderecoId, EnderecoDTO enderecoDTO) {
+        return enderecoService.updateEndereco(id, enderecoId, enderecoDTO);
+    }
+
+    @Override
+    public UsuarioResponseDTO removeEnderecos(Long id, Long enderecoId) {
+        return enderecoService.removeEndereco(id, enderecoId);
     }
 
     @Override
     public CartaoResponseDTO findCartaoByUsuarioId(Long id, Long cartaoId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return cartaoService.findCartaoByUsuarioId(id, cartaoId);
     }
 
     @Override
-    @Transactional
+    public UsuarioResponseDTO createCartao(Long id, List<CartaoDTO> cartaoDTO) {
+        return cartaoService.addCartoes(id, cartaoDTO);
+    }
+
+    @Override
+    public UsuarioResponseDTO updateCartao(Long id, Long cartaoId, CartaoDTO cartaoDTO) {
+        return cartaoService.updateCartao(id, cartaoId, cartaoDTO);
+    }
+
+    @Override
+    public UsuarioResponseDTO deleteCartao(Long id, Long cartaoId) {
+        return cartaoService.removeCartao(id, cartaoId);
+    }
+
+    @Override
     public UsuarioResponseDTO createTelefones(Long usuarioId, List<TelefoneDTO> telefonesDTO) {
-        // Busca o usuário pelo ID
-        Usuario usuarioExistente = usuarioRepository.findById(usuarioId);
-        if (usuarioExistente == null) {
-            throw new NotFoundException("Usuário não encontrado.");
+        return telefoneService.addTelefones(usuarioId, telefonesDTO);
+    }
+
+    // Métodos auxiliares
+    private void validateNewUser(UsuarioDTO dto) {
+        if (usuarioRepository.findByLogin(dto.login()).isPresent()) {
+            throw new ValidationException("login", "Login já existe");
         }
+        validateUserFields(dto);
+    }
 
-        // Recupera a lista existente de telefones do usuário
-        List<Telefone> telefonesExistentes = usuarioExistente.getTelefone();
-
-        // Itera sobre a lista de DTOs de telefone e adiciona os novos telefones ao usuário
-        for (TelefoneDTO telefoneDTO : telefonesDTO) {
-            Telefone novoTelefone = new Telefone();
-            novoTelefone.setCodigoArea(telefoneDTO.codigoArea());
-            novoTelefone.setNumero(telefoneDTO.numero());
-
-            telefonesExistentes.add(novoTelefone);
+    private void validateExistingUser(Usuario usuario, UsuarioDTO dto) {
+        if (!usuario.getLogin().equals(dto.login())
+                && usuarioRepository.findByLogin(dto.login()).isPresent()) {
+            throw new ValidationException("login", "Login já existe");
         }
+        validateUserFields(dto);
+    }
 
-        // Persiste o usuário com os novos telefones
-        usuarioRepository.persist(usuarioExistente);
+    private void validateUserFields(UsuarioDTO dto) {
+        if (dto.idPerfil() == 0) {
+            throw new ValidationException("perfil", "Perfil inválido");
+        }
+    }
 
-        // Retorna o DTO de resposta atualizado
-        return UsuarioResponseDTO.valueOf(usuarioExistente);
+    private void updateUsuarioFromDTO(Usuario usuario, UsuarioDTO dto) {
+        usuario.setNome(dto.nome());
+        usuario.setEmail(dto.email());
+        usuario.setLogin(dto.login());
+        usuario.setSenha(hashService.getHashSenha(dto.senha()));
+        usuario.setTipoUsuario(TipoUsuario.fromId(dto.idPerfil()));
+    }
+
+    private Usuario findUsuarioOrThrow(Long id) {
+        return usuarioRepository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+    }
+
+    @Override
+    public UsuarioResponseDTO updateTelefone(Long id, Long telefoneId, TelefoneDTO dto) {
+        return telefoneService.updateTelefone(id, telefoneId, dto);
+    }
+
+    @Override
+    public UsuarioResponseDTO removeTelefone(Long id, Long telefoneId) {
+        return telefoneService.removeTelefone(id, telefoneId);
+    }
+
+    @Override
+    public List<TelefoneDTO> findTelefonesByUsuarioId(Long id) {
+        return telefoneService.findTelefonesByUsuarioId(id);
     }
 }

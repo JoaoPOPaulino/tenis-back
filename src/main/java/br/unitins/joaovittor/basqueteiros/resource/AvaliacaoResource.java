@@ -6,12 +6,15 @@ import br.unitins.joaovittor.basqueteiros.application.Result;
 import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.avaliacao.AvaliacaoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.service.avaliacao.AvaliacaoService;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
@@ -31,33 +34,51 @@ public class AvaliacaoResource {
     AvaliacaoService avaliacaoService;
 
     @POST
-    public Response create(AvaliacaoDTO dto) {
-        Result result = null;
-
+    public Response create(@Valid AvaliacaoDTO dto) {
         try {
             AvaliacaoResponseDTO avaliacao = avaliacaoService.create(dto);
-            return Response.status(Status.CREATED).entity(avaliacao).build();
-        } catch (ConstraintViolationException e) {
-            result = new Result(e.getConstraintViolations());
-        } catch (Exception e) {
-            result = new Result(e.getMessage(), false);
-        }
+            return Response.status(Status.CREATED)
+                    .entity(avaliacao)
+                    .build();
 
-        return Response.status(Status.NOT_FOUND).entity(result).build();
+        } catch (ConstraintViolationException e) {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(new Result(e.getConstraintViolations()))
+                    .build();
+
+        } catch (ValidationException e) {
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+
+        } catch (Exception e) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Result("Erro interno no servidor", false))
+                    .build();
+        }
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, AvaliacaoDTO dto) {
+    public Response update(@PathParam("id") Long id, @Valid AvaliacaoDTO dto) {
         try {
             AvaliacaoResponseDTO avaliacao = avaliacaoService.update(id, dto);
             return Response.ok(avaliacao).build();
+
         } catch (ConstraintViolationException e) {
-            Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            return Response.status(Status.BAD_REQUEST)
+                    .entity(new Result(e.getConstraintViolations()))
+                    .build();
+
+        } catch (NotFoundException e) {
+            return Response.status(Status.NOT_FOUND)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+
         } catch (Exception e) {
-            Result result = new Result(e.getMessage(), false);
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Result("Erro interno no servidor", false))
+                    .build();
         }
     }
 
@@ -66,24 +87,50 @@ public class AvaliacaoResource {
     public Response delete(@PathParam("id") Long id) {
         try {
             avaliacaoService.delete(id);
-            return Response.status(Status.NO_CONTENT).build();
+            return Response.noContent().build();
+
+        } catch (NotFoundException e) {
+            return Response.status(Status.NOT_FOUND)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+
         } catch (Exception e) {
-            Result result = new Result(e.getMessage(), false);
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Result("Erro interno no servidor", false))
+                    .build();
         }
     }
 
     @GET
-    public List<AvaliacaoResponseDTO> findAll(
-            @QueryParam("page") @DefaultValue("0") int page,
+    public Response findAll(@QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
-        return avaliacaoService.findAll(page, pageSize);
+        try {
+            List<AvaliacaoResponseDTO> avaliacoes = avaliacaoService.findAll(page, pageSize);
+            return Response.ok(avaliacoes).build();
+
+        } catch (Exception e) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Result("Erro interno no servidor", false))
+                    .build();
+        }
     }
 
     @GET
     @Path("/{id}")
-    public AvaliacaoResponseDTO findById(@PathParam("id") Long id) {
-        return avaliacaoService.findById(id);
-    }
+    public Response findById(@PathParam("id") Long id) {
+        try {
+            AvaliacaoResponseDTO avaliacao = avaliacaoService.findById(id);
+            return Response.ok(avaliacao).build();
 
+        } catch (NotFoundException e) {
+            return Response.status(Status.NOT_FOUND)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+
+        } catch (Exception e) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Result("Erro interno no servidor", false))
+                    .build();
+        }
+    }
 }

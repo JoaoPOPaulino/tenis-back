@@ -7,6 +7,7 @@ import br.unitins.joaovittor.basqueteiros.dto.usuario.UsuarioResponseDTO;
 import br.unitins.joaovittor.basqueteiros.service.hash.HashService;
 import br.unitins.joaovittor.basqueteiros.service.jwt.JwtService;
 import br.unitins.joaovittor.basqueteiros.service.usuario.UsuarioService;
+import br.unitins.joaovittor.basqueteiros.validation.ValidationException;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -21,8 +22,10 @@ import jakarta.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthResource {
 
+    private static final Logger LOG = Logger.getLogger(AuthResource.class);
+
     @Inject
-    UsuarioService service;
+    UsuarioService usuarioService;
 
     @Inject
     HashService hashService;
@@ -30,26 +33,35 @@ public class AuthResource {
     @Inject
     JwtService jwtService;
 
-    private static final Logger LOG = Logger.getLogger(AuthResource.class);
-
     @POST
+    @Path("/login")
     public Response login(@Valid LoginDTO dto) {
-        LOG.info("Iniciando autenticação.");
-        String hashSenha = hashService.getHashSenha(dto.senha());
+        LOG.info("Iniciando processo de autenticação para usuário: " + dto.login());
 
-        UsuarioResponseDTO result = service.findByLoginAndSenha(dto.login(),
-                hashSenha);
+        try {
+            String hashSenha = hashService.getHashSenha(dto.senha());
+            UsuarioResponseDTO usuario = usuarioService.findByLoginAndSenha(dto.login(), hashSenha);
+            String token = jwtService.generateJwt(usuario);
 
-        if (result != null) {
-            LOG.info("Login e senha corretos.");
-            String token = jwtService.generateJwt(result);
-            LOG.info("Token JWT gerado com sucesso.");
-            return Response.ok().header("Authorization", "Bearer " + token).build();
-        } else {
-            LOG.warn("Login e senha incorretos.");
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Login ou senha incorretos").build();
+            LOG.info("Autenticação bem-sucedida para usuário: " + dto.login());
+            return Response.ok()
+                    .header("Authorization", "Bearer " + token)
+                    .build();
+
+        } catch (ValidationException e) {
+            LOG.warn("Falha na autenticação: " + e.getMessage());
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(new ErrorResponse("credenciais", e.getMessage()))
+                    .build();
+        } catch (Exception e) {
+            LOG.error("Erro interno durante autenticação: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse("erro", "Erro interno no servidor"))
+                    .build();
         }
-
     }
+}
+
+record ErrorResponse(String field, String message) {
 
 }

@@ -1,24 +1,25 @@
 package br.unitins.joaovittor.basqueteiros.service.tenis;
 
+import java.util.List;
+
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisDTO;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisResponseDTO;
-import br.unitins.joaovittor.basqueteiros.model.tenis.Tenis;
-
-import java.util.List;
 
 public interface TenisService {
 
-    Tenis criarTenis(TenisDTO tenisDTO);
+    TenisResponseDTO create(TenisDTO dto);
 
-    Tenis buscarTenisPorId(Long id);
+    TenisResponseDTO update(Long id, TenisDTO dto);
 
-    List<Tenis> buscarTenisPorNome(String nome);
+    void delete(Long id);
 
-    List<Tenis> buscarTenisPorMarca(String marcaNome);
+    TenisResponseDTO findById(Long id);
 
-    List<Tenis> buscarTenisPorPrecoRange(float minPreco, float maxPreco);
+    List<TenisResponseDTO> findByNome(String nome, int page, int pageSize);
 
-    List<TenisResponseDTO> listarTodosTenis();
+    List<TenisResponseDTO> findByMarca(String marcaNome, int page, int pageSize);
 
-    void excluirTenis(Long id);
+    List<TenisResponseDTO> findByPrecoRange(float minPreco, float maxPreco, int page, int pageSize);
+
+    List<TenisResponseDTO> findAll(int page, int pageSize);
 }
