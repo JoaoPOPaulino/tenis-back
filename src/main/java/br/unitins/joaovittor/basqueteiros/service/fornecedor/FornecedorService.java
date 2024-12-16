@@ -8,24 +8,24 @@ import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
 
 public interface FornecedorService {
 
+    // Operações CRUD básicas
     FornecedorResponseDTO create(FornecedorDTO dto);
 
     FornecedorResponseDTO update(Long id, FornecedorDTO dto);
 
     void delete(Long id);
 
+    // Operações de busca
     List<FornecedorResponseDTO> findAll(int page, int pageSize);
 
     FornecedorResponseDTO findById(Long id);
 
     List<FornecedorResponseDTO> findByNome(String nome, int page, int pageSize);
 
-    FornecedorResponseDTO createEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO);
+    // Operação de endereço
+    FornecedorResponseDTO updateEndereco(Long id, EnderecoDTO enderecoDTO);
 
-    FornecedorResponseDTO updateEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO);
-
-    FornecedorResponseDTO removeEnderecos(Long fornecedorId, Long enderecoId);
-
+    // Operações de contagem
     long count();
 
     long countByNome(String nome);

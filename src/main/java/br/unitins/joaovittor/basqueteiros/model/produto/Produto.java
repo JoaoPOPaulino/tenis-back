@@ -47,6 +47,9 @@ public abstract class Produto extends DefaultEntity {
     }
 
     public void setEstoque(int estoque) {
+        if (estoque < 0) {
+            throw new IllegalArgumentException("Estoque não pode ser negativo");
+        }
         this.estoque = estoque;
     }
 

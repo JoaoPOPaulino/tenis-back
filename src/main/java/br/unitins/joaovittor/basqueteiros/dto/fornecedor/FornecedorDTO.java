@@ -1,8 +1,7 @@
 package br.unitins.joaovittor.basqueteiros.dto.fornecedor;
 
-import java.util.List;
-
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import io.smallrye.common.constraint.NotNull;
 import jakarta.validation.constraints.NotBlank;
 
 public record FornecedorDTO(
@@ -10,6 +9,7 @@ public record FornecedorDTO(
         String nome,
         @NotBlank(message = "CNPJ é obrigatório")
         String cnpj,
-        List<EnderecoDTO> enderecos) {
+        @NotNull
+        EnderecoDTO endereco) {
 
 }

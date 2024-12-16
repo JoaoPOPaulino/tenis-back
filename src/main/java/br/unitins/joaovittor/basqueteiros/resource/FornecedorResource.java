@@ -35,18 +35,16 @@ public class FornecedorResource {
 
     @POST
     public Response create(FornecedorDTO dto) {
-        Result result = null;
-
         try {
             FornecedorResponseDTO fornecedor = fornecedorService.create(dto);
             return Response.status(Status.CREATED).entity(fornecedor).build();
         } catch (ConstraintViolationException e) {
-            result = new Result(e.getConstraintViolations());
+            Result result = new Result(e.getConstraintViolations());
+            return Response.status(Status.BAD_REQUEST).entity(result).build();
         } catch (Exception e) {
-            result = new Result(e.getMessage(), false);
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Status.BAD_REQUEST).entity(result).build();
         }
-
-        return Response.status(Status.NOT_FOUND).entity(result).build();
     }
 
     @PUT
@@ -57,10 +55,10 @@ public class FornecedorResource {
             return Response.ok(fornecedor).build();
         } catch (ConstraintViolationException e) {
             Result result = new Result(e.getConstraintViolations());
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            return Response.status(Status.BAD_REQUEST).entity(result).build();
         } catch (Exception e) {
             Result result = new Result(e.getMessage(), false);
-            return Response.status(Status.NOT_FOUND).entity(result).build();
+            return Response.status(Status.BAD_REQUEST).entity(result).build();
         }
     }
 
@@ -89,39 +87,17 @@ public class FornecedorResource {
         return fornecedorService.findById(id);
     }
 
-    @POST
-    @Path("/{id}/enderecos")
-    @Transactional
-    public Response createEnderecos(List<EnderecoDTO> enderecosDTO, @PathParam("id") Long id) {
-        try {
-            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.createEnderecos(id, enderecosDTO);
-            return Response.ok(fornecedorAtualizado).build();
-        } catch (NotFoundException e) {
-            return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
-        }
-    }
-
     @PUT
+    @Path("/{id}/endereco")
     @Transactional
-    @Path("/{id}/enderecos")
-    public Response updateEnderecos(List<EnderecoDTO> enderecosDTO, @PathParam("id") Long id) {
+    public Response updateEndereco(@PathParam("id") Long id, EnderecoDTO enderecoDTO) {
         try {
-            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.updateEnderecos(id, enderecosDTO);
+            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.updateEndereco(id, enderecoDTO);
             return Response.ok(fornecedorAtualizado).build();
         } catch (NotFoundException e) {
             return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
-        }
-    }
-
-    @DELETE
-    @Path("/{userId}/enderecos/{enderecoId}")
-    @Transactional
-    public Response removeEnderecos(@PathParam("userId") Long userId, @PathParam("enderecoId") Long enderecoId) {
-        try {
-            FornecedorResponseDTO fornecedorAtualizado = fornecedorService.removeEnderecos(userId, enderecoId);
-            return Response.ok(fornecedorAtualizado).build();
-        } catch (NotFoundException e) {
-            return Response.status(Status.NOT_FOUND).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
     }
 

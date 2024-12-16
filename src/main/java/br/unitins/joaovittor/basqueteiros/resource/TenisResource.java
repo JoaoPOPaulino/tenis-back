@@ -1,16 +1,19 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import br.unitins.joaovittor.basqueteiros.application.Result;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisDTO;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisResponseDTO;
 import br.unitins.joaovittor.basqueteiros.service.tenis.TenisService;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -28,63 +31,99 @@ public class TenisResource {
     TenisService tenisService;
 
     @POST
-    public Response criarTenis(@Valid TenisDTO tenisDTO) {
-        TenisResponseDTO tenis = TenisResponseDTO.valueOf(tenisService.criarTenis(tenisDTO));
-        return Response.status(Response.Status.CREATED).entity(tenis).build();
+    public Response create(@Valid TenisDTO tenisDTO) {
+        try {
+            TenisResponseDTO tenis = tenisService.create(tenisDTO);
+            return Response.status(Response.Status.CREATED).entity(tenis).build();
+        } catch (ConstraintViolationException e) {
+            Result result = new Result(e.getConstraintViolations());
+            return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
+        } catch (Exception e) {
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
+        }
     }
 
     @GET
     @Path("/{id}")
-    public Response buscarTenisPorId(@PathParam("id") Long id) {
-        TenisResponseDTO tenis = TenisResponseDTO.valueOf(tenisService.buscarTenisPorId(id));
-        if (tenis != null) {
+    public Response findById(@PathParam("id") Long id) {
+        try {
+            TenisResponseDTO tenis = tenisService.findById(id);
             return Response.ok(tenis).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @GET
-    @Path("/nome/{nome}")
-    public Response buscarTenisPorNome(@PathParam("nome") String nome) {
-        List<TenisResponseDTO> tenis = tenisService.buscarTenisPorNome(nome)
-                .stream()
-                .map(TenisResponseDTO::valueOf)
-                .collect(Collectors.toList());
-        return Response.ok(tenis).build();
+    @Path("/search/nome/{nome}")
+    public Response findByNome(
+            @PathParam("nome") String nome,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        try {
+            List<TenisResponseDTO> tenis = tenisService.findByNome(nome, page, pageSize);
+            return Response.ok(tenis).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+        }
     }
 
     @GET
-    @Path("/marca/{marcaNome}")
-    public Response buscarTenisPorMarca(@PathParam("marcaNome") String marcaNome) {
-        List<TenisResponseDTO> tenis = tenisService.buscarTenisPorMarca(marcaNome)
-                .stream()
-                .map(TenisResponseDTO::valueOf)
-                .collect(Collectors.toList());
-        return Response.ok(tenis).build();
+    @Path("/search/marca/{marcaNome}")
+    public Response findByMarca(
+            @PathParam("marcaNome") String marcaNome,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        try {
+            List<TenisResponseDTO> tenis = tenisService.findByMarca(marcaNome, page, pageSize);
+            return Response.ok(tenis).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+        }
     }
 
     @GET
-    @Path("/preco")
-    public Response buscarTenisPorPrecoRange(
+    @Path("/search/preco")
+    public Response findByPrecoRange(
             @QueryParam("min") float minPreco,
-            @QueryParam("max") float maxPreco) {
-        List<TenisResponseDTO> tenis = tenisService.buscarTenisPorPrecoRange(minPreco, maxPreco)
-                .stream()
-                .map(TenisResponseDTO::valueOf)
-                .collect(Collectors.toList());
-        return Response.ok(tenis).build();
+            @QueryParam("max") float maxPreco,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        try {
+            List<TenisResponseDTO> tenis = tenisService.findByPrecoRange(minPreco, maxPreco, page, pageSize);
+            return Response.ok(tenis).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+        }
     }
 
     @GET
-    public Response listarTodosTenis() {
-        List<TenisResponseDTO> tenis = tenisService.listarTodosTenis();
+    public Response findAll(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        List<TenisResponseDTO> tenis = tenisService.findAll(page, pageSize);
         return Response.ok(tenis).build();
     }
 
     @DELETE
     @Path("/{id}")
-    public Response excluirTenis(@PathParam("id") Long id) {
-        tenisService.excluirTenis(id);
-        return Response.noContent().build();
+    public Response delete(@PathParam("id") Long id) {
+        try {
+            tenisService.delete(id);
+            return Response.noContent().build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+        }
     }
 }

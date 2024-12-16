@@ -1,14 +1,5 @@
 package br.unitins.joaovittor.basqueteiros.service.fornecedor;
 
-import java.util.List;
-import java.util.Set;
-
-import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
-import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorDTO;
-import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
-import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
-import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
-import br.unitins.joaovittor.basqueteiros.repository.FornecedorRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -16,6 +7,19 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import jakarta.ws.rs.NotFoundException;
+
+import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
+import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorDTO;
+import br.unitins.joaovittor.basqueteiros.dto.fornecedor.FornecedorResponseDTO;
+import br.unitins.joaovittor.basqueteiros.model.cidade.Cidade;
+import br.unitins.joaovittor.basqueteiros.model.endereco.Endereco;
+import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
+import br.unitins.joaovittor.basqueteiros.repository.CidadeRepository;
+import br.unitins.joaovittor.basqueteiros.repository.FornecedorRepository;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class FornecedorServiceImpl implements FornecedorService {
@@ -25,6 +29,9 @@ public class FornecedorServiceImpl implements FornecedorService {
 
     @Inject
     Validator validator;
+
+    @Inject
+    CidadeRepository cidadeRepository;
 
     @Override
     @Transactional
@@ -47,69 +54,79 @@ public class FornecedorServiceImpl implements FornecedorService {
         Fornecedor fornecedor = findFornecedorOrThrow(id);
         updateFornecedorFromDTO(fornecedor, dto);
 
-        fornecedorRepository.persist(fornecedor);
+        return FornecedorResponseDTO.valueOf(fornecedor);
+    }
+
+    @Override
+    @Transactional
+    public FornecedorResponseDTO updateEndereco(Long id, EnderecoDTO enderecoDTO) {
+        Fornecedor fornecedor = findFornecedorOrThrow(id);
+        fornecedor.setEndereco(createEnderecoFromDTO(enderecoDTO));
 
         return FornecedorResponseDTO.valueOf(fornecedor);
     }
 
     @Override
     @Transactional
-    public FornecedorResponseDTO createEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO) {
-        Fornecedor fornecedor = findFornecedorOrThrow(fornecedorId);
-
-        enderecosDTO.stream()
-                .map(this::createEnderecoFromDTO)
-                .forEach(fornecedor::addEndereco);
-
-        fornecedorRepository.persist(fornecedor);
-
-        return FornecedorResponseDTO.valueOf(fornecedor);
+    public void delete(Long id) {
+        Fornecedor fornecedor = findFornecedorOrThrow(id);
+        fornecedorRepository.delete(fornecedor);
     }
 
     @Override
-    @Transactional
-    public FornecedorResponseDTO updateEnderecos(Long fornecedorId, List<EnderecoDTO> enderecosDTO) {
-        Fornecedor fornecedor = findFornecedorOrThrow(fornecedorId);
-
-        // Limpa a lista atual e adiciona os novos endereços
-        fornecedor.getEnderecos().clear();
-        enderecosDTO.stream()
-                .map(this::createEnderecoFromDTO)
-                .forEach(fornecedor::addEndereco);
-
-        fornecedorRepository.persist(fornecedor);
-        return FornecedorResponseDTO.valueOf(fornecedor);
+    public List<FornecedorResponseDTO> findAll(int page, int pageSize) {
+        return fornecedorRepository.findAll()
+                .page(page, pageSize)
+                .stream()
+                .map(FornecedorResponseDTO::valueOf)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public FornecedorResponseDTO removeEnderecos(Long fornecedorId, Long enderecoId) {
-        Fornecedor fornecedor = findFornecedorOrThrow(fornecedorId);
+    public FornecedorResponseDTO findById(Long id) {
+        return FornecedorResponseDTO.valueOf(findFornecedorOrThrow(id));
+    }
 
-        boolean removed = fornecedor.getEnderecos().removeIf(
-                endereco -> endereco.getId().equals(enderecoId)
-        );
+    @Override
+    public List<FornecedorResponseDTO> findByNome(String nome, int page, int pageSize) {
+        return fornecedorRepository.find("UPPER(nome) LIKE UPPER(?1)", "%" + nome + "%")
+                .page(page, pageSize)
+                .stream()
+                .map(FornecedorResponseDTO::valueOf)
+                .collect(Collectors.toList());
+    }
 
-        if (!removed) {
-            throw new NotFoundException("Endereço não encontrado");
+    @Override
+    public long count() {
+        return fornecedorRepository.count();
+    }
+
+    @Override
+    public long countByNome(String nome) {
+        return fornecedorRepository.count("UPPER(nome) LIKE UPPER(?1)", "%" + nome + "%");
+    }
+
+    private Endereco createEnderecoFromDTO(EnderecoDTO dto) {
+        Endereco endereco = new Endereco();
+        endereco.setCep(dto.cep());
+        endereco.setQuadra(dto.quadra());
+        endereco.setRua(dto.rua());
+        endereco.setNumero(dto.numero());
+        endereco.setComplemento(dto.complemento());
+
+        // Você precisa buscar a cidade pelo ID
+        if (dto.idCidade() != null) {
+            Cidade cidade = cidadeRepository.findById(dto.idCidade());
+            endereco.setCidade(cidade);
         }
 
-        fornecedorRepository.persist(fornecedor);
-        return FornecedorResponseDTO.valueOf(fornecedor);
+        // Como é um endereço de fornecedor, podemos assumir que é principal e ativo
+        endereco.setPrincipal(true);
+        endereco.setAtivo(true);
+
+        return endereco;
     }
 
-    private void updateFornecedorFromDTO(Fornecedor fornecedor, FornecedorDTO dto) {
-        fornecedor.setNome(dto.nome());
-        fornecedor.setCnpj(dto.cnpj());
-
-        if (dto.enderecos() != null) {
-            dto.enderecos().stream()
-                    .map(this::createEnderecoFromDTO)
-                    .forEach(fornecedor::addEndereco);
-        }
-    }
-
-    // Métodos auxiliares
     private void validate(FornecedorDTO dto) {
         Set<ConstraintViolation<FornecedorDTO>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
@@ -122,50 +139,14 @@ public class FornecedorServiceImpl implements FornecedorService {
                 .orElseThrow(() -> new NotFoundException("Fornecedor não encontrado"));
     }
 
-    private Endereco createEnderecoFromDTO(EnderecoDTO dto) {
-        Endereco endereco = new Endereco();
-        endereco.setNumero(dto.numero());
-        endereco.setCep(dto.cep());
-        endereco.setQuadra(dto.quadra());
-        endereco.setRua(dto.rua());
-        endereco.setComplemento(dto.complemento());
-        // Adicionar cidade se necessário
-        return endereco;
+    private void updateFornecedorFromDTO(Fornecedor fornecedor, FornecedorDTO dto) {
+        fornecedor.setNome(dto.nome());
+        fornecedor.setCnpj(dto.cnpj());
+
+        if (dto.endereco() != null) {
+            Endereco endereco = createEnderecoFromDTO(dto.endereco());
+            fornecedor.setEndereco(endereco);
+        }
     }
 
-    @Override
-    public void delete(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    @Override
-    public List<FornecedorResponseDTO> findAll(int page, int pageSize) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
-    }
-
-    @Override
-    public FornecedorResponseDTO findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
-    }
-
-    @Override
-    public List<FornecedorResponseDTO> findByNome(String nome, int page, int pageSize) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByNome'");
-    }
-
-    @Override
-    public long count() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'count'");
-    }
-
-    @Override
-    public long countByNome(String nome) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'countByNome'");
-    }
 }

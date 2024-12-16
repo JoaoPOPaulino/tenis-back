@@ -1,7 +1,5 @@
 package br.unitins.joaovittor.basqueteiros.dto.avaliacao;
 
-import java.time.LocalDateTime;
-
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisResponseDTO;
 import br.unitins.joaovittor.basqueteiros.model.avaliacao.Avaliacao;
 

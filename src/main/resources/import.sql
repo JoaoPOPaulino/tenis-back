@@ -1,89 +1,154 @@
---insert into fornecedor(nome_empresa, email, telefone, data_cadastro) 
---values
-    --('nike', 'niketop@gmail.com', '999', CURRENT_DATE),
-    --('meia', 'meialegal@gmail.com', '888', CURRENT_DATE);
+-- Inserir Estados
+INSERT INTO estado (nome, sigla, ativo) VALUES
+('Acre', 'AC', true),
+('Alagoas', 'AL', true),
+('Amapá', 'AP', true),
+('Amazonas', 'AM', true),
+('Bahia', 'BA', true),
+('Ceará', 'CE', true),
+('Distrito Federal', 'DF', true),
+('Espírito Santo', 'ES', true),
+('Goiás', 'GO', true),
+('Maranhão', 'MA', true),
+('Mato Grosso', 'MT', true),
+('Mato Grosso do Sul', 'MS', true),
+('Minas Gerais', 'MG', true),
+('Pará', 'PA', true),
+('Paraíba', 'PB', true),
+('Paraná', 'PR', true),
+('Pernambuco', 'PE', true),
+('Piauí', 'PI', true),
+('Rio de Janeiro', 'RJ', true),
+('Rio Grande do Norte', 'RN', true),
+('Rio Grande do Sul', 'RS', true),
+('Rondônia', 'RO', true),
+('Roraima', 'RR', true),
+('Santa Catarina', 'SC', true),
+('São Paulo', 'SP', true),
+('Sergipe', 'SE', true),
+('Tocantins', 'TO', true);
 
-insert into marca(nome) 
-values 
-('nike'), 
-('adidas');
+-- Inserir Cidades
+INSERT INTO cidade (nome, estado_id) VALUES
+('Palmas', 1),        -- Tocantins
+('São Paulo', 2),     -- São Paulo
+('Rio de Janeiro', 3), -- Rio de Janeiro
+('Belo Horizonte', 4), -- Minas Gerais
+('Goiânia', 5);       -- Goiás
 
---insert into tamanho(numeracao, tamanho_em_cm, data_cadastro) 
---values 
---(37, '25', CURRENT_DATE),
---(38, '25,5', CURRENT_DATE),
---(39, '26', CURRENT_DATE),
---(40, '26,5', CURRENT_DATE),
---(41, '27', CURRENT_DATE),
---(42, '27,5', CURRENT_DATE),
---(43, '28', CURRENT_DATE);
+-- Inserir Marcas
+INSERT INTO marca (nome) VALUES
+('Nike'),
+('Adidas'),
+('Under Armour'),
+('Jordan'),
+('Puma');
 
---insert into cor(nome, data_cadastro)
---values
---('preto', CURRENT_DATE),
---('branco', CURRENT_DATE);
+-- Inserir Fornecedores
+INSERT INTO fornecedor (nome, cnpj) VALUES
+('Nike Brasil LTDA', '12345678000190'),
+('Adidas Brasil LTDA', '98765432000190'),
+('Under Armour Brasil', '45678912000190'),
+('Jordan Brasil Imports', '78912345000190'),
+('Puma Sports Brasil', '32165498000190');
 
--- ADICIONANDO CLIENTE
---insert into usuario (username, `password`)
---values ('joao', 'Z7dL+3VaMV++fdWH0b8S3NV26muviRKuWXNk5ayr2RVBF9BE8tMorc/G7NB1P51lHzLhjc7irjXu+Q5f3T997w==');
+-- Inserir alguns usuários (senha exemplo: "Senha123")
+INSERT INTO usuario (nome, email, login, senha, tipo_usuario) VALUES
+('Admin Sistema', 'admin@email.com', 'admin', '$2a$10$YourHashedPasswordHere', 'ADMINISTRADOR'),
+('Usuário Comum', 'usuario@email.com', 'usuario', '$2a$10$YourHashedPasswordHere', 'USUARIO'),
+('João Silva', 'joao@email.com', 'joao', '$2a$10$YourHashedPasswordHere', 'USUARIO'),
+('Maria Santos', 'maria@email.com', 'maria', '$2a$10$YourHashedPasswordHere', 'USUARIO');
 
---#insert into pessoafisica (cpf, nome, telefone, data_nascimento, id_usuario)
---values ('999.999.999-00','João Víttor O','(99)9999-9999', CURRENT_DATE, 1);
+-- Inserir Telefones
+INSERT INTO telefone (ddd, numero) VALUES
+('63', '999999999'),
+('11', '988888888'),
+('21', '977777777'),
+('31', '966666666');
 
---insert into cliente (saldo, id_pessoa_fisica)
---values (1000.00, 1);
+-- Associar Telefones aos Usuários
+INSERT INTO usuario_telefone (usuario_id, telefones_id) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4);
 
---insert into endereco (cep, rua, complemento, id_cliente)
---values ('77001-000', 'Com asfalto', 'casa 2', 1);
+-- Inserir Endereços
+INSERT INTO endereco (cep, quadra, rua, numero, complemento, cidade_id, usuario_id, principal, ativo) VALUES
+('77000000', 'Quadra 1', 'Rua 1', '1', 'Apt 101', 1, 1, true, true),
+('01000000', 'Quadra 2', 'Rua 2', '2', 'Casa 2', 2, 2, true, true),
+('20000000', 'Quadra 3', 'Rua 3', '3', 'Apt 303', 3, 3, true, true),
+('30000000', 'Quadra 4', 'Rua 4', '4', 'Casa 4', 4, 4, true, true);
 
--- ADICIONANDO FUNCIONARIO
---insert into usuario (username, `password`) 
---values ('rona', 'xMjCHZuQU+YIM0rmuq63vX4UgfwSDSsKE+9a+njtZWkjyD9dE9q6eZP7S5DMoRKXICJ//q4op6+AUmEVeMzkyw==');
+-- Inserir Tênis
+INSERT INTO produto (nome, preco, estoque, fornecedor_id, dtype) VALUES
+('Nike LeBron XX', 999.99, 50, 1, 'Tenis'),
+('Adidas Harden Vol. 7', 899.99, 45, 2, 'Tenis'),
+('Under Armour Curry 10', 849.99, 30, 3, 'Tenis'),
+('Air Jordan XXXVII', 1299.99, 25, 4, 'Tenis'),
+('Puma MB.02', 799.99, 35, 5, 'Tenis');
 
---insert into pessoafisica (cpf, nome, telefone, data_nascimento, id_usuario)
---values ('000.111.222-33','Ronaldo','(00)0000-0000', CURRENT_DATE, 2);
+-- Atualizar tabela Tenis com informações específicas
+INSERT INTO tenis (id, descricao, marca_id, modelo, tamanho) VALUES
+(1, 'Tênis signature do LeBron James', 1, 'LeBron XX', 'GG'),
+(2, 'Tênis signature do James Harden', 2, 'Harden Vol. 7', 'G'),
+(3, 'Tênis signature do Stephen Curry', 3, 'Curry 10', 'M'),
+(4, 'Air Jordan nova geração', 4, 'XXXVII', 'GG'),
+(5, 'Tênis signature do LaMelo Ball', 5, 'MB.02', 'G');
 
---insert into funcionario(codigo_contrato, data_admissao, id_pessoa_fisica)
---values ('PJ#0001', CURRENT_DATE, 2);
+-- Inserir alguns Cartões
+INSERT INTO cartao (tipo_cartao, numero, cvv, validade, titular, cpf, usuario_id, ativo) VALUES
+('CREDITO', '1111222233334444', '123', '2025-12-31', 'Admin Sistema', '12345678900', 1, true),
+('DEBITO', '4444333322221111', '456', '2025-12-31', 'Usuário Comum', '98765432100', 2, true);
 
---insert into produto (nome, descricao, quantidade, preco_compra, preco_venda, id_fornecedor, id_marca)
---values 
---('Nike Air Max', 'Tênis de corrida Nike Air Max', 50, 150.00, 250.00, 1, 2),
---('Nike Air Force 1', 'Tênis casual Nike Air Force 1', 40, 120.00, 200.00, 1, 2),
---('Nike Dri-FIT', 'Camiseta Nike Dri-FIT', 30, 25.00, 50.00, 1, 2),
---('Nike Tech Fleece', 'Moletom Nike Tech Fleece', 20, 80.00, 150.00, 1, 2),
---('Nike Elite Backpack', 'Mochila Nike Elite', 15, 50.00, 100.00, 1, 2),
---('Nike Pro Shorts', 'Shorts de compressão Nike Pro', 35, 30.00, 60.00, 1, 2),
---('Meia Ultraboost', 'Meia Ultraboost', 55, 160.00, 270.00, 2, 1),
---('Meia Stan Smith', 'Meia Stan Smith', 45, 100.00, 180.00, 2, 1),
---('Meia Essentials Tee', 'Meia Essentials', 25, 20.00, 40.00, 2, 1),
---('Meia Originals Hoodie', 'Meia Originals', 18, 70.00, 130.00, 2, 1),
---('Meia Classic Backpack', 'Meia Classic', 12, 40.00, 90.00, 2, 1),
---('Meia 3-Stripes Shorts', 'Meia 3-Stripes', 30, 25.00, 50.00, 2, 1);
+-- Criando alguns pedidos
+INSERT INTO pedido (data, usuario_id, total, endereco_id, cartao_id) VALUES
+-- Pedido 1: Usuário 1 comprando dois tênis
+(NOW(), 1, 2299.98, 1, 1),
+-- Pedido 2: Usuário 2 comprando um tênis
+(NOW() - INTERVAL '1 day', 2, 899.99, 2, 2),
+-- Pedido 3: Usuário 3 comprando três tênis
+(NOW() - INTERVAL '2 day', 3, 3149.97, 3, NULL),
+-- Pedido 4: Usuário 4 comprando um tênis
+(NOW() - INTERVAL '3 day', 4, 1299.99, 4, NULL);
 
---insert into meia (id, qtd_pares, id_cor)
---values
---(7, 4, 1),
---(8, 2, 2),
---(9, 6, 1),
---(10, 1, 2),
---(11, 2, 1),
---(12, 2, 2);
+-- Criando os itens dos pedidos
+INSERT INTO item (quantidade, preco, id_tenis, id_pedido) VALUES
+-- Itens do Pedido 1
+(1, 999.99, 1, 1),   -- Nike LeBron XX
+(1, 1299.99, 4, 1),  -- Air Jordan XXXVII
 
---insert into basqueteira (id, tamanho_cano, id_tamanho, peso)
---values
---(1, 2, 2, 200),
---(2, 0, 1, 320),
---(3, 2, 3, 190),
---(4, 1, 4, 450),
---(5, 0, 2, 220),
---(6, 1, 1, 210);
+-- Itens do Pedido 2
+(1, 899.99, 2, 2),   -- Adidas Harden Vol. 7
 
--- Inserindo um registro na tabela usuario
---INSERT INTO usuario (id, nome, email, login, senha, tipo_usuario)
---VALUES (1, 'João da Silva', 'joao.silva@example.com', 'joao123', 'senha123', 1);
+-- Itens do Pedido 3
+(2, 849.99, 3, 3),   -- 2x Under Armour Curry 10
+(1, 1299.99, 4, 3),  -- Air Jordan XXXVII
 
-INSERT INTO usuario (id, nome, email, login, senha, tipo_usuario) 
-VALUES (1, 'João da Silva', 'joao.silva@example.com', 'joao123', 'senha123', 'ADMINISTRADOR');
+-- Itens do Pedido 4
+(1, 1299.99, 4, 4);  -- Air Jordan XXXVII
 
+-- Criando os pagamentos
+INSERT INTO pagamento (tipo_pagamento, status_pagamento, valor, pedido_id, cartao_id, data_pagamento) VALUES
+-- Pagamento do Pedido 1 (Cartão de Crédito)
+('CARTAO_CREDITO', 'APROVADO', 2299.98, 1, 1, NOW()),
 
+-- Pagamento do Pedido 2 (Cartão de Débito)
+('CARTAO_DEBITO', 'APROVADO', 899.99, 2, 2, NOW() - INTERVAL '1 day'),
+
+-- Pagamento do Pedido 3 (PIX)
+('PIX', 'APROVADO', 3149.97, 3, NULL, NOW() - INTERVAL '2 day'),
+
+-- Pagamento do Pedido 4 (Boleto)
+('BOLETO', 'PENDENTE', 1299.99, 4, NULL, NOW() - INTERVAL '3 day');
+
+-- Atualizar estoque dos tênis após as vendas
+UPDATE produto 
+SET estoque = CASE id
+    WHEN 1 THEN estoque - 1  -- Nike LeBron XX (-1)
+    WHEN 2 THEN estoque - 1  -- Adidas Harden (-1)
+    WHEN 3 THEN estoque - 2  -- Curry 10 (-2)
+    WHEN 4 THEN estoque - 3  -- Air Jordan (-3)
+    ELSE estoque
+END
+WHERE id IN (1, 2, 3, 4);
