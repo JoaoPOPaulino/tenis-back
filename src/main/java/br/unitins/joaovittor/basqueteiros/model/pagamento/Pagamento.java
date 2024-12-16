@@ -20,11 +20,11 @@ import jakarta.persistence.OneToOne;
 public class Pagamento extends DefaultEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "tipo_pagamento", nullable = false)
     private TipoPagamento tipoPagamento;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status_pagamento", nullable = false)
     private StatusPagamento statusPagamento;
 
     @Column(nullable = false)
@@ -40,7 +40,7 @@ public class Pagamento extends DefaultEntity {
     private String chavePix;
     private String numeroBoleto;
 
-    @Column(nullable = false)
+    @Column(name = "data_pagamento", nullable = false)
     private LocalDateTime dataPagamento = LocalDateTime.now();
 
     public TipoPagamento getTipoPagamento() {
