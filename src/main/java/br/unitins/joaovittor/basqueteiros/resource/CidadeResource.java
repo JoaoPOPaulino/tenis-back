@@ -175,4 +175,20 @@ public class CidadeResource {
                     .build();
         }
     }
+
+    @GET
+    @Path("/estado/{estadoId}")
+    public Response findByEstadoId(@PathParam("estadoId") Long estadoId,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+        try {
+            List<CidadeResponseDTO> cidades = cidadeService.findByEstadoId(estadoId, page, pageSize);
+            return Response.ok(cidades).build();
+
+        } catch (Exception e) {
+            return Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Result("Erro interno no servidor", false))
+                    .build();
+        }
+    }
 }

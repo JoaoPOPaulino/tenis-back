@@ -20,6 +20,8 @@ public interface CidadeService {
 
     List<CidadeResponseDTO> findByNome(String nome, int page, int pageSize);
 
+    List<CidadeResponseDTO> findByEstadoId(Long estadoId, int page, int pageSize);
+
     long count();
 
     long countByNome(String nome);

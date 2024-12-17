@@ -100,6 +100,16 @@ public class CidadeServiceImpl implements CidadeService {
     }
 
     @Override
+    public List<CidadeResponseDTO> findByEstadoId(Long estadoId, int page, int pageSize) {
+        return cidadeRepository.findByEstadoId(estadoId)
+                .page(page, pageSize)
+                .list()
+                .stream()
+                .map(CidadeResponseDTO::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public long count() {
         return cidadeRepository.count();
     }

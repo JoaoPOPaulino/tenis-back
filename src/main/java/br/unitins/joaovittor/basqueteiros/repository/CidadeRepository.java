@@ -14,4 +14,8 @@ public class CidadeRepository implements PanacheRepository<Cidade> {
         }
         return find("UPPER(nome) LIKE ?1 ", "%" + nome.toUpperCase() + "%");
     }
+
+    public PanacheQuery<Cidade> findByEstadoId(Long estadoId) {
+        return find("estado.id", estadoId);
+    }
 }
