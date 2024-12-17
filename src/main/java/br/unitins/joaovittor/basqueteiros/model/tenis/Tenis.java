@@ -6,6 +6,7 @@ import br.unitins.joaovittor.basqueteiros.model.marca.Marca;
 import br.unitins.joaovittor.basqueteiros.model.produto.Produto;
 import br.unitins.joaovittor.basqueteiros.model.tamanho.Tamanho;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,13 +14,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
+@DiscriminatorValue("Tenis")
 public class Tenis extends Produto {
 
     @Column(columnDefinition = "TEXT")
     private String descricao;
 
     @ManyToOne
-    @JoinColumn(name = "id_marca", nullable = false)
+    @JoinColumn(name = "marca_id", nullable = false)
     private Marca marca;
 
     @Column(nullable = false)

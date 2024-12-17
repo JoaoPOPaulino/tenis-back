@@ -3,6 +3,8 @@ package br.unitins.joaovittor.basqueteiros.model.produto;
 import br.unitins.joaovittor.basqueteiros.model.defaultEntity.DefaultEntity;
 import br.unitins.joaovittor.basqueteiros.model.fornecedor.Fornecedor;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
@@ -11,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 public abstract class Produto extends DefaultEntity {
 
     @Column(nullable = false)

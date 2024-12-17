@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToOne;
 public class Cartao extends DefaultEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "tipo_cartao", nullable = false)
     private TipoCartao tipoCartao;
 
     @Column(nullable = false, unique = true)
@@ -35,7 +35,7 @@ public class Cartao extends DefaultEntity {
     private String cpf;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     private boolean ativo = true;

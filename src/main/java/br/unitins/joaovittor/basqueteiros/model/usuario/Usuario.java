@@ -39,7 +39,7 @@ public class Usuario extends DefaultEntity {
     private String senha;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "tipo_usuario", nullable = false)
     private TipoUsuario tipoUsuario;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

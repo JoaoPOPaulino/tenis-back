@@ -2,12 +2,14 @@ package br.unitins.joaovittor.basqueteiros.model.tipo_usuario;
 
 import java.util.Arrays;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum TipoUsuario {
     ADMINISTRADOR(1, "Administrador"),
-    USUARIO(2, "Usuário");
+    USUARIO(2, "Usuario");
 
     private final Integer id;
     private final String label;
@@ -29,10 +31,11 @@ public enum TipoUsuario {
         return this == ADMINISTRADOR;
     }
 
-    public static TipoUsuario fromId(Integer id) {
+    @JsonCreator
+    public static TipoUsuario fromId(@JsonProperty("id") Integer id) {
         return Arrays.stream(values())
                 .filter(t -> t.id.equals(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("ID de Tipo de Usuário inválido: " + id));
     }
 }

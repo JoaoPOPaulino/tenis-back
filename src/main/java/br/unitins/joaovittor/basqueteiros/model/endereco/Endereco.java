@@ -30,7 +30,7 @@ public class Endereco extends DefaultEntity {
     private String complemento;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "usuario_id", referencedColumnName= "id", nullable = false)
     private Usuario usuario;
 
     private boolean principal;
