@@ -1,10 +1,14 @@
 package br.unitins.joaovittor.basqueteiros.resource;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import br.unitins.joaovittor.basqueteiros.application.Result;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisDTO;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisResponseDTO;
+import br.unitins.joaovittor.basqueteiros.form.ImageForm;
 import br.unitins.joaovittor.basqueteiros.service.file.FileService;
 import br.unitins.joaovittor.basqueteiros.service.tenis.TenisService;
 import jakarta.inject.Inject;
@@ -15,6 +19,7 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -23,6 +28,7 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.ResponseBuilder;
+import jakarta.ws.rs.core.Response.Status;
 
 @Path("/tenis")
 @Produces(MediaType.APPLICATION_JSON)
@@ -94,21 +100,18 @@ public class TenisResource {
         }
     }
 
-    @POST
-    @Path("/{id}/imagem/upload")
+    @PATCH
+    @Path("/image/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadImagem(@PathParam("id") Long id, String nomeImagem) {
+    public Response salvarImagem(@MultipartForm ImageForm form) {
+
         try {
-            TenisResponseDTO tenis = tenisService.uploadImagem(id, nomeImagem);
-            return Response.ok(tenis).build();
-        } catch (NotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(new Result(e.getMessage(), false))
-                    .build();
-        } catch (Exception e) {
-            Result result = new Result(e.getMessage(), false);
-            return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
+            fileService.salvar(form.getId(), form.getNomeImagem(), form.getImagem());
+            return Response.noContent().build();
+        } catch (IOException e) {
+            return Response.status(Status.CONFLICT).build();
         }
+
     }
 
     @GET
