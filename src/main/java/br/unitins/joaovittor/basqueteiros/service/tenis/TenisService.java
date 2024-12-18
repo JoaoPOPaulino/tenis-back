@@ -22,4 +22,6 @@ public interface TenisService {
     List<TenisResponseDTO> findByPrecoRange(float minPreco, float maxPreco, int page, int pageSize);
 
     List<TenisResponseDTO> findAll(int page, int pageSize);
+
+    TenisResponseDTO uploadImagem(Long id, String nomeImagem);
 }

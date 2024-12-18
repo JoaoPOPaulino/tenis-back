@@ -5,6 +5,7 @@ import java.util.List;
 import br.unitins.joaovittor.basqueteiros.application.Result;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisDTO;
 import br.unitins.joaovittor.basqueteiros.dto.tenis.TenisResponseDTO;
+import br.unitins.joaovittor.basqueteiros.service.file.FileService;
 import br.unitins.joaovittor.basqueteiros.service.tenis.TenisService;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
@@ -21,6 +22,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 
 @Path("/tenis")
 @Produces(MediaType.APPLICATION_JSON)
@@ -29,6 +31,9 @@ public class TenisResource {
 
     @Inject
     TenisService tenisService;
+
+    @Inject
+    FileService fileService;
 
     @POST
     public Response create(@Valid TenisDTO tenisDTO) {
@@ -87,6 +92,32 @@ public class TenisResource {
                     .entity(new Result(e.getMessage(), false))
                     .build();
         }
+    }
+
+    @POST
+    @Path("/{id}/imagem/upload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadImagem(@PathParam("id") Long id, String nomeImagem) {
+        try {
+            TenisResponseDTO tenis = tenisService.uploadImagem(id, nomeImagem);
+            return Response.ok(tenis).build();
+        } catch (NotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(new Result(e.getMessage(), false))
+                    .build();
+        } catch (Exception e) {
+            Result result = new Result(e.getMessage(), false);
+            return Response.status(Response.Status.BAD_REQUEST).entity(result).build();
+        }
+    }
+
+    @GET
+    @Path("/image/download/{nomeImagem}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response obter(@PathParam("nomeImagem") String nomeImagem) {
+        ResponseBuilder response = Response.ok(fileService.obter(nomeImagem));
+        response.header("Content-Disposition", "attachment;filename=" + nomeImagem);
+        return response.build();
     }
 
     @GET

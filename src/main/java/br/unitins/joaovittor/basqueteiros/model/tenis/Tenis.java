@@ -31,6 +31,16 @@ public class Tenis extends Produto {
     @Column(nullable = false)
     private Tamanho tamanho;
 
+    private String nomeImagem;
+
+    public String getNomeImagem() {
+        return nomeImagem;
+    }
+
+    public void setNomeImagem(String nomeImagem) {
+        this.nomeImagem = nomeImagem;
+    }
+
     public Tenis() {
     }
 

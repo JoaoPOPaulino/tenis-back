@@ -10,7 +10,8 @@ public record TenisResponseDTO(
         MarcaResponseDTO marca,
         String modelo,
         Tamanho tamanho,
-        Float preco) {
+        Float preco,
+        String nomeImagem) {
 
     public static TenisResponseDTO valueOf(Tenis tenis) {
         return new TenisResponseDTO(
@@ -19,7 +20,8 @@ public record TenisResponseDTO(
                 MarcaResponseDTO.valueOf(tenis.getMarca()),
                 tenis.getModelo(),
                 tenis.getTamanho(),
-                tenis.getPreco()
+                tenis.getPreco(),
+                tenis.getNomeImagem()
         );
     }
 }

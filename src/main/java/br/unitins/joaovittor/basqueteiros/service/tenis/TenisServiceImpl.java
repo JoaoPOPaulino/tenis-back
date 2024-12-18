@@ -148,4 +148,12 @@ public class TenisServiceImpl implements TenisService {
         tenis.setPreco(dto.preco().floatValue());
         tenis.setMarca(marcaRepository.findById(dto.idMarca()));
     }
+
+    @Override
+    public TenisResponseDTO uploadImagem(Long id, String nomeImagem) {
+        Tenis tenis = tenisRepository.findById(id);
+        tenis.setNomeImagem(nomeImagem);
+
+        return TenisResponseDTO.valueOf(tenis);
+    }
 }
