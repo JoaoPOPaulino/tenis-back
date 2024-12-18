@@ -42,15 +42,21 @@ INSERT INTO marca (nome) VALUES
 ('Adidas'),
 ('Under Armour'),
 ('Jordan'),
-('Puma');
+('Puma'),
+('Reebok'),
+('New Balance'),
+('Fila');
 
 -- Inserir Fornecedores
-INSERT INTO fornecedor (nome, cnpj) VALUES
-('Nike Brasil LTDA', '12345678000190'),
-('Adidas Brasil LTDA', '98765432000190'),
-('Under Armour Brasil', '45678912000190'),
-('Jordan Brasil Imports', '78912345000190'),
-('Puma Sports Brasil', '32165498000190');
+INSERT INTO fornecedor (nome, cnpj) VALUES 
+('Nike Brasil LTDA', '12345678000190'), 
+('Adidas Brasil LTDA', '98765432000190'), 
+('Under Armour Brasil', '45678912000190'), 
+('Jordan Brasil Imports', '78912345000190'), 
+('Puma Sports Brasil', '32165498000190'), 
+('Reebok Brasil LTDA', '90123456000190'), 
+('New Balance Brasil', '23456789000190'), 
+('Fila Brasil LTDA', '56789012300190');
 
 -- Inserir alguns usuários (senha exemplo: "Senha123")
 INSERT INTO usuario (nome, email, login, senha, tipo_usuario) VALUES
@@ -86,15 +92,58 @@ INSERT INTO produto (nome, preco, estoque, fornecedor_id, dtype) VALUES
 ('Adidas Harden Vol. 7', 899.99, 45, 2, 'Tenis'),
 ('Under Armour Curry 10', 849.99, 30, 3, 'Tenis'),
 ('Air Jordan XXXVII', 1299.99, 25, 4, 'Tenis'),
-('Puma MB.02', 799.99, 35, 5, 'Tenis');
+('Puma MB.02', 799.99, 35, 5, 'Tenis'),
+('Reebok Classic Leather', 699.99, 40, 6, 'Tenis'),
+('New Balance 574', 799.99, 30, 7, 'Tenis'),
+('Fila Disruptor II', 899.99, 25, 8, 'Tenis'),
+('Nike Air Max 270', 999.99, 35, 1, 'Tenis'),
+('Adidas Yung-1', 799.99, 40, 2, 'Tenis'),
+('Under Armour Micro G Pursuit', 699.99, 30, 3, 'Tenis'),
+('Air Jordan 1', 1299.99, 25, 4, 'Tenis'),
+('Puma Future 4.1', 899.99, 35, 5, 'Tenis'),
+('Puma MB.03', 799.99, 35, 5, 'Tenis'),
+('Reebok Nano X2', 749.99, 40, 6, 'Tenis'),
+('New Balance Fresh Foam 1080', 949.99, 30, 7, 'Tenis'),
+('Fila Ray Tracer', 699.99, 25, 8, 'Tenis'),
+('Nike Air Max 90', 999.99, 35, 1, 'Tenis'),
+('Adidas Ultraboost 22', 1149.99, 40, 2, 'Tenis'),
+('Under Armour HOVR Phantom 3', 899.99, 30, 3, 'Tenis'),
+('Air Jordan 1 Retro High OG', 1399.99, 25, 4, 'Tenis'),
+('Puma RS-X3', 749.99, 35, 5, 'Tenis'),
+('Reebok Zig Kinetica 2.5', 799.99, 40, 6, 'Tenis'),
+('New Balance 327', 849.99, 30, 7, 'Tenis'),
+('Fila Renno', 649.99, 25, 8, 'Tenis'),
+('Nike Air Force 1', 799.99, 35, 1, 'Tenis'),
+('Adidas Superstar', 699.99, 40, 2, 'Tenis');
 
--- Atualizar tabela Tenis com informações específicas
+
+-- Atualizar tabela Tenis com informações específicas (sem duplicatas)
 INSERT INTO tenis (id, descricao, marca_id, modelo, tamanho) VALUES
 (1, 'Tênis signature do LeBron James', 1, 'LeBron XX', 'GG'),
 (2, 'Tênis signature do James Harden', 2, 'Harden Vol. 7', 'G'),
 (3, 'Tênis signature do Stephen Curry', 3, 'Curry 10', 'M'),
 (4, 'Air Jordan nova geração', 4, 'XXXVII', 'GG'),
-(5, 'Tênis signature do LaMelo Ball', 5, 'MB.02', 'G');
+(5, 'Tênis signature do LaMelo Ball', 5, 'MB.02', 'G'),
+(6, 'Tênis clássico casual', 6, 'Classic Leather', 'M'),
+(7, 'Tênis lifestyle retrô', 7, '574', 'G'),
+(8, 'Tênis chunky lifestyle', 8, 'Disruptor II', 'M'),
+(9, 'Tênis lifestyle com amortecimento Air', 1, 'Air Max 270', 'GG'),
+(10, 'Tênis retrô runner', 2, 'Yung-1', 'G'),
+(11, 'Tênis para corrida leve', 3, 'Micro G Pursuit', 'M'),
+(12, 'Tênis clássico basquete', 4, '1', 'GG'),
+(13, 'Tênis para futebol', 5, 'Future 4.1', 'G'),
+(14, 'Tênis para CrossFit', 6, 'Nano X2', 'M'),
+(15, 'Tênis para corrida de alto desempenho', 7, 'Fresh Foam 1080', 'G'),
+(16, 'Tênis lifestyle moderno', 8, 'Ray Tracer', 'M'),
+(17, 'Tênis para corrida premium', 2, 'Ultraboost 22', 'G'),
+(18, 'Tênis para corrida com tecnologia HOVR', 3, 'HOVR Phantom 3', 'M'),
+(19, 'Tênis clássico Jordan retro', 4, '1 Retro High OG', 'GG'),
+(20, 'Tênis lifestyle com design futurista', 5, 'RS-X3', 'G'),
+(21, 'Tênis com tecnologia Zig', 6, 'Zig Kinetica 2.5', 'M'),
+(22, 'Tênis lifestyle retrô-moderno', 7, '327', 'G'),
+(23, 'Tênis lifestyle contemporâneo', 8, 'Renno', 'M'),
+(24, 'Tênis clássico urbano', 1, 'Air Force 1', 'G'),
+(25, 'Tênis clássico lifestyle', 2, 'Superstar', 'M');
 
 -- Inserir alguns Cartões
 INSERT INTO cartao (tipo_cartao, numero, cvv, validade, titular, cpf, usuario_id, ativo) VALUES

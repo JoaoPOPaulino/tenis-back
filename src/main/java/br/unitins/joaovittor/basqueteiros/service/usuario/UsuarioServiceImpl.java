@@ -181,8 +181,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     private void validateUserFields(UsuarioDTO dto) {
-        if (dto.idPerfil() == 0) {
-            throw new ValidationException("perfil", "Perfil inválido");
+        // Verifica se idPerfil é nulo antes de comparar
+        if (dto.idPerfil() == null || dto.idPerfil() == 0) {
+            throw new ValidationException("perfil", "Perfil é obrigatório");
         }
     }
 
