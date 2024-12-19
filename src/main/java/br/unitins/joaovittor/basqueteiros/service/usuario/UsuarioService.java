@@ -51,4 +51,6 @@ public interface UsuarioService {
     UsuarioResponseDTO removeTelefone(Long id, Long telefoneId);
 
     List<TelefoneDTO> findTelefonesByUsuarioId(Long id);
+
+    UsuarioResponseDTO login(String login, String senha);
 }

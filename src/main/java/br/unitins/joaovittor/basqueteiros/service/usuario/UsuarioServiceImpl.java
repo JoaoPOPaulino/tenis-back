@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoDTO;
 import br.unitins.joaovittor.basqueteiros.dto.cartao.CartaoResponseDTO;
 import br.unitins.joaovittor.basqueteiros.dto.endereco.EnderecoDTO;
@@ -42,6 +44,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Inject
     TelefoneUsuarioService telefoneService;
+    
+    private void updateUsuarioFromDTO(Usuario usuario, UsuarioDTO dto) {
+        // Atualiza os campos básicos do usuário
+        usuario.setLogin(dto.login());
+    
+        // Gera o hash da senha antes de armazenar
+        if (dto.senha() != null && !dto.senha().isEmpty()) {
+            usuario.setSenha(hashService.getHashSenha(dto.senha()));
+        }
+    
+        // Define o tipo de usuário/perfil usando o método fromId
+        TipoUsuario perfil = TipoUsuario.fromId(dto.idPerfil());
+        usuario.setTipoUsuario(perfil);
+    }
 
     @Override
     @Transactional
@@ -106,17 +122,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioResponseDTO findByLoginAndSenha(String login, String senha) {
-        return usuarioRepository.findByLoginAndSenha(login, hashService.getHashSenha(senha))
-                .map(UsuarioResponseDTO::valueOf)
-                .orElseThrow(() -> new ValidationException("credenciais", "Login ou senha inválidos"));
+        Usuario usuario = usuarioRepository.findByLoginAndSenha(login, hashService.getHashSenha(senha));
+        if (usuario == null) {
+            throw new ValidationException("credenciais", "Login ou senha inválidos");
+        }
+        return UsuarioResponseDTO.valueOf(usuario);
     }
 
     @Override
     public UsuarioResponseDTO findByLogin(String login) {
-        return UsuarioResponseDTO.valueOf(
-                usuarioRepository.findByLogin(login)
-                        .orElseThrow(() -> new NotFoundException("Usuário não encontrado"))
-        );
+        Usuario usuario = usuarioRepository.findByLogin(login);
+        if (usuario == null) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+        return UsuarioResponseDTO.valueOf(usuario);
     }
 
     @Override
@@ -164,42 +183,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         return telefoneService.addTelefones(usuarioId, telefonesDTO);
     }
 
-    // Métodos auxiliares
-    private void validateNewUser(UsuarioDTO dto) {
-        if (usuarioRepository.findByLogin(dto.login()).isPresent()) {
-            throw new ValidationException("login", "Login já existe");
-        }
-        validateUserFields(dto);
-    }
-
-    private void validateExistingUser(Usuario usuario, UsuarioDTO dto) {
-        if (!usuario.getLogin().equals(dto.login())
-                && usuarioRepository.findByLogin(dto.login()).isPresent()) {
-            throw new ValidationException("login", "Login já existe");
-        }
-        validateUserFields(dto);
-    }
-
-    private void validateUserFields(UsuarioDTO dto) {
-        // Verifica se idPerfil é nulo antes de comparar
-        if (dto.idPerfil() == null || dto.idPerfil() == 0) {
-            throw new ValidationException("perfil", "Perfil é obrigatório");
-        }
-    }
-
-    private void updateUsuarioFromDTO(Usuario usuario, UsuarioDTO dto) {
-        usuario.setNome(dto.nome());
-        usuario.setEmail(dto.email());
-        usuario.setLogin(dto.login());
-        usuario.setSenha(hashService.getHashSenha(dto.senha()));
-        usuario.setTipoUsuario(TipoUsuario.fromId(dto.idPerfil()));
-    }
-
-    private Usuario findUsuarioOrThrow(Long id) {
-        return usuarioRepository.findByIdOptional(id)
-                .orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
-    }
-
     @Override
     public UsuarioResponseDTO updateTelefone(Long id, Long telefoneId, TelefoneDTO dto) {
         return telefoneService.updateTelefone(id, telefoneId, dto);
@@ -213,5 +196,50 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<TelefoneDTO> findTelefonesByUsuarioId(Long id) {
         return telefoneService.findTelefonesByUsuarioId(id);
+    }
+
+    @Override
+    public UsuarioResponseDTO login(String username, String senha) {
+        Usuario usuario = usuarioRepository.findByLogin(username);
+        if (usuario == null) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+
+        if (!hashService.verificarSenha(senha, usuario.getSenha())) {
+            throw new ValidationException("credenciais", "Credenciais inválidas");
+        }
+
+        return UsuarioResponseDTO.valueOf(usuario);
+    }
+
+    // Métodos auxiliares
+    private void validateNewUser(UsuarioDTO dto) {
+        Usuario existingUser = usuarioRepository.findByLogin(dto.login());
+        if (existingUser != null) {
+            throw new ValidationException("login", "Login já existe");
+        }
+        validateUserFields(dto);
+    }
+
+    private void validateExistingUser(Usuario usuario, UsuarioDTO dto) {
+        if (!usuario.getLogin().equals(dto.login())
+                && usuarioRepository.findByLogin(dto.login()) != null) {
+            throw new ValidationException("login", "Login já existe");
+        }
+        validateUserFields(dto);
+    }
+
+    private void validateUserFields(UsuarioDTO dto) {
+        if (dto.idPerfil() == null || dto.idPerfil() == 0) {
+            throw new ValidationException("perfil", "Perfil inválido");
+        }
+    }
+
+    private Usuario findUsuarioOrThrow(Long id) {
+        Usuario usuario = usuarioRepository.findById(id);
+        if (usuario == null) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+        return usuario;
     }
 }

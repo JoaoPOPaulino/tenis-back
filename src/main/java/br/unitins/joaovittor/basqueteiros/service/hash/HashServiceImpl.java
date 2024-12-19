@@ -10,10 +10,9 @@ import javax.crypto.spec.PBEKeySpec;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-
 public class HashServiceImpl implements HashService {
 
-    private String salt = "blahxyz22";
+    private String salt = "#blahxyz22";
 
     private Integer iterationCount = 405;
 
@@ -21,7 +20,6 @@ public class HashServiceImpl implements HashService {
 
     @Override
     public String getHashSenha(String senha) {
-
         try {
             byte[] result = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512")
                     .generateSecret(new PBEKeySpec(senha.toCharArray(),
@@ -35,10 +33,25 @@ public class HashServiceImpl implements HashService {
         }
     }
 
-    public static void main(String[] args) {
-        HashService service = new HashServiceImpl();
-        System.out.println(service.getHashSenha("123"));
-
+    @Override
+    public boolean verificarSenha(String senhaOriginal, String senhaHashArmazenada) {
+        // Gera o hash da senha original usando os mesmos parâmetros
+        String novoHash = getHashSenha(senhaOriginal);
+        
+        // Compara o novo hash gerado com o hash armazenado
+        return novoHash.equals(senhaHashArmazenada);
     }
 
+    public static void main(String[] args) {
+        HashService service = new HashServiceImpl();
+        
+        // Demonstração da verificação de senha
+        String senha = "123";
+        String hash = service.getHashSenha(senha);
+        
+        System.out.println("Senha original: " + senha);
+        System.out.println("Hash gerado: " + hash);
+        System.out.println("Verificação de senha correta: " + service.verificarSenha(senha, hash));
+        System.out.println("Verificação de senha incorreta: " + service.verificarSenha("senhaErrada", hash));
+    }
 }

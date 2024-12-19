@@ -60,7 +60,7 @@ INSERT INTO fornecedor (nome, cnpj) VALUES
 
 -- Inserir alguns usuários (senha exemplo: "Senha123")
 INSERT INTO usuario (nome, email, login, senha, tipo_usuario) VALUES
-('Admin Sistema', 'admin@email.com', 'admin', '$2a$10$YourHashedPasswordHere', 'ADMINISTRADOR'),
+('Admin Sistema', 'admin@email.com', 'admin', 'owA4ynbT13Pbe3aXyiXnw3xoH70CCnnbTZdv2zs2EuLrxlzwCByAEAx8JulcRn/+gGwuqaNXhlIuWwniXanK0Q==', 'ADMINISTRADOR'),
 ('Usuário Comum', 'usuario@email.com', 'usuario', '$2a$10$YourHashedPasswordHere', 'USUARIO'),
 ('João Silva', 'joao@email.com', 'joao', '$2a$10$YourHashedPasswordHere', 'USUARIO'),
 ('Maria Santos', 'maria@email.com', 'maria', '$2a$10$YourHashedPasswordHere', 'USUARIO');

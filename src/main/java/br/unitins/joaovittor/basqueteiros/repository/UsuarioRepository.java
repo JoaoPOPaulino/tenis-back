@@ -18,19 +18,20 @@ public class UsuarioRepository implements PanacheRepository<Usuario> {
         return find("UPPER(nome) LIKE UPPER(?1)", "%" + nome + "%");
     }
 
-    public Optional<Usuario> findByLogin(String login) {
+    public Usuario findByLogin(String login) {
         try {
-            return find("login = ?1", login).firstResultOptional();
+            return find("login = ?1 ", login).singleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public Optional<Usuario> findByLoginAndSenha(String login, String senha) {
+    public Usuario findByLoginAndSenha(String login, String senha) {
         try {
-            return find("login = ?1 AND senha = ?2", login, senha).firstResultOptional();
+            return find("login = ?1 AND senha = ?2", login, senha).firstResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            return null;
         }
     }
 }

@@ -1,6 +1,9 @@
 package br.unitins.joaovittor.basqueteiros.service.hash;
 
 public interface HashService {
-
-    public String getHashSenha(String senha);
+    // Método existente para gerar hash
+    String getHashSenha(String senha);
+    
+    // Novo método para verificar senha
+    boolean verificarSenha(String senhaOriginal, String senhaHashArmazenada);
 }
